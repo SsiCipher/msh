@@ -9,8 +9,10 @@ typedef enum e_token_types {
 	REDIRECT_APPEND,
 	PIPE,
 	DOLLAR_SIGN,
+	AND,
+	OR,
 	ASTERISK,
-	NORMAL_CHAR
+	SIMPLE_CMD
 }	t_token_types;
 
 typedef struct s_token
@@ -39,15 +41,24 @@ t_token_types	get_type(char *str)
 		return (PIPE);
 	else if (!ft_strncmp(str, "$", 1))
 		return (DOLLAR_SIGN);
+	else if (!ft_strncmp(str, "&&", 2))
+		return (AND);
+	else if (!ft_strncmp(str, "||", 2))
+		return (OR);
 	else if (!ft_strncmp(str, "*", 1))
 		return (ASTERISK);
 	else
-		return (NORMAL_CHAR);
+		return (SIMPLE_CMD);
 }
 
 int	get_length(t_token_types type)
 {
-	if (type == HERE_DOC || type == REDIRECT_APPEND)
+	if (
+		type == HERE_DOC
+		|| type == REDIRECT_APPEND
+		|| type == AND
+		|| type == OR
+	)
 		return (2);
 	return (1);
 }
@@ -102,34 +113,47 @@ void	tokenize(char *str, t_token **tokens)
 			i++;
 		t_token_types t = get_type(str + i);
 
-		if (t != NORMAL_CHAR)
+		if (t != SIMPLE_CMD)
 		{
 			int tok_len = get_length(t);
-			tok = create_token(str + i, t, tok_len);
+			int j = 1;
+			if (t == SINGLE_QUOTE || t == DOUBLE_QUOTE)
+			{
+				while (get_type(str + i + j) != t && str[i + j] != '\0')
+					j++;
+			}
+			tok = create_token(str + i, t, tok_len + j);
 			ft_add_token(tokens, tok);
-			i += tok_len;
+			i += tok_len + j;
 		}
 		else
 		{
 			int j = 0;
-			while (get_type(str + i + j) == NORMAL_CHAR && str[i + j] != '\0')
+			while (get_type(str + i + j) == SIMPLE_CMD && str[i + j] != '\0')
 				j++;
-			tok = create_token(str + i, NORMAL_CHAR, j);
+			tok = create_token(str + i, SIMPLE_CMD, j);
 			ft_add_token(tokens, tok);
 			i += j;
 		}
 	}
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
 	t_token *token_lst = NULL;
 
+	t_env *env;
+
+	env = dup_env(envp);
 	while (TRUE)
 	{
-		char *shell = readline("\x1B[1;34m$>\x1B[0m ");
+		char *prompt = ft_strjoin("\x1B[1;34m", get_env_var(env, "USER"));
+		prompt = ft_strjoin(prompt, " ");
+		prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
+		prompt = ft_strjoin(prompt, " »\x1B[0m ");
+		char *shell = readline(prompt);
 		add_history(shell);
 
 		tokenize(shell, &token_lst);

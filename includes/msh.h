@@ -17,4 +17,7 @@ typedef struct s_env
 	size_t	length;
 }	t_env;
 
+t_env	*dup_env(char **envp);
+char *get_env_var(t_env *env, char *var_name);
+
 #endif

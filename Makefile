@@ -12,7 +12,7 @@ libs:
 	cp libs/libft/libft.a libs
 
 $(NAME): $(SRCS) msh.c
-	$(CC) $(FLAGS) $(LIBS) $(INCS) $(SRCS) msh.c -o $(NAME)
+	$(CC) $(FLAGS) $(INCS) $(SRCS) msh.c $(LIBS) -o $(NAME)
 
 clean:
 	rm -rf $(NAME)

@@ -27,14 +27,14 @@ t_token_types	get_type(char *str)
 		return (SINGLE_QUOTE);
 	else if (!ft_strncmp(str, "\"", 1))
 		return (DOUBLE_QUOTE);
-	else if (!ft_strncmp(str, "<", 1))
-		return (REDIRECT_IN);
-	else if (!ft_strncmp(str, ">", 1))
-		return (REDIRECT_OUT);
 	else if (!ft_strncmp(str, "<<", 2))
 		return (HERE_DOC);
 	else if (!ft_strncmp(str, ">>", 2))
 		return (REDIRECT_APPEND);
+	else if (!ft_strncmp(str, "<", 1))
+		return (REDIRECT_IN);
+	else if (!ft_strncmp(str, ">", 1))
+		return (REDIRECT_OUT);
 	else if (!ft_strncmp(str, "|", 1))
 		return (PIPE);
 	else if (!ft_strncmp(str, "$", 1))
@@ -81,29 +81,43 @@ void	ft_add_token(t_token **lst, t_token *new_token)
 	}
 }
 
+void	free_tokens(t_token **token)
+{
+	t_token *curr = *token;
+	while (curr != NULL)
+	{
+		free(curr);
+		curr = curr->next;
+	}
+	*token = NULL;
+}
+
 void	tokenize(char *str, t_token **tokens)
 {
 	int i = 0;
 	while (str[i])
 	{
 		t_token	*tok;
+		while (ft_isspace(*(str + i)))
+			i++;
 		t_token_types t = get_type(str + i);
 
 		if (t != NORMAL_CHAR)
 		{
-			tok = create_token(str + i, t, get_length(t));
+			int tok_len = get_length(t);
+			tok = create_token(str + i, t, tok_len);
 			ft_add_token(tokens, tok);
+			i += tok_len;
 		}
 		else
 		{
 			int j = 0;
-			while (get_type(str + i + j) == NORMAL_CHAR || *(str + i + j) == '\0')
+			while (get_type(str + i + j) == NORMAL_CHAR && str[i + j] != '\0')
 				j++;
 			tok = create_token(str + i, NORMAL_CHAR, j);
 			ft_add_token(tokens, tok);
 			i += j;
 		}
-		i++;
 	}
 }
 
@@ -128,7 +142,8 @@ int main(int argc, char **argv)
 			printf("\n");
 			t = t->next;
 		}
-	}	
 
+		free_tokens(&token_lst);
+	}
 	return (0);
 }

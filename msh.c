@@ -45,7 +45,7 @@ t_token	*create_token(char *content, t_token_types type, int length)
 	t_token *new_token;
 
 	new_token = (t_token *)malloc(sizeof(t_token));
-	new_token->content = content;
+	new_token->content = ft_substr(content, 0, length);
 	new_token->type = type;
 	new_token->length = length;
 	new_token->next = NULL;
@@ -125,50 +125,81 @@ char *ft_str_replace(char *str, char *find, char *replace)
 	return (output);
 }
 
-int main(int argc, char **argv, char **envp)
+void	preprocess_vars(char *str, t_env *env)
 {
-	(void)argc;
-	(void)argv;
-	t_env	*env;
-	t_token	*token_lst;
-	char	*prompt;
+	int		i = 0;
+	int		var_len;
+	char	*var;
 
-	env = dup_env(envp);
-	token_lst = NULL;
-	while (TRUE)
+	while (str[i])
 	{
-		prompt = ft_strjoin("\x1B[1;34m", get_env_var(env, "USER"));
-		prompt = ft_strjoin(prompt, " ");
-		prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
-		prompt = ft_strjoin(prompt, " »\x1B[0m ");
-		char *shell = readline(prompt);
-
-		add_history(shell);
-
-		tokenize_shell(shell, &token_lst);
-
-		t_token	*t = token_lst;
-		while (t != NULL)
+		var_len = 0;
+		if (str[i] == '$')
 		{
-			if (
-				(t->type == DOUBLE_QUOTE || t->type == SIMPLE_CMD)
-				&& ft_memchr(t->content, '$', t->length)
+			i += 1;
+			while (
+				ft_isalnum(str[i + var_len])
+				|| str[i + var_len] == '_'
 			)
-			{
-				printf("type = [%u]\n", t->type);
-				write(1, "content = [", 11);
-				// printf("content = [%s]\n", get_env_var(env, ft_substr(t->content, 1, t->length)));
-				write(1, t->content, t->length);
-				write(1, "]\n", 2);
-			}
-			t = t->next;
+				var_len += 1;
+			var = ft_substr(str, i, var_len);
+			// ft_str_replace(str, var, get_env_var(env, var));
+			printf("var = [%s]; length = [%d]\n", var, var_len);
+			i += var_len;
 		}
-
-		free_all_tokens(&token_lst);
-		free(shell);
+		else
+			i++;
 	}
-	// printf("%s\n", ft_str_replace("hello$var asdasadsrest", "$var", "var_value_example"));
+}
+
+// int main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	t_env	*env;
+// 	t_token	*token_lst;
+// 	char	*prompt;
+
+// 	env = dup_env(envp);
+// 	token_lst = NULL;
+// 	while (TRUE)
+// 	{
+// 		prompt = ft_strjoin("\x1B[1;34m", get_env_var(env, "USER"));
+// 		prompt = ft_strjoin(prompt, " ");
+// 		prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
+// 		prompt = ft_strjoin(prompt, " »\x1B[0m ");
+// 		char *shell = readline(prompt);
+
+// 		add_history(shell);
+
+// 		tokenize_shell(shell, &token_lst);
+
+// 		t_token	*t = token_lst;
+// 		while (t != NULL)
+// 		{
+// 			if (
+// 				(t->type == DOUBLE_QUOTE || t->type == SIMPLE_CMD)
+// 				&& ft_memchr(t->content, '$', t->length)
+// 			)
+// 			{
+// 				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
+// 			}
+// 			else
+// 				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
+// 			t = t->next;
+// 		}
+
+// 		free_all_tokens(&token_lst);
+// 		free(shell);
+// 	}
+// 	return (0);
+// }
+
+int main(void)
+{
+	preprocess_vars("\"text text strinf $var_VAR124_sdf-sdfsdf sdf$sdfsd\"");
 	return (0);
 }
+
 
 // echo "sdfsdf" > f && echo "$ddfg" > f1 && echo '$sdfsf' && echo $USER > f4

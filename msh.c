@@ -125,7 +125,7 @@ char *ft_str_replace(char *str, char *find, char *replace)
 	return (output);
 }
 
-void	preprocess_vars(char *str, t_env *env)
+char	*preprocess_vars(char *str, t_env *env)
 {
 	int		i = 0;
 	int		var_len;
@@ -142,64 +142,62 @@ void	preprocess_vars(char *str, t_env *env)
 				|| str[i + var_len] == '_'
 			)
 				var_len += 1;
-			var = ft_substr(str, i, var_len);
-			// ft_str_replace(str, var, get_env_var(env, var));
-			printf("var = [%s]; length = [%d]\n", var, var_len);
+			var = ft_substr(str, i - 1, var_len + 1);
+			str = ft_str_replace(str, var, get_env_var(env, var + 1));
 			i += var_len;
 		}
 		else
 			i++;
 	}
+	return (str);
 }
 
-// int main(int argc, char **argv, char **envp)
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	t_env	*env;
-// 	t_token	*token_lst;
-// 	char	*prompt;
-
-// 	env = dup_env(envp);
-// 	token_lst = NULL;
-// 	while (TRUE)
-// 	{
-// 		prompt = ft_strjoin("\x1B[1;34m", get_env_var(env, "USER"));
-// 		prompt = ft_strjoin(prompt, " ");
-// 		prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
-// 		prompt = ft_strjoin(prompt, " »\x1B[0m ");
-// 		char *shell = readline(prompt);
-
-// 		add_history(shell);
-
-// 		tokenize_shell(shell, &token_lst);
-
-// 		t_token	*t = token_lst;
-// 		while (t != NULL)
-// 		{
-// 			if (
-// 				(t->type == DOUBLE_QUOTE || t->type == SIMPLE_CMD)
-// 				&& ft_memchr(t->content, '$', t->length)
-// 			)
-// 			{
-// 				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
-// 			}
-// 			else
-// 				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
-// 			t = t->next;
-// 		}
-
-// 		free_all_tokens(&token_lst);
-// 		free(shell);
-// 	}
-// 	return (0);
-// }
-
-int main(void)
+int main(int argc, char **argv, char **envp)
 {
-	preprocess_vars("\"text text strinf $var_VAR124_sdf-sdfsdf sdf$sdfsd\"");
+	(void)argc;
+	(void)argv;
+	t_env	*env;
+	t_token	*token_lst;
+	char	*prompt;
+
+	env = dup_env(envp);
+	token_lst = NULL;
+	while (TRUE)
+	{
+		prompt = ft_strjoin("\x1B[1;34m", get_env_var(env, "USER"));
+		prompt = ft_strjoin(prompt, " ");
+		prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
+		prompt = ft_strjoin(prompt, " »\x1B[0m ");
+		char *shell = readline(prompt);
+
+		add_history(shell);
+
+		tokenize_shell(shell, &token_lst);
+
+		t_token	*t = token_lst;
+		while (t != NULL)
+		{
+			if (
+				(t->type == DOUBLE_QUOTE || t->type == SIMPLE_CMD)
+				&& ft_memchr(t->content, '$', t->length)
+			)
+			{
+				t->content = preprocess_vars(t->content, env);
+				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
+			}
+			else if (t->type == SIMPLE_CMD && ft_memchr(t->content, '*', t->length))
+			{
+				
+			}
+			else
+				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
+			t = t->next;
+		}
+
+		free_all_tokens(&token_lst);
+		free(shell);
+	}
 	return (0);
 }
-
 
 // echo "sdfsdf" > f && echo "$ddfg" > f1 && echo '$sdfsf' && echo $USER > f4

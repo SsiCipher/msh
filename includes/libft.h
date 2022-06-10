@@ -83,7 +83,6 @@ char	*ft_strstr(const char *haystack, const char *needle);
 int		ft_abs(int n);
 void	ft_bsort(int len, int *arr, int (*cmp)(int, int));
 int		ft_isspace(int c);
-char	*ft_strstr(const char *haystack, const char *needle);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void	ft_puthex_fd(unsigned int n, int fd, int is_prefixed);

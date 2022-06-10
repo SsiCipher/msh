@@ -152,23 +152,36 @@ char	*preprocess_vars(char *str, t_env *env)
 	return (str);
 }
 
+char	*create_prompt(t_env *env)
+{
+	char	*prompt;
+	char	*temp;
+
+	prompt = ft_strjoin("\e[1;32m", get_env_var(env, "USER"));
+	temp = prompt;
+	prompt = ft_strjoin(prompt, "\e[1;36m \x1B[1;34m");
+	free(temp);
+	temp = prompt;
+	prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
+	free(temp);
+	temp = prompt;
+	prompt = ft_strjoin(prompt, "\x1B[0m » ");
+	free(temp);
+	return (prompt);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
 	t_env	*env;
 	t_token	*token_lst;
-	char	*prompt;
 
 	env = dup_env(envp);
 	token_lst = NULL;
 	while (TRUE)
 	{
-		prompt = ft_strjoin("\x1B[1;34m", get_env_var(env, "USER"));
-		prompt = ft_strjoin(prompt, " ");
-		prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));
-		prompt = ft_strjoin(prompt, " »\x1B[0m ");
-		char *shell = readline(prompt);
+		char *shell = readline(create_prompt(env));
 
 		add_history(shell);
 
@@ -187,7 +200,7 @@ int main(int argc, char **argv, char **envp)
 			}
 			else if (t->type == SIMPLE_CMD && ft_memchr(t->content, '*', t->length))
 			{
-				
+
 			}
 			else
 				printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);

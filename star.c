@@ -59,11 +59,11 @@ int	ft_ismatch(char *pattern, char *text)
     int i = 0, j = 0, textPointer = -1, pattPointer = -1;
 
     while (i < n) {
-        if (text[i] == pattern[j]) {    //matching text and pattern characters
+        if (text[i] == pattern[j]) {
             i++;
             j++;
         }
-        else if (j < m && pattern[j] == '*') {    //as * used for one or more character
+        else if (j < m && pattern[j] == '*') {
             textPointer = i;
             pattPointer = j;
             j++;
@@ -78,10 +78,10 @@ int	ft_ismatch(char *pattern, char *text)
     }
 
     while (j < m && pattern[j] == '*') {
-        j++;     //j will increase when wildcard is *
+        j++;
     }
 
-    if (j == m) {    //check whether pattern is finished or not
+    if (j == m) {
         return 1;
     }
 
@@ -101,18 +101,7 @@ int	main(int argc, char *argv[])
 		if (ft_ismatch(argv[1], dir->content[i]))
 			printf("%s ", dir->content[i]);
 	}
+	printf("\n");
 
 	return (0);
-}
-
-
-int main (int c, char**v){
-    return !m(v[1],v[2]);
-}
-
-int m (char*s, char*t)
-{
-    return (
-        *t-42 ? *s ? 63 == *t | *s == *t && m(s+1,t+1) : !*t : m(s,t+1) || *s && m(s+1,t)
-    );
 }

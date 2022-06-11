@@ -159,7 +159,7 @@ char	*create_prompt(t_env *env)
 
 	prompt = ft_strjoin("\e[1;32m", get_env_var(env, "USER"));
 	temp = prompt;
-	prompt = ft_strjoin(prompt, "\e[1;36m \x1B[1;34m");
+	prompt = ft_strjoin(prompt, " • \e[1;36m\x1B[1;34m");
 	free(temp);
 	temp = prompt;
 	prompt = ft_strjoin(prompt, get_env_var(env, "PWD"));

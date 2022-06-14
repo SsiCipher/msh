@@ -67,11 +67,12 @@ void			tokenize_shell(char *str, t_token **tokens);
 // =================== src/var_expantion.c
 
 char			*ft_str_replace(char *str, char *find, char *replace);
-char			*preprocess_vars(char *str, t_env *env);
+char			*expand_vars(char *str, t_env *env);
 
 // =================== src/star_expantion.c
 
 t_dir			*read_dir_content(char *dir_path);
 bool			match_wildcard(char *pattern, char *text);
+char			*expand_wildcard(char *pattern, char *path);
 
 #endif

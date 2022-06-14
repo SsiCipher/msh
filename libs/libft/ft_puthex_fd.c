@@ -20,6 +20,6 @@ void	ft_puthex_fd(unsigned int n, int fd, int is_prefixed)
 	if (is_prefixed)
 		ft_putstr_fd("0x", fd);
 	if (n >= 16)
-		ft_puthex_fd(n / 16, fd, FALSE);
+		ft_puthex_fd(n / 16, fd, false);
 	ft_putchar_fd(base[n % 16], fd);
 }

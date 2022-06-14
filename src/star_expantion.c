@@ -85,3 +85,34 @@ bool	match_wildcard(char *pattern, char *text)
 		return (true);
 	return (false);
 }
+
+/**
+ * get the files and directories that match pattern in path
+ * @param pattern the pattern to match
+ * @param path the path to search
+ * @return a string of names concatenated with space ' '
+ */
+char	*expand_wildcard(char *pattern, char *path)
+{
+	int		i;
+	char	*output;
+	t_dir	*dir;
+	char	*temp;
+
+	i = -1;
+	output = NULL;
+	dir = read_dir_content(path);
+	while (dir->content[++i])
+	{
+		if (match_wildcard(pattern, dir->content[i]))
+		{
+			temp = output;
+			if (!output)
+				output = ft_strjoin_many(1, dir->content[i]);
+			else
+				output = ft_strjoin_many(3, output, " ", dir->content[i]);
+			free(temp);
+		}
+	}
+	return (output);
+}

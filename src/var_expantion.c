@@ -13,7 +13,13 @@ char	*ft_str_replace(char *str, char *find, char *replace)
 	return (output);
 }
 
-char	*preprocess_vars(char *str, t_env *env)
+/**
+ * find and replace all variables in str
+ * @param str the string to use
+ * @param env t_env struct containing environment variables
+ * @return str string with variables replaced with their values
+ */
+char	*expand_vars(char *str, t_env *env)
 {
 	int		i = 0;
 	int		var_len;

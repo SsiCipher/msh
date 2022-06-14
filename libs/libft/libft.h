@@ -15,9 +15,8 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-
-# define TRUE 1
-# define FALSE 0
+# include <stdarg.h>
+# include <stdbool.h>
 
 typedef struct s_list
 {
@@ -92,5 +91,6 @@ void	ft_swap(int *arr, int i, int j);
 int		ft_intlen(int n);
 void	ft_qsort(int *array, int size, int (*cmp)(int, int));
 int		ft_countchr(char *str, char c);
+char	*ft_strjoin_many(int strs_count, ...);
 
 #endif

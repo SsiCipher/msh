@@ -20,6 +20,6 @@ void	ft_putbin_fd(unsigned int n, int fd, int is_prefixed)
 	if (is_prefixed)
 		ft_putstr_fd("0b", fd);
 	if (n >= 2)
-		ft_putbin_fd(n / 2, fd, FALSE);
+		ft_putbin_fd(n / 2, fd, false);
 	ft_putchar_fd(base[n % 2], fd);
 }

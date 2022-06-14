@@ -15,6 +15,8 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdarg.h>
+# include <stdbool.h>
 
 typedef struct s_list
 {
@@ -80,6 +82,7 @@ char	*ft_strstr(const char *haystack, const char *needle);
 int		ft_abs(int n);
 void	ft_bsort(int len, int *arr, int (*cmp)(int, int));
 int		ft_isspace(int c);
+char	*ft_strstr(const char *haystack, const char *needle);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void	ft_puthex_fd(unsigned int n, int fd, int is_prefixed);
@@ -88,5 +91,6 @@ void	ft_swap(int *arr, int i, int j);
 int		ft_intlen(int n);
 void	ft_qsort(int *array, int size, int (*cmp)(int, int));
 int		ft_countchr(char *str, char c);
+char	*ft_strjoin_many(int strs_count, ...);
 
 #endif

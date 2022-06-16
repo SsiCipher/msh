@@ -92,5 +92,6 @@ int		ft_intlen(int n);
 void	ft_qsort(int *array, int size, int (*cmp)(int, int));
 int		ft_countchr(char *str, char c);
 char	*ft_strjoin_many(int strs_count, ...);
+int		ft_strcasecmp(const char *s1, const char *s2);
 
 #endif

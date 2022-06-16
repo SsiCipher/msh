@@ -33,7 +33,7 @@
 
 ## TODO
 
-- [ ] sort * wilcard results to match bash
+- [x] sort * wilcard results to match bash
 - [ ] find a convenient way to display errors
 - [ ] start checking cmd syntax & display errors
 - [ ] start here_docs + handle variable expansion in it + multiple here_docs for the same cmd

@@ -1,7 +1,7 @@
 #include "msh.h"
 
 /**
- * Read all the files in a directory into the t_dir struct (except: "." and "..")
+ * Read all the files in a directory into the t_dir struct
  * @param dir_path the path to the directory
  * @return pointer to t_dir struct
  */
@@ -86,6 +86,13 @@ bool	match_wildcard(char *pattern, char *text)
 	return (false);
 }
 
+int cmp_names(const void* p1, const void* p2)
+{
+	return (
+		ft_strcasecmp(*(const char **)p1, *(const char **)p2)
+	);
+}
+
 /**
  * get the files and directories that match pattern in path
  * @param pattern the pattern to match
@@ -102,6 +109,7 @@ char	*expand_wildcard(char *pattern, char *path)
 	i = -1;
 	output = NULL;
 	dir = read_dir_content(path);
+	qsort(dir->content, dir->length, sizeof(char *), cmp_names);
 	while (dir->content[++i])
 	{
 		if (match_wildcard(pattern, dir->content[i]))

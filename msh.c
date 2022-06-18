@@ -50,6 +50,8 @@ int	main(int argc, char **argv, char **envp)
 			t = t->next;
 		}
 
+		check_errors(token_lst);
+
 		free(shell);
 		free_all_tokens(&token_lst);
 	}

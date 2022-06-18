@@ -1,6 +1,6 @@
 #include "msh.h"
 
-t_token_types	get_type(char *str)
+t_token_types	get_t_type(char *str)
 {
 	if (!ft_strncmp(str, "'", 1))
 		return (SINGLE_QUOTE);
@@ -14,21 +14,25 @@ t_token_types	get_type(char *str)
 		return (REDIRECT_IN);
 	else if (!ft_strncmp(str, ">", 1))
 		return (REDIRECT_OUT);
-	else if (!ft_strncmp(str, "|", 1))
-		return (PIPE);
-	else if (!ft_strncmp(str, "$", 1))
-		return (SIMPLE_CMD);
 	else if (!ft_strncmp(str, "&&", 2))
 		return (AND);
 	else if (!ft_strncmp(str, "||", 2))
 		return (OR);
+	else if (!ft_strncmp(str, "|", 1))
+		return (PIPE);
+	else if (!ft_strncmp(str, "(", 1))
+		return (OPEN_QUOTE);
+	else if (!ft_strncmp(str, ")", 1))
+		return (CLOSE_QUOTE);
+	// else if (!ft_strncmp(str, "$", 1))
+	// 	return (SIMPLE_CMD);
 	// else if (!ft_strncmp(str, "*", 1))
 	// 	return (ASTERISK);
 	else
 		return (SIMPLE_CMD);
 }
 
-int	get_length(t_token_types type)
+int		get_t_length(t_token_types type)
 {
 	if (
 		type == HERE_DOC
@@ -91,20 +95,23 @@ void	tokenize_shell(char *str, t_token **tokens)
 		if (str[i] == '\0')
 			return ;
 
-		t_token_types t = get_type(str + i);
+		t_token_types t = get_t_type(str + i);
 		if (t == SIMPLE_CMD)
 		{
 			int cmd_length = 0;
-			while (get_type(str + i + cmd_length) == SIMPLE_CMD && !ft_isspace(str[i + cmd_length]) && str[i + cmd_length] != '\0')
+			while (
+				get_t_type(str + i + cmd_length) == SIMPLE_CMD
+				&& !ft_isspace(str[i + cmd_length]) && str[i + cmd_length] != '\0'
+			)
 				cmd_length++;
 			push_token(tokens, create_token(str + i, SIMPLE_CMD, cmd_length));
 			i += cmd_length;
 		}
 		else
 		{
-			int tok_len = get_length(t);
+			int tok_len = get_t_length(t);
 			int quotes_length = (t == SINGLE_QUOTE || t == DOUBLE_QUOTE);
-			while (get_type(str + i + quotes_length) != t && str[i + quotes_length] != '\0')
+			while (get_t_type(str + i + quotes_length) != t && str[i + quotes_length] != '\0')
 				quotes_length++;
 			push_token(tokens, create_token(str + i, t, tok_len + quotes_length));
 			i += tok_len + quotes_length;

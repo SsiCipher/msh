@@ -1,5 +1,13 @@
 #include "msh.h"
 
+/**
+ * find and replace all the first occurence of 'find' in str by 'replace'
+ * 
+ * @param	str the string to use
+ * @param	find the search word
+ * @param	replace the word to repleace it with
+ * @return	the new string allocated in memory
+ */
 char	*ft_str_replace(char *str, char *find, char *replace)
 {
 	int find_len = ft_strlen(find);
@@ -15,9 +23,10 @@ char	*ft_str_replace(char *str, char *find, char *replace)
 
 /**
  * find and replace all variables in str
- * @param str the string to use
- * @param env t_env struct containing environment variables
- * @return str string with variables replaced with their values
+ * 
+ * @param	str the string to use
+ * @param	env t_env struct containing environment variables
+ * @return	str string with variables replaced with their values
  */
 char	*expand_vars(char *str, t_env *env)
 {

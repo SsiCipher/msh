@@ -2,16 +2,16 @@
 
 ## syntax check
 
-- '>'	->	file
-- '<'	->	file
-- '>>'	->	file
-- '<<'	->	Limiter
-- '|'	->	cmd
-- 'CMD'	->	arguments
-- '$'	->	variable
-- '&&'	->	cmd
-- '||'	->	cmd
-- '*'	->	anything
+- '>'	->	file	-> msh: syntax error: expected file after '>'
+- '<'	->	file	-> msh: syntax error: expected file after '<'
+- '>>'	->	file	-> msh: syntax error: expected file after '>>'
+- '<<'	->	limiter	-> msh: syntax error: expected limiter after '<<'
+- '|'	->	cmd		-> msh: syntax error: expected cmd after '|'
+- 'CMD'	->	args	-> msh: syntax error: expected args after 'CMD
+- '$'	->	var		-> msh: syntax error: expected var after '$'
+- '&&'	->	cmd		-> msh: syntax error: expected cmd after '&&'
+- '||'	->	cmd		-> msh: syntax error: expected cmd after '||'
+- '*'	->	chars	-> msh: syntax error: expected chars after '*'
 
 ## steps
 
@@ -27,14 +27,11 @@
 ## tasks
 
 - [x] start variable expansion
-- [ ] start a heredoc + var expansion inside
 - [x] wildcard expansion
 - [ ] syntax validation check
-
-## TODO
-
-- [x] sort * wilcard results to match bash
-- [ ] find a convenient way to display errors
-- [ ] start checking cmd syntax & display errors
-- [ ] start here_docs + handle variable expansion in it + multiple here_docs for the same cmd
+  - [ ] find a convenient way to display errors
+  - [ ] start checking cmd syntax & display errors
+- [ ] start a heredoc + var expansion inside
+  - [ ] handle here_docs + variable expansion in it
+  - [ ] multiple here_docs for the same cmd
 - [ ] build the AST and start executing

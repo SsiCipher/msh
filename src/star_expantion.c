@@ -2,8 +2,9 @@
 
 /**
  * Read all the files in a directory into the t_dir struct
- * @param dir_path the path to the directory
- * @return pointer to t_dir struct
+ * 
+ * @param	dir_path the path to the directory
+ * @return	pointer to t_dir struct
  */
 t_dir	*read_dir_content(char *dir_path)
 {
@@ -34,9 +35,10 @@ t_dir	*read_dir_content(char *dir_path)
 
 /**
  * check if the given string matches the patten
- * @param pattern pattern to match
- * @param text string to check
- * @return 'true' if the string matches the string else 'false'
+ * 
+ * @param	pattern pattern to match
+ * @param	text string to check
+ * @return	'true' if the string matches the string else 'false'
  */
 bool	match_wildcard(char *pattern, char *text)
 {
@@ -95,9 +97,10 @@ int cmp_names(const void* p1, const void* p2)
 
 /**
  * get the files and directories that match pattern in path
- * @param pattern the pattern to match
- * @param path the path to search
- * @return a string of names concatenated with space ' '
+ * 
+ * @param	pattern the pattern to match
+ * @param	path the path to search
+ * @return	a string of names concatenated with space ' '
  */
 char	*expand_wildcard(char *pattern, char *path)
 {

@@ -33,7 +33,9 @@ typedef enum e_token_types {
 	AND,
 	OR,
 	ASTERISK,
-	SIMPLE_CMD
+	SIMPLE_CMD,
+	OPEN_QUOTE,
+	CLOSE_QUOTE
 }	t_token_types;
 
 typedef struct s_token
@@ -58,8 +60,8 @@ char			*get_env_var(t_env *env, char *var_name);
 
 // =================== src/parse.c
 
-t_token_types	get_type(char *str);
-int				get_length(t_token_types type);
+t_token_types	get_t_type(char *str);
+int				get_t_length(t_token_types type);
 t_token			*create_token(char *content, t_token_types type, int length);
 void			push_token(t_token **lst, t_token *new_token);
 void			free_all_tokens(t_token **tokens_lst);
@@ -75,5 +77,9 @@ char			*expand_vars(char *str, t_env *env);
 t_dir			*read_dir_content(char *dir_path);
 bool			match_wildcard(char *pattern, char *text);
 char			*expand_wildcard(char *pattern, char *path);
+
+// =================== src/error_check.c
+
+void			check_errors(t_token *token_lst);
 
 #endif

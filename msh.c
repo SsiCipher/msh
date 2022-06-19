@@ -15,6 +15,17 @@ char	*create_prompt(t_env *env)
 	return (prompt);
 }
 
+void	print_tokens(t_token *first_tk)
+{
+	t_token *curr_tk = first_tk;
+
+	while (curr_tk)
+	{
+		printf("type = [%u]\ncontent = [%s]\n", curr_tk->type, curr_tk->content);
+		curr_tk = curr_tk->next;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
@@ -46,11 +57,11 @@ int	main(int argc, char **argv, char **envp)
 			)
 				t->content = expand_wildcard(t->content, "./");
 
-			printf("type = [%u]\ncontent = [%s]\n", t->type, t->content);
 			t = t->next;
 		}
 
-		check_errors(token_lst);
+		if (!check_errors(token_lst))
+			print_tokens(token_lst);
 
 		free(shell);
 		free_all_tokens(&token_lst);

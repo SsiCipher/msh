@@ -80,6 +80,6 @@ char			*expand_wildcard(char *pattern, char *path);
 
 // =================== src/error_check.c
 
-void			check_errors(t_token *token_lst);
+bool			check_errors(t_token *token_lst);
 
 #endif

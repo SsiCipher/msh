@@ -4,8 +4,9 @@
  * Check tokens for syntax errors
  * 
  * @param	token_lst the list of tokens
+ * @return	true if any errors were found false otherwise
  */
-void	check_errors(t_token *token_lst)
+bool	check_errors(t_token *token_lst)
 {
 	t_token	*tk = token_lst;
 
@@ -17,7 +18,9 @@ void	check_errors(t_token *token_lst)
 		)
 		{
 			printf("msh: syntax error: expected a file after %s\n", tk->content);
+			return (true);
 		}
 		tk = tk->next;
 	}
+	return (false);
 }

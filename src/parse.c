@@ -78,6 +78,7 @@ void	free_all_tokens(t_token **tokens_lst)
 	t_token *curr = *tokens_lst;
 	while (curr != NULL)
 	{
+		free(curr->content);
 		free(curr);
 		curr = curr->next;
 	}

@@ -125,5 +125,9 @@ char	*expand_wildcard(char *pattern, char *path)
 			free(temp);
 		}
 	}
+	for (int i = 0; i < dir->length; i++)
+		free(dir->content[i]);
+	free(dir->content);
+	free(dir);
 	return (output);
 }

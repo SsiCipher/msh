@@ -69,7 +69,7 @@ void			tokenize_shell(char *str, t_token **tokens);
 
 // =================== src/var_expantion.c
 
-char			*ft_str_replace(char *str, char *find, char *replace);
+char			*ft_find_n_replace(char *str, char *find, char *replace);
 char			*expand_vars(char *str, t_env *env);
 
 // =================== src/star_expantion.c

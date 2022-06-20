@@ -3,15 +3,17 @@
 char	*create_prompt(t_env *env)
 {
 	char	*prompt;
+	char	*user;
+	char	*cwd;
 
+	user = get_env_var(env, "USER");
+	cwd = get_env_var(env, "PWD");
 	prompt = ft_strjoin_many(
 			5,
-			"\e[1;32m",
-			get_env_var(env, "USER"),
-			" • \e[1;36m\x1B[1;34m",
-			get_env_var(env, "PWD"),
-			"\x1B[0m » "
+			"\e[1;32m", user, " • \e[1;36m\x1B[1;34m", cwd, "\x1B[0m » "
 			);
+	free(user);
+	free(cwd);
 	return (prompt);
 }
 
@@ -31,6 +33,7 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*env;
 	t_token	*token_lst;
 	char	*shell;
+	char	*prompt;
 	t_token	*t;
 
 	(void)argc;
@@ -39,7 +42,8 @@ int	main(int argc, char **argv, char **envp)
 	token_lst = NULL;
 	while (true)
 	{
-		shell = readline(create_prompt(env));
+		prompt = create_prompt(env);
+		shell = readline(prompt);
 		add_history(shell);
 		tokenize_shell(shell, &token_lst);
 
@@ -50,12 +54,20 @@ int	main(int argc, char **argv, char **envp)
 				(t->type == DOUBLE_QUOTE || t->type == SIMPLE_CMD)
 				&& ft_memchr(t->content, '$', t->length)
 			)
+			{
+				char	*tmp = t->content;
 				t->content = expand_vars(t->content, env);
+				free(tmp);
+			}
 			else if (
 				t->type == SIMPLE_CMD
 				&& ft_memchr(t->content, '*', t->length)
 			)
+			{
+				char	*tmp = t->content;
 				t->content = expand_wildcard(t->content, "./");
+				free(tmp);
+			}
 
 			t = t->next;
 		}
@@ -64,9 +76,8 @@ int	main(int argc, char **argv, char **envp)
 			print_tokens(token_lst);
 
 		free(shell);
+		free(prompt);
 		free_all_tokens(&token_lst);
 	}
 	return (0);
 }
-
-// echo "sdfsdf" > f && echo "$ddfg" > f1s && echo '$sdfsf' && echo $USER > f4

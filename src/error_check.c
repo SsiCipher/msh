@@ -20,6 +20,14 @@ bool	check_errors(t_token *token_lst)
 			printf("msh: syntax error: expected a file after %s\n", tk->content);
 			return (true);
 		}
+		else if (
+			(tk->type == PIPE || tk->type == AND || tk->type == OR) 
+			&& (tk->next == NULL || tk->next->type != SIMPLE_CMD)
+		)
+		{
+			printf("msh: syntax error: expected a command after %s\n", tk->content);
+			return (true);
+		}
 		tk = tk->next;
 	}
 	return (false);

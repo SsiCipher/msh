@@ -9,10 +9,10 @@
 void	handle_here_docs(t_token *token_lst, t_env *env)
 {
 	t_token *tk;
+	char	*temp;
 	char	*limiter;
 	char	*here_doc_content;
 
-	(void)env;
 	tk = token_lst;
 	while (tk)
 	{
@@ -28,11 +28,14 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 					&& *(line + ft_strlen(limiter)) == '\n'
 				)
 					break ;
+				temp = here_doc_content;
 				here_doc_content = ft_strjoin(here_doc_content, line);
+				free(temp);
+				free(line);
 				line = get_next_line(STDIN_FILENO);
 			}
 			free(limiter);
-			tk->next->content = here_doc_content;
+			tk->next->content = expand_vars(here_doc_content, env);
 		}
 
 		tk = tk->next;

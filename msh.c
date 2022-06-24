@@ -76,18 +76,19 @@ int	main(int argc, char **argv, char **envp)
 		prompt = create_prompt(env);
 		shell = readline(prompt);
 		add_history(shell);
-		tokenize_shell(shell, &token_lst);
-		handle_expansions(token_lst, env);
+		// tokenize_shell(shell, &token_lst);
+		// handle_expansions(token_lst, env);
 
-		if (!check_errors(token_lst))
-		{
-			handle_here_docs(token_lst, env);
-			print_tokens(token_lst);
-		}
+		// if (!check_errors(token_lst))
+		// {
+		// 	handle_here_docs(token_lst, env);
+		// }
+		token_lst = parse_shell(shell);
+		print_tokens(token_lst);
 
 		free(shell);
 		free(prompt);
-		free_all_tokens(&token_lst);
+		// free_all_tokens(&token_lst);
 	}
 	return (0);
 }

@@ -2,11 +2,11 @@
 
 t_token_types	get_t_type(char *str)
 {
-	if (!ft_strncmp(str, "'", 1))
-		return (SINGLE_QUOTE);
-	else if (!ft_strncmp(str, "\"", 1))
-		return (DOUBLE_QUOTE);
-	else if (!ft_strncmp(str, "<<", 2))
+	// if (!ft_strncmp(str, "'", 1))
+	// 	return (SINGLE_QUOTE);
+	// else if (!ft_strncmp(str, "\"", 1))
+	// 	return (DOUBLE_QUOTE);
+	if (!ft_strncmp(str, "<<", 2))
 		return (HERE_DOC);
 	else if (!ft_strncmp(str, ">>", 2))
 		return (REDIRECT_APPEND);
@@ -20,10 +20,10 @@ t_token_types	get_t_type(char *str)
 		return (OR);
 	else if (!ft_strncmp(str, "|", 1))
 		return (PIPE);
-	else if (!ft_strncmp(str, "(", 1))
-		return (OPEN_QUOTE);
-	else if (!ft_strncmp(str, ")", 1))
-		return (CLOSE_QUOTE);
+	// else if (!ft_strncmp(str, "(", 1))
+	// 	return (OPEN_QUOTE);
+	// else if (!ft_strncmp(str, ")", 1))
+	// 	return (CLOSE_QUOTE);
 	// else if (!ft_strncmp(str, "$", 1))
 	// 	return (SIMPLE_CMD);
 	// else if (!ft_strncmp(str, "*", 1))

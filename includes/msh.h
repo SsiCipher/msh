@@ -53,6 +53,14 @@ typedef struct s_dir
 	int		length;
 }	t_dir;
 
+typedef struct s_ast
+{
+	t_token_types	type;
+	char			*value;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}	t_ast;
+
 // =================== src/env.c
 
 t_env			*copy_env(char **envp);
@@ -86,5 +94,9 @@ bool			check_errors(t_token *token_lst);
 // =================== src/handle_here_doc.c
 
 void			handle_here_docs(t_token *token_lst, t_env *env);
+
+// =================== src/tokenize.c
+
+t_token		*parse_shell(char *shell);
 
 #endif

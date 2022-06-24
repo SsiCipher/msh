@@ -14,6 +14,7 @@
 # include <readline/history.h>
 
 # include "libft.h"
+# include "get_next_line.h"
 
 typedef struct s_env
 {
@@ -81,5 +82,9 @@ char			*expand_wildcard(char *pattern, char *path);
 // =================== src/error_check.c
 
 bool			check_errors(t_token *token_lst);
+
+// =================== src/handle_here_doc.c
+
+void			handle_here_docs(t_token *token_lst, t_env *env);
 
 #endif

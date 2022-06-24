@@ -32,6 +32,7 @@
   - [ ] find a convenient way to display errors
   - [ ] start checking cmd syntax & display errors
 - [ ] start a heredoc + var expansion inside
-  - [ ] handle here_docs + variable expansion in it
+  - [x] handle here_docs
+  - [ ] variable expansion in here_docs
   - [ ] multiple here_docs for the same cmd
 - [ ] build the AST and start executing

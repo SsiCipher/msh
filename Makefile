@@ -8,10 +8,10 @@ LIBS		= -Llibs -lft -lgnl -lreadline
 all: libs $(NAME)
 
 libs:
-	make -C libs/libft
-	make -C libs/get_next_line
-	cp libs/libft/libft.a libs
-	cp libs/get_next_line/libgnl.a libs
+	@make -C libs/libft &>/dev/null
+	@cp libs/libft/libft.a libs
+	@make -C libs/get_next_line &>/dev/null
+	@cp libs/get_next_line/libgnl.a libs
 
 $(NAME): $(SRCS) msh.c
 	$(CC) $(FLAGS) $(INCS) $(SRCS) msh.c $(LIBS) -o $(NAME)

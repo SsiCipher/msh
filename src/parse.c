@@ -1,6 +1,6 @@
 #include "msh.h"
 
-t_token_types	get_t_type(char *str)
+t_type	tkn_type(char *str)
 {
 	// if (!ft_strncmp(str, "'", 1))
 	// 	return (SINGLE_QUOTE);
@@ -32,7 +32,7 @@ t_token_types	get_t_type(char *str)
 		return (SIMPLE_CMD);
 }
 
-int		get_t_length(t_token_types type)
+int		tkn_length(t_type type)
 {
 	if (
 		type == HERE_DOC
@@ -44,7 +44,7 @@ int		get_t_length(t_token_types type)
 	return (1);
 }
 
-t_token	*create_token(char *content, t_token_types type, int length)
+t_token	*create_token(char *content, t_type type, int length)
 {
 	t_token	*new_token;
 
@@ -73,7 +73,7 @@ void	push_token(t_token **lst, t_token *new_token)
 	}
 }
 
-void	free_all_tokens(t_token **tokens_lst)
+void	free_tokens(t_token **tokens_lst)
 {
 	t_token *curr = *tokens_lst;
 	while (curr != NULL)
@@ -83,39 +83,4 @@ void	free_all_tokens(t_token **tokens_lst)
 		curr = curr->next;
 	}
 	*tokens_lst = NULL;
-}
-
-void	tokenize_shell(char *str, t_token **tokens)
-{
-	int		i = 0;
-
-	while (str[i])
-	{
-		while (ft_isspace(str[i]))
-			i++;
-		if (str[i] == '\0')
-			return ;
-
-		t_token_types t = get_t_type(str + i);
-		if (t == SIMPLE_CMD)
-		{
-			int cmd_length = 0;
-			while (
-				get_t_type(str + i + cmd_length) == SIMPLE_CMD
-				&& !ft_isspace(str[i + cmd_length]) && str[i + cmd_length] != '\0'
-			)
-				cmd_length++;
-			push_token(tokens, create_token(str + i, SIMPLE_CMD, cmd_length));
-			i += cmd_length;
-		}
-		else
-		{
-			int tok_len = get_t_length(t);
-			int quotes_length = (t == SINGLE_QUOTE || t == DOUBLE_QUOTE);
-			while (get_t_type(str + i + quotes_length) != t && str[i + quotes_length] != '\0')
-				quotes_length++;
-			push_token(tokens, create_token(str + i, t, tok_len + quotes_length));
-			i += tok_len + quotes_length;
-		}
-	}
 }

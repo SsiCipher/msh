@@ -22,7 +22,7 @@ typedef struct s_env
 	size_t		length;
 }	t_env;
 
-typedef enum e_token_types {
+typedef enum e_type {
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE,
 	REDIRECT_IN,
@@ -37,12 +37,12 @@ typedef enum e_token_types {
 	SIMPLE_CMD,
 	OPEN_QUOTE,
 	CLOSE_QUOTE
-}	t_token_types;
+}	t_type;
 
 typedef struct s_token
 {
 	char			*content;
-	t_token_types	type;
+	t_type	type;
 	int				length;
 	struct s_token	*next;
 }	t_token;
@@ -55,7 +55,7 @@ typedef struct s_dir
 
 typedef struct s_ast
 {
-	t_token_types	type;
+	t_type	type;
 	char			*value;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -63,37 +63,36 @@ typedef struct s_ast
 
 // =================== src/env.c
 
-t_env			*copy_env(char **envp);
-void			free_env(t_env **env);
-char			*get_env_var(t_env *env, char *var_name);
+t_env		*copy_env(char **envp);
+void		free_env(t_env **env);
+char		*get_env_var(t_env *env, char *var_name);
 
 // =================== src/parse.c
 
-t_token_types	get_t_type(char *str);
-int				get_t_length(t_token_types type);
-t_token			*create_token(char *content, t_token_types type, int length);
-void			push_token(t_token **lst, t_token *new_token);
-void			free_all_tokens(t_token **tokens_lst);
-void			tokenize_shell(char *str, t_token **tokens);
+t_type		tkn_type(char *str);
+int			tkn_length(t_type type);
+t_token		*create_token(char *content, t_type type, int length);
+void		push_token(t_token **lst, t_token *new_token);
+void		free_tokens(t_token **tokens_lst);
 
 // =================== src/var_expantion.c
 
-char			*ft_find_n_replace(char *str, char *find, char *replace);
-char			*expand_vars(char *str, t_env *env);
+char		*ft_find_n_replace(char *str, char *find, char *replace);
+char		*expand_vars(char *str, t_env *env);
 
 // =================== src/star_expantion.c
 
-t_dir			*read_dir_content(char *dir_path);
-bool			match_wildcard(char *pattern, char *text);
-char			*expand_wildcard(char *pattern, char *path);
+t_dir		*read_dir_content(char *dir_path);
+bool		match_wildcard(char *pattern, char *text);
+char		*expand_wildcard(char *pattern, char *path);
 
 // =================== src/error_check.c
 
-bool			check_errors(t_token *token_lst);
+bool		check_errors(t_token *token_lst);
 
 // =================== src/handle_here_doc.c
 
-void			handle_here_docs(t_token *token_lst, t_env *env);
+void		handle_here_docs(t_token *token_lst, t_env *env);
 
 // =================== src/tokenize.c
 

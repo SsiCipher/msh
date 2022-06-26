@@ -15,9 +15,10 @@ bool	is_meta_char(t_token_types type)
 
 t_token		*parse_shell(char *shell)
 {
-	int		i = 0;
+	int		i;
 	t_token	*tokens;
 
+	i = 0;
 	tokens = NULL;
 	while (shell[i])
 	{
@@ -33,10 +34,13 @@ t_token		*parse_shell(char *shell)
 			while (
 				get_t_type(&shell[i + cmd_len]) == SIMPLE_CMD
 				&& !is_meta_char(get_t_type(&shell[i + cmd_len]))
-				&& shell[i + cmd_len] != '\0'
+				&& shell[i + cmd_len]
 			)
 				cmd_len++;
-			push_token(&tokens, create_token(&shell[i], SIMPLE_CMD, cmd_len));
+			int spaces = 0;
+			while (ft_isspace(shell[i + cmd_len - spaces - 1]))
+				spaces++;
+			push_token(&tokens, create_token(&shell[i], SIMPLE_CMD, cmd_len - spaces));
 			i += cmd_len;
 		}
 		else

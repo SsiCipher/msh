@@ -63,9 +63,9 @@ void	handle_expansions(t_token *token_lst, t_env *env)
 int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
-	t_token	*token_lst;
 	char	*shell;
 	char	*prompt;
+	t_token	*token_lst;
 
 	(void)argc;
 	(void)argv;
@@ -88,7 +88,7 @@ int	main(int argc, char **argv, char **envp)
 
 		free(shell);
 		free(prompt);
-		// free_all_tokens(&token_lst);
+		free_all_tokens(&token_lst);
 	}
 	return (0);
 }

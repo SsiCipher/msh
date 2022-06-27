@@ -1,4 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error_check.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
+/*   Updated: 2022/06/27 06:08:06 by yanab            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "msh.h"
+
+/**
+ * Check tokens for syntax errors
+ * 
+ * @param	expected the expected token after
+ * @param	tkn_content the content of the token
+ * @return	true always
+ */
+bool	syntax_error(char *expected, char *tkn_content)
+{
+	printf(
+		"msh: syntax error: expected a %s after %s\n",
+		expected,
+		tkn_content);
+	return (true);
+}
 
 /**
  * Check tokens for syntax errors
@@ -8,26 +36,22 @@
  */
 bool	check_errors(t_token *token_lst)
 {
-	t_token	*tk = token_lst;
+	t_token	*tk;
 
+	tk = token_lst;
 	while (tk)
 	{
 		if (
-			(tk->type == REDIRECT_IN || tk->type == REDIRECT_OUT || tk->type == REDIRECT_APPEND)
+			(tk->type == REDIRECT_IN || tk->type == REDIRECT_OUT
+				|| tk->type == REDIRECT_APPEND)
 			&& (tk->next == NULL || tk->next->type != SIMPLE_CMD)
 		)
-		{
-			printf("msh: syntax error: expected a file after %s\n", tk->content);
-			return (true);
-		}
+			return (syntax_error("file", tk->content));
 		else if (
-			(tk->type == PIPE || tk->type == AND || tk->type == OR) 
+			(tk->type == PIPE || tk->type == AND || tk->type == OR)
 			&& (tk->next == NULL || tk->next->type != SIMPLE_CMD)
 		)
-		{
-			printf("msh: syntax error: expected a command after %s\n", tk->content);
-			return (true);
-		}
+			return (syntax_error("command", tk->content));
 		tk = tk->next;
 	}
 	return (false);

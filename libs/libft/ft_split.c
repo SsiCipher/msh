@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/14 14:13:23 by yanab             #+#    #+#             */
-/*   Updated: 2022/01/24 08:09:54 by cipher           ###   ########.fr       */
+/*   Updated: 2022/06/27 06:10:44 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,12 @@ static int	ft_count_parts(char const *str, char sep)
 		return (0);
 	while (str[i])
 	{
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			i++;
+			while (str[i] && str[i] != '\'' && str[i] != '"')
+				i++;
+		}
 		if (str[i] == sep && str[i + 1] != sep && str[i + 1] != '\0')
 			count++;
 		i++;
@@ -41,16 +47,20 @@ static char	*ft_nth_part(char const *str, char sep, int n)
 
 	i = 0;
 	count = 1;
-	if (*str == '\0')
-		return (&((char *)str)[0]);
-	while (str[i] == sep)
+	while (str[i] && str[i] == sep)
 		i++;
-	if (str[i] == '\0')
+	if (str[0] == '\0' || str[i] == '\0')
 		return (&((char *)str)[0]);
 	while (str[i])
 	{
 		if (count == n)
 			return (&((char *)str)[i]);
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			i++;
+			while (str[i] && str[i] != '\'' && str[i] != '"')
+				i++;
+		}
 		if (str[i] == sep && str[i + 1] != sep && str[i + 1] != '\0')
 			count++;
 		i++;
@@ -64,7 +74,18 @@ static int	ft_partlen(char *part_start, char sep)
 
 	len = 0;
 	while (part_start[len] && part_start[len] != sep)
+	{
+		if (part_start[len] == '\'' || part_start[len] == '"')
+		{
+			len++;
+			while (part_start[len]
+				&& part_start[len] != '\''
+				&& part_start[len] != '"'
+			)
+				len++;
+		}
 		len++;
+	}
 	return (len);
 }
 

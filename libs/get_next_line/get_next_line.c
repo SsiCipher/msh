@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 12:25:05 by yanab             #+#    #+#             */
-/*   Updated: 2021/12/17 14:14:00 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/27 06:11:10 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*extract_rest(char *str)
 	return (rest);
 }
 
-void fill_buff(int fd, char **rest)
+void	fill_buff(int fd, char **rest)
 {
 	int		read_bytes;
 	char	*buff;

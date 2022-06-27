@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   msh.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
+/*   Updated: 2022/06/27 05:56:11 by yanab            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MSH_H
 # define MSH_H
 
@@ -42,7 +54,7 @@ typedef enum e_type {
 typedef struct s_token
 {
 	char			*content;
-	t_type	type;
+	t_type			type;
 	int				length;
 	struct s_token	*next;
 }	t_token;
@@ -55,7 +67,7 @@ typedef struct s_dir
 
 typedef struct s_ast
 {
-	t_type	type;
+	t_type			type;
 	char			*value;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -67,24 +79,30 @@ t_env		*copy_env(char **envp);
 void		free_env(t_env **env);
 char		*get_env_var(t_env *env, char *var_name);
 
-// =================== src/parse.c
+// =================== src/lst.c
 
-t_type		tkn_type(char *str);
-int			tkn_length(t_type type);
 t_token		*create_token(char *content, t_type type, int length);
-void		push_token(t_token **lst, t_token *new_token);
+void		push_token(t_token **tokens_lst, t_token *new_token);
 void		free_tokens(t_token **tokens_lst);
 
-// =================== src/var_expantion.c
+// =================== src/parser.c
+
+t_type		tkn_type(char *str);
+bool		is_meta_char(t_type type);
+int			tkn_length(t_type type);
+t_token		*parse_shell(char *str);
+
+// =================== src/expantions.c
+
+char		*expand_vars(char *str, t_env *env);
+char		*expand_wildcard(char *pattern, char *path);
+void		expand_shell(t_token *token_lst, t_env *env);
+
+// =================== src/expantions_utils.c
 
 char		*ft_find_n_replace(char *str, char *find, char *replace);
-char		*expand_vars(char *str, t_env *env);
-
-// =================== src/star_expantion.c
-
 t_dir		*read_dir_content(char *dir_path);
 bool		match_wildcard(char *pattern, char *text);
-char		*expand_wildcard(char *pattern, char *path);
 
 // =================== src/error_check.c
 
@@ -93,9 +111,5 @@ bool		check_errors(t_token *token_lst);
 // =================== src/handle_here_doc.c
 
 void		handle_here_docs(t_token *token_lst, t_env *env);
-
-// =================== src/tokenize.c
-
-t_token		*parse_shell(char *shell);
 
 #endif

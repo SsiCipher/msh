@@ -8,9 +8,9 @@ LIBS		= -Llibs -lft -lgnl -lreadline
 all: libs $(NAME)
 
 libs:
-	@make -C libs/libft &>/dev/null
+	@make -C libs/libft
 	@cp libs/libft/libft.a libs
-	@make -C libs/get_next_line &>/dev/null
+	@make -C libs/get_next_line
 	@cp libs/get_next_line/libgnl.a libs
 
 $(NAME): $(SRCS) msh.c

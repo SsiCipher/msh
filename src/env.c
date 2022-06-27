@@ -1,5 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
+/*   Updated: 2022/06/27 06:01:34 by yanab            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "msh.h"
 
+/**
+ * Create a copy of the envp variable
+ * 
+ * @param	envp the list of environment variables to duplicate
+ * @return	t_env struct that holds the new copy of the envp
+ */
 t_env	*copy_env(char **envp)
 {
 	int		i;
@@ -18,6 +36,11 @@ t_env	*copy_env(char **envp)
 	return (new_envp);
 }
 
+/**
+ * Free the allocated memory for the copied envp
+ * 
+ * @param	env t_env struct that holds the new copy of the envp
+ */
 void	free_env(t_env **env)
 {
 	int		i;
@@ -30,6 +53,13 @@ void	free_env(t_env **env)
 	*env = NULL;
 }
 
+/**
+ * Searches for a variable in the env
+ * 
+ * @param	env t_env struct that holds all the environment variables
+ * @param	var_name the name of the variable to search for
+ * @return	the value of the variable if found or NULL
+ */
 char	*get_env_var(t_env *env, char *var_name)
 {
 	size_t	i;

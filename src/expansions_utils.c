@@ -1,4 +1,43 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expansions_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
+/*   Updated: 2022/06/27 06:01:49 by yanab            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "msh.h"
+
+/**
+ * find and replace the first occurence of 'find' in str by 'replace'
+ * 
+ * @param	str the string to use
+ * @param	find the search word
+ * @param	replace the word to repleace it with
+ * @return	the new string allocated in memory
+ */
+char	*ft_find_n_replace(char *str, char *find, char *replace)
+{
+	char	*find_i;
+	char	*start;
+	char	*end;
+	char	*output;
+
+	find_i = ft_strstr(str, find);
+	start = ft_substr(str, 0, find_i - str);
+	end = ft_substr(
+			str,
+			(unsigned int)(find_i - str) + ft_strlen(find),
+			ft_strlen(str));
+	output = ft_strjoin_many(3, start, replace, end);
+	free(start);
+	free(end);
+	return (output);
+}
 
 /**
  * Read all the files in a directory into the t_dir struct
@@ -86,48 +125,4 @@ bool	match_wildcard(char *pattern, char *text)
 	if (j == m)
 		return (true);
 	return (false);
-}
-
-int cmp_names(const void* p1, const void* p2)
-{
-	return (
-		ft_strcasecmp(*(const char **)p1, *(const char **)p2)
-	);
-}
-
-/**
- * get the files and directories that match pattern in path
- * 
- * @param	pattern the pattern to match
- * @param	path the path to search
- * @return	a string of names concatenated with space ' '
- */
-char	*expand_wildcard(char *pattern, char *path)
-{
-	int		i;
-	char	*output;
-	t_dir	*dir;
-	char	*temp;
-
-	i = -1;
-	output = NULL;
-	dir = read_dir_content(path);
-	qsort(dir->content, dir->length, sizeof(char *), cmp_names);
-	while (dir->content[++i])
-	{
-		if (match_wildcard(pattern, dir->content[i]))
-		{
-			temp = output;
-			if (!output)
-				output = ft_strjoin_many(1, dir->content[i]);
-			else
-				output = ft_strjoin_many(3, output, " ", dir->content[i]);
-			free(temp);
-		}
-	}
-	for (int i = 0; i < dir->length; i++)
-		free(dir->content[i]);
-	free(dir->content);
-	free(dir);
-	return (output);
 }

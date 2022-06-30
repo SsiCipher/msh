@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/29 21:28:25 by cipher           ###   ########.fr       */
+/*   Updated: 2022/06/30 10:06:27 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,44 +23,28 @@ char	*expand_vars(char *str, t_env *env)
 {
 	int		i;
 	char	*var;
-	int		var_len;
-	char	*var_value;
+	char	*expanded_str;
 
 	i = 0;
-	while (str[i])
+	expanded_str = ft_strdup(str);
+	while (expanded_str[i])
 	{
-		var_len = 0;
-		if (str[i] == '$')
-		{
+		if (expanded_str[i] != '$')
 			i += 1;
-			while (
-				ft_isalnum(str[i + var_len])
-				|| str[i + var_len] == '_'
-			)
-				var_len += 1;
-			if (var_len == 0)
-				i++;
+		else
+		{
+			var = extract_var(&expanded_str[i]);
+			if (!var)
+				i += 1;
 			else
 			{
-				var = ft_substr(str, i - 1, var_len + 1);
-				var_value = get_env_var(env, var + 1);
-				str = ft_find_n_replace(str, var, var_value);
-				free(var);
-				free(var_value);
-				i += var_len;
+				replace_var(&expanded_str, var, env);
+				i += ft_strlen(var);
 			}
+			free(var);
 		}
-		else
-			i++;
 	}
-	return (str);
-}
-
-int	cmp_names(const void *p1, const void *p2)
-{
-	return (
-		ft_strcasecmp(*(const char **)p1, *(const char **)p2)
-	);
+	return (expanded_str);
 }
 
 /**
@@ -80,7 +64,6 @@ char	*expand_wildcard(char *pattern, char *path)
 	i = -1;
 	output = NULL;
 	dir = read_dir_content(path);
-	qsort(dir->content, dir->length, sizeof(char *), cmp_names);
 	while (dir->content[++i])
 	{
 		if (match_wildcard(pattern, dir->content[i]))
@@ -109,30 +92,28 @@ char	*expand_wildcard(char *pattern, char *path)
  */
 void	expand_shell(t_token *token_lst, t_env *env)
 {
-	t_token	*t;
 	char	*tmp;
 
-	t = token_lst;
-	while (t)
+	while (token_lst)
 	{
 		if (
-			(t->type == DOUBLE_QUOTE || t->type == SIMPLE_CMD)
-			&& ft_memchr(t->content, '$', t->length)
+			(token_lst->type == DOUBLE_QUOTE || token_lst->type == SIMPLE_CMD)
+			&& ft_memchr(token_lst->content, '$', token_lst->length)
 		)
 		{
-			tmp = t->content;
-			t->content = expand_vars(t->content, env);
+			tmp = token_lst->content;
+			token_lst->content = expand_vars(token_lst->content, env);
 			free(tmp);
 		}
 		else if (
-			t->type == SIMPLE_CMD
-			&& ft_memchr(t->content, '*', t->length)
+			token_lst->type == SIMPLE_CMD
+			&& ft_memchr(token_lst->content, '*', token_lst->length)
 		)
 		{
-			tmp = t->content;
-			t->content = expand_wildcard(t->content, "./");
+			tmp = token_lst->content;
+			token_lst->content = expand_wildcard(token_lst->content, "./");
 			free(tmp);
 		}
-		t = t->next;
+		token_lst = token_lst->next;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/29 20:52:38 by cipher           ###   ########.fr       */
+/*   Updated: 2022/06/30 12:42:55 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_token	*create_token(char *content, t_type type, int length)
 	new_token->type = type;
 	new_token->length = length;
 	new_token->next = NULL;
+	new_token->prev = NULL;
 	return (new_token);
 }
 
@@ -51,8 +52,45 @@ void	push_token(t_token **tokens_lst, t_token *new_token)
 		end_list = *tokens_lst;
 		while (end_list->next)
 			end_list = end_list->next;
+		new_token->prev = end_list;
 		end_list->next = new_token;
 	}
+}
+
+/**
+ * Delete a token from the list and free its content
+ * 
+ * @param	token the token to delete
+ */
+void	delete_token(t_token *token)
+{
+	if (!token)
+		return ;
+
+	if (token->prev)
+		token->prev->next = token->next;
+	if (token->next)
+		token->next->prev = token->prev;
+	free(token->content);
+	free(token);
+}
+
+/**
+ * Get the last token in the list of tokens
+ * 
+ * @param	tokens_lst the list of tokens
+ * @return	t_token struct that holds the last token
+ */
+t_token	*last_token(t_token *tokens_lst)
+{
+	t_token	*tk;
+
+	if (!tokens_lst)
+		return (NULL);
+	tk = tokens_lst;
+	while (tk->next)
+		tk = tk->next;
+	return (tk);
 }
 
 /**

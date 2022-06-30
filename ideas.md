@@ -31,13 +31,13 @@
 - [ ] syntax validation check
   - [ ] find a convenient way to display errors
   - [ ] start checking cmd syntax & display errors
-- [ ] start a heredoc + var expansion inside
+- [x] start a heredoc + var expansion inside
   - [x] handle here_docs
-  - [ ] variable expansion in here_docs
-  - [ ] multiple here_docs for the same cmd
+  - [x] variable expansion in here_docs
+  - [x] multiple here_docs for the same cmd
 - [ ] build the AST and start executing
 
 # TODO
-- [ ] Check double free in (echo $"USER")
-- [ ] turn token to a bidirectional node
-- [ ] 
+- [x] Check double free in (echo $"USER")
+- [x] turn token to a bidirectional node
+- [x] handle quoted limiter for here_doc + var expansion inside

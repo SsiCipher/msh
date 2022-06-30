@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/29 20:52:22 by cipher           ###   ########.fr       */
+/*   Updated: 2022/06/30 12:44:39 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,34 @@ char	*init_shell(t_env *env)
 	return (shell);
 }
 
+char *get_type_name(t_type type)
+{
+	if (type == SINGLE_QUOTE)
+		return ("SINGLE_QUOTE");
+	if (type == DOUBLE_QUOTE)
+		return ("DOUBLE_QUOTE");
+	if (type == HERE_DOC)
+		return ("HERE_DOC");
+	if (type == REDIRECT_APPEND)
+		return ("REDIRECT_APPEND");
+	if (type == REDIRECT_IN)
+		return ("REDIRECT_IN");
+	if (type == REDIRECT_OUT)
+		return ("REDIRECT_OUT");
+	if (type == AND)
+		return ("AND");
+	if (type == OR)
+		return ("OR");
+	if (type == PIPE)
+		return ("PIPE");
+	if (type == OPEN_QUOTE)
+		return ("OPEN_QUOTE");
+	if (type == CLOSE_QUOTE)
+		return ("CLOSE_QUOTE");
+	else
+		return ("SIMPLE_CMD");
+}
+
 void	print_tokens(t_token *tokens_lst)
 {
 	t_token	*curr_tk;
@@ -52,7 +80,7 @@ void	print_tokens(t_token *tokens_lst)
 	curr_tk = tokens_lst;
 	while (curr_tk)
 	{
-		printf("type = [%u]\ncontent = [%s]\n", curr_tk->type, curr_tk->content);
+		printf("content[%d] = [%s]\t\t\t{%s}\n", curr_tk->length, curr_tk->content, get_type_name(curr_tk->type));
 		curr_tk = curr_tk->next;
 	}
 }

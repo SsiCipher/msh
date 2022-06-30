@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:01:49 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/30 10:06:30 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,69 @@ char	*ft_find_n_replace(char *str, char *find, char *replace)
 	char	*end;
 	char	*output;
 
+	if (!str || !find)
+		return (NULL);
 	find_i = ft_strstr(str, find);
 	start = ft_substr(str, 0, find_i - str);
 	end = ft_substr(
 			str,
 			(unsigned int)(find_i - str) + ft_strlen(find),
 			ft_strlen(str));
+	if (!replace)
+		replace = "";
 	output = ft_strjoin_many(3, start, replace, end);
 	free(start);
 	free(end);
 	return (output);
+}
+
+/**
+ * extract a variable from a string
+ * 
+ * @param	str the string to extraxt from
+ * @return	the variable of NULL if it's just a '$' 
+ */
+char	*extract_var(char *str)
+{
+	char	*name;
+	int		name_len;
+
+	name_len = 0;
+	while (
+		ft_isalnum(str[name_len + 1])
+		|| str[name_len + 1] == '_'
+	)
+		name_len += 1;
+	if (name_len == 0)
+		return (NULL);
+	name = ft_substr(str, 0, name_len + 1);
+	return (name);
+}
+
+/**
+ * replace the given variable in a string
+ * 
+ * @param	str the string to use
+ * @param	var the variable to replace
+ * @param	env t_env struct that holds all the environment variables
+ */
+void	replace_var(char **str, char *var, t_env *env)
+{
+	char	*temp;
+	char	*var_value;
+
+	var_value = get_env_var(env, var + 1);
+	temp = *str;
+	*str = ft_find_n_replace(*str, var, var_value);
+	free(temp);
+	free(var_value);
+}
+
+int	cmp_names(const void *p1, const void *p2)
+{
+	return (
+		ft_strcmp(*(const char **)p1, *(const char **)p2)
+	);
 }
 
 /**
@@ -69,6 +122,7 @@ t_dir	*read_dir_content(char *dir_path)
 			sizeof(char *) * dir->length, sizeof(char *) * (dir->length + 1));
 	dir->content[dir->length] = NULL;
 	closedir(dir_stream);
+	qsort(dir->content, dir->length, sizeof(char *), cmp_names);
 	return (dir);
 }
 
@@ -122,7 +176,5 @@ bool	match_wildcard(char *pattern, char *text)
 	}
 	while (j < m && pattern[j] == '*')
 		j++;
-	if (j == m)
-		return (true);
-	return (false);
+	return (j == m);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/29 20:53:04 by cipher           ###   ########.fr       */
+/*   Updated: 2022/06/30 12:45:11 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_token
 	t_type			type;
 	int				length;
 	struct s_token	*next;
+	struct s_token	*prev;
 }	t_token;
 
 typedef struct s_dir
@@ -83,6 +84,8 @@ char		*get_env_var(t_env *env, char *var_name);
 
 t_token		*create_token(char *content, t_type type, int length);
 void		push_token(t_token **tokens_lst, t_token *new_token);
+void		delete_token(t_token *token);
+t_token		*last_token(t_token *tokens_lst);
 void		free_tokens(t_token **tokens_lst);
 
 // =================== src/parser.c
@@ -101,6 +104,8 @@ void		expand_shell(t_token *token_lst, t_env *env);
 // =================== src/expantions_utils.c
 
 char		*ft_find_n_replace(char *str, char *find, char *replace);
+char		*extract_var(char *str);
+void		replace_var(char **str, char *var, t_env *env);
 t_dir		*read_dir_content(char *dir_path);
 bool		match_wildcard(char *pattern, char *text);
 

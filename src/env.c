@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:01:34 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/30 09:18:01 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ char	*get_env_var(t_env *env, char *var_name)
 	size_t	i;
 	char	*var_value;
 
-	i = 0;
+	i = -1;
 	var_name = ft_strjoin(var_name, "=");
-	while (i < env->length)
+	while (++i < env->length)
 	{
 		if (!ft_strncmp(env->content[i], var_name, ft_strlen(var_name)))
 		{
@@ -76,7 +76,6 @@ char	*get_env_var(t_env *env, char *var_name)
 			free(var_name);
 			return (var_value);
 		}
-		i++;
 	}
 	free(var_name);
 	return (NULL);

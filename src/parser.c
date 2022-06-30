@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:33:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:06:03 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/30 12:42:59 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,7 @@ t_token	*parse_shell(char *str)
 {
 	int			i;
 	t_type		t;
-	int			cmd_len;
-	int			quotes_len;
+	int			len;
 	t_token		*tokens_lst;
 
 	i = 0;
@@ -104,32 +103,40 @@ t_token	*parse_shell(char *str)
 		while (ft_isspace(str[i]))
 			i++;
 		if (str[i] == '\0')
-			return (NULL);
+			break ;
 		t = tkn_type(str + i);
-		if (t == SIMPLE_CMD)
+		if (tokens_lst && last_token(tokens_lst)->type == HERE_DOC)
 		{
-			cmd_len = 0;
+			len = 0;
+			while (str[i + len] && !isspace(str[i + len]))
+				len++;
+			push_token(&tokens_lst, create_token(str + i, SIMPLE_CMD, len));
+			i += len;
+		}
+		else if (t == SIMPLE_CMD)
+		{
+			len = 0;
 			while (
-				tkn_type(str + i + cmd_len) == SIMPLE_CMD
-				&& !ft_isspace(str[i + cmd_len]) && str[i + cmd_len] != '\0'
+				tkn_type(str + i + len) == SIMPLE_CMD
+				&& !ft_isspace(str[i + len]) && str[i + len] != '\0'
 			)
-				cmd_len++;
-			push_token(&tokens_lst, create_token(str + i, SIMPLE_CMD, cmd_len));
-			i += cmd_len;
+				len++;
+			push_token(&tokens_lst, create_token(str + i, SIMPLE_CMD, len));
+			i += len;
 		}
 		else
 		{
-			quotes_len = (t == SINGLE_QUOTE || t == DOUBLE_QUOTE);
+			len = (t == SINGLE_QUOTE || t == DOUBLE_QUOTE);
 			while (
-				tkn_type(&str[i + quotes_len]) != t
-				&& str[i + quotes_len] != '\0'
+				tkn_type(&str[i + len]) != t
+				&& str[i + len] != '\0'
 			)
-				quotes_len++;
+				len++;
 			push_token(
 				&tokens_lst,
-				create_token(str + i, t, tkn_length(t) + quotes_len)
+				create_token(str + i, t, tkn_length(t) + len)
 				);
-			i += tkn_length(t) + quotes_len;
+			i += tkn_length(t) + len;
 		}
 	}
 	return (tokens_lst);

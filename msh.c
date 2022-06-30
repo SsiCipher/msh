@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   msh.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:14:56 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/29 20:52:22 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-char	*create_prompt(t_env *env)
+char	*create_prompt_str(t_env *env)
 {
 	char	*prompt;
 	char	*user;
@@ -31,6 +31,20 @@ char	*create_prompt(t_env *env)
 	return (prompt);
 }
 
+char	*init_shell(t_env *env)
+{
+	char *prompt;
+	char *shell;
+
+	prompt = create_prompt_str(env);
+	shell = readline(prompt);
+	free(prompt);
+	if (!shell)
+		exit(1);
+	add_history(shell);
+	return (shell);
+}
+
 void	print_tokens(t_token *tokens_lst)
 {
 	t_token	*curr_tk;
@@ -47,7 +61,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
 	char	*shell;
-	char	*prompt;
 	t_token	*token_lst;
 
 	(void)argc;
@@ -55,9 +68,7 @@ int	main(int argc, char **argv, char **envp)
 	env = copy_env(envp);
 	while (true)
 	{
-		prompt = create_prompt(env);
-		shell = readline(prompt);
-		add_history(shell);
+		shell = init_shell(env);
 		token_lst = parse_shell(shell);
 		expand_shell(token_lst, env);
 		if (!check_errors(token_lst))
@@ -65,7 +76,6 @@ int	main(int argc, char **argv, char **envp)
 			handle_here_docs(token_lst, env);
 			print_tokens(token_lst);
 		}
-		free(prompt);
 		free(shell);
 		free_tokens(&token_lst);
 	}

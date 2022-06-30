@@ -36,3 +36,8 @@
   - [ ] variable expansion in here_docs
   - [ ] multiple here_docs for the same cmd
 - [ ] build the AST and start executing
+
+# TODO
+- [ ] Check double free in (echo $"USER")
+- [ ] turn token to a bidirectional node
+- [ ] 

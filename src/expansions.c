@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:01:59 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/29 21:28:25 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 char	*expand_vars(char *str, t_env *env)
 {
 	int		i;
-	int		var_len;
 	char	*var;
+	int		var_len;
 	char	*var_value;
 
 	i = 0;

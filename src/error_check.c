@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:08:06 by yanab            ###   ########.fr       */
+/*   Updated: 2022/06/29 21:22:47 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ bool	syntax_error(char *expected, char *tkn_content)
 		tkn_content);
 	return (true);
 }
+
+// bool	has_invalid_token(char *str)
+// {
+	
+// }
 
 /**
  * Check tokens for syntax errors
@@ -52,6 +57,20 @@ bool	check_errors(t_token *token_lst)
 			&& (tk->next == NULL || tk->next->type != SIMPLE_CMD)
 		)
 			return (syntax_error("command", tk->content));
+		else if (
+			tk->type == DOUBLE_QUOTE && ft_countchr(tk->content, '"') != 2
+		)
+			return (printf("msh: unclosed quotes: enter a matching \"\n"));
+		else if (
+			tk->type == SINGLE_QUOTE && ft_countchr(tk->content, '\'') != 2
+		)
+			return (printf("msh: unclosed quotes: enter a matching '\n"));
+		// else if (
+		// 	(tk->type == SIMPLE_CMD || tk->type == DOUBLE_QUOTE || tk->type == SINGLE_QUOTE)
+		// 	&& (ft_strchr(tk->content, ';') || ft_strchr(tk->content, '\\'))
+		// )
+		// 	return (printf("msh: invalid token: can't use \n"));
+			
 		tk = tk->next;
 	}
 	return (false);

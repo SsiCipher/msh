@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 10:08:12 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/01 12:12:22 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,24 @@
  * 
  * @param	expected the expected token after
  * @param	tkn_content the content of the token
- * @return	true always
+ * @return	always true
  */
-bool	syntax_error(char *expected, char *tkn_content)
+bool	print_error(char *error_type, char *expected, char *tkn_content)
 {
-	printf(
-		"msh: syntax error: expected a %s after %s\n",
-		expected,
-		tkn_content);
+	ft_putstr_fd("msh: ", 2);
+	ft_putstr_fd(error_type, 2);
+	ft_putstr_fd(" error: ", 2);
+	if (expected)
+	{
+		ft_putstr_fd("expected a ", 2);
+		ft_putstr_fd(expected, 2);
+	}
+	if (tkn_content)
+	{
+		ft_putstr_fd(" after ", 2);
+		ft_putstr_fd(tkn_content, 2);
+	}
+	ft_putchar_fd('\n', 2);
 	return (true);
 }
 
@@ -41,25 +51,27 @@ bool	check_errors(t_token *token_lst)
 	tk = token_lst;
 	while (tk)
 	{
-		if (
+		if (tk->type == HERE_DOC && (!(tk->next) || tk->next->type != SIMPLE_CMD))
+			return (print_error("syntax", "limiter", tk->content));
+		else if (
 			(tk->type == REDIRECT_IN || tk->type == REDIRECT_OUT
 				|| tk->type == REDIRECT_APPEND)
-			&& (tk->next == NULL || tk->next->type != SIMPLE_CMD)
+			&& (!(tk->next) || tk->next->type != SIMPLE_CMD)
 		)
-			return (syntax_error("file", tk->content));
+			return (print_error("syntax", "file", tk->content));
 		else if (
 			(tk->type == PIPE || tk->type == AND || tk->type == OR)
-			&& (tk->next == NULL || tk->next->type != SIMPLE_CMD)
+			&& (!(tk->next) || tk->next->type != SIMPLE_CMD)
 		)
-			return (syntax_error("command", tk->content));
+			return (print_error("syntax", "command", tk->content));
 		else if (
 			tk->type == DOUBLE_QUOTE && ft_countchr(tk->content, '"') != 2
 		)
-			return (printf("msh: unclosed quotes: enter a matching \"\n"));
+			return (print_error("syntax", "matching quote", NULL));
 		else if (
 			tk->type == SINGLE_QUOTE && ft_countchr(tk->content, '\'') != 2
 		)
-			return (printf("msh: unclosed quotes: enter a matching '\n"));
+			return (print_error("syntax", "matching quote", NULL));
 		tk = tk->next;
 	}
 	return (false);

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 12:45:11 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/01 12:05:42 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@
 
 # include "libft.h"
 # include "get_next_line.h"
-
-typedef struct s_env
-{
-	char		**content;
-	size_t		length;
-}	t_env;
 
 typedef enum e_type {
 	SINGLE_QUOTE,
@@ -59,6 +53,12 @@ typedef struct s_token
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
+
+typedef struct s_env
+{
+	char		**content;
+	size_t		length;
+}	t_env;
 
 typedef struct s_dir
 {
@@ -109,12 +109,14 @@ void		replace_var(char **str, char *var, t_env *env);
 t_dir		*read_dir_content(char *dir_path);
 bool		match_wildcard(char *pattern, char *text);
 
-// =================== src/error_check.c
-
-bool		check_errors(t_token *token_lst);
-
 // =================== src/handle_here_doc.c
 
 void		handle_here_docs(t_token *token_lst, t_env *env);
+char		*remove_quotes(char *limiter);
+
+// =================== src/error_check.c
+
+bool		print_error(char *error_type, char *expected, char *tkn_content);
+bool		check_errors(t_token *token_lst);
 
 #endif

@@ -6,64 +6,18 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 12:55:05 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/01 11:12:19 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-/*
-
-- [ ] empty here_doc
-- [ ] join content by \n
-- [ ] multiple here_docs
-- [ ] variable expansion
-
-*/
-
 /**
- * Handle the start and read of here_docs + variable expansions
+ * Remove all quotes from a string 
  * 
- * @param	token_list t_token struct containing the list of tokens
- * @param	env t_env struct containing all the environment variables
+ * @param	limiter the limiter string to remove quotes from
+ * @return	a new string with quotes removed
  */
-// void	handle_here_docs(t_token *token_lst, t_env *env)
-// {
-// 	t_token	*tk;
-// 	char	*temp;
-// 	char	*line;
-// 	char	*limiter;
-// 	char	*here_doc_content;
-
-// 	tk = token_lst;
-// 	while (tk)
-// 	{
-// 		here_doc_content = NULL;
-// 		if (tk->type == HERE_DOC)
-// 		{
-// 			limiter = tk->next->content;
-// 			line = readline("heredoc> ");
-// 			while (line)
-// 			{
-// 				if (
-// 					!ft_strncmp(line, limiter, ft_strlen(limiter))
-// 					&& *(line + ft_strlen(limiter)) == '\0'
-// 				)
-// 					break ;
-// 				temp = here_doc_content;
-// 				here_doc_content = ft_strjoin_many(3, here_doc_content, line, "\n");
-// 				free(temp);
-// 				free(line);
-// 				line = readline("heredoc> ");
-// 			}
-// 			free(tk->next->content);
-// 			if (here_doc_content)
-// 				tk->next->content = expand_vars(here_doc_content, env);
-// 		}
-// 		tk = tk->next;
-// 	}
-// }
-
 char	*remove_quotes(char *limiter)
 {
 	int		i;
@@ -87,6 +41,12 @@ char	*remove_quotes(char *limiter)
 	return (unquoted_limiter);
 }
 
+/**
+ * Handle the start and read of here_docs + variable expansions
+ * 
+ * @param	token_list t_token struct containing the list of tokens
+ * @param	env t_env struct containing all the environment variables
+ */
 void	handle_here_docs(t_token *token_lst, t_env *env)
 {
 	t_token	*tk;

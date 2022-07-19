@@ -36,6 +36,5 @@
 - [ ] build the AST and start executing
 
 # TODO
-- [x] Check double free in (echo $"USER")
-- [x] turn token to a bidirectional node
-- [x] handle quoted limiter for here_doc + var expansion inside
+- [ ] handle `e"$VAR"o sdfs` while VAR=cho
+- [ ] before executing open & create all in/out files before executing (to handle no cmd redirection)

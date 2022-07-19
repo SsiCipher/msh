@@ -80,7 +80,7 @@ void	print_tokens(t_token *tokens_lst)
 	curr_tk = tokens_lst;
 	while (curr_tk)
 	{
-		printf("content[%d] = [%s]\t\t\t{%s}\n", curr_tk->length, curr_tk->content, get_type_name(curr_tk->type));
+		printf("content[ %4d ] = [ %-20s ]\t\t{ %s }\n", curr_tk->length, curr_tk->content, get_type_name(curr_tk->type));
 		curr_tk = curr_tk->next;
 	}
 }

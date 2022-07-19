@@ -13,7 +13,7 @@ SRCS =	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c  \
 		ft_putendl_fd.c ft_putnbr_fd.c ft_puthex_fd.c ft_putbin_fd.c \
 		ft_every.c ft_any.c ft_abs.c ft_realloc.c ft_bsort.c \
 		ft_intlen.c ft_swap.c ft_qsort.c ft_countchr.c ft_strjoin_many.c \
-		ft_strcasecmp.c ft_strjoin_arr.c
+		ft_strcasecmp.c ft_strjoin_arr.c ft_indexof.c
 
 OBJS = $(SRCS:.c=.o)
 

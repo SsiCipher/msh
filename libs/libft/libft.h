@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/04 17:23:09 by marvin            #+#    #+#             */
-/*   Updated: 2021/11/04 17:23:09 by marvin           ###   ########.fr       */
+/*   Created: 2022/07/04 09:47:30 by cipher            #+#    #+#             */
+/*   Updated: 2022/07/04 09:47:30 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ int		ft_countchr(char *str, char c);
 char	*ft_strjoin_many(int strs_count, ...);
 int		ft_strcasecmp(const char *s1, const char *s2);
 char	*ft_strjoin_arr(char **arr);
+int		ft_indexof(char *str, char c);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/01 12:12:22 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/24 17:45:02 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ bool	check_errors(t_token *token_lst)
 	tk = token_lst;
 	while (tk)
 	{
-		if (tk->type == HERE_DOC && (!(tk->next) || tk->next->type != SIMPLE_CMD))
+		if (tk->type == HERE_DOC && (!(tk->next) || tk->next->type != CMD))
 			return (print_error("syntax", "limiter", tk->content));
 		else if (
 			(tk->type == REDIRECT_IN || tk->type == REDIRECT_OUT

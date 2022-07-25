@@ -3,14 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   expansions_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 10:06:30 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/24 15:37:23 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+/**
+ * extract a variable from a string
+ * 
+ * @param	str the string to extraxt from
+ * @return	the variable of NULL if it's just a '$' 
+ */
+char	*extract_var(char *str)
+{
+	int		name_len;
+
+	name_len = 0;
+	while (
+		ft_isalnum(str[name_len + 1])
+		|| str[name_len + 1] == '_'
+	)
+		name_len++;
+	if (name_len == 0)
+		return (NULL);
+	return (ft_substr(str, 0, name_len + 1));
+}
 
 /**
  * find and replace the first occurence of 'find' in str by 'replace'
@@ -20,20 +41,17 @@
  * @param	replace the word to repleace it with
  * @return	the new string allocated in memory
  */
-char	*ft_find_n_replace(char *str, char *find, char *replace)
+char	*ft_find_n_replace(char *str, int start_i, char *find, char *replace)
 {
-	char	*find_i;
 	char	*start;
 	char	*end;
 	char	*output;
 
 	if (!str || !find)
 		return (NULL);
-	find_i = ft_strstr(str, find);
-	start = ft_substr(str, 0, find_i - str);
+	start = ft_substr(str, 0, start_i);
 	end = ft_substr(
-			str,
-			(unsigned int)(find_i - str) + ft_strlen(find),
+			str, start_i + ft_strlen(find),
 			ft_strlen(str));
 	if (!replace)
 		replace = "";
@@ -44,45 +62,27 @@ char	*ft_find_n_replace(char *str, char *find, char *replace)
 }
 
 /**
- * extract a variable from a string
- * 
- * @param	str the string to extraxt from
- * @return	the variable of NULL if it's just a '$' 
- */
-char	*extract_var(char *str)
-{
-	char	*name;
-	int		name_len;
-
-	name_len = 0;
-	while (
-		ft_isalnum(str[name_len + 1])
-		|| str[name_len + 1] == '_'
-	)
-		name_len += 1;
-	if (name_len == 0)
-		return (NULL);
-	name = ft_substr(str, 0, name_len + 1);
-	return (name);
-}
-
-/**
  * replace the given variable in a string
  * 
  * @param	str the string to use
+ * @param	start index to start the replacement from
  * @param	var the variable to replace
  * @param	env t_env struct that holds all the environment variables
+ * @return	the length of the variable replaced
  */
-void	replace_var(char **str, char *var, t_env *env)
+int	replace_var(char **str, int start, char *var, t_env *env)
 {
 	char	*temp;
 	char	*var_value;
 
+	if (!var)
+		return (1);
 	var_value = get_env_var(env, var + 1);
 	temp = *str;
-	*str = ft_find_n_replace(*str, var, var_value);
+	*str = ft_find_n_replace(*str, start, var, var_value);
 	free(temp);
 	free(var_value);
+	return (ft_strlen(var));
 }
 
 int	cmp_names(const void *p1, const void *p2)

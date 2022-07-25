@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 10:06:27 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/24 18:19:52 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+/*
+
+$VAR
+"$VAR"
+'$VAR'
+
+str $VAR str
+str"$VAR"str
+str'$VAR'str
+
+str'$VAR'$VAR
+
+*/
 
 /**
  * find and replace all variables in str
@@ -24,23 +38,20 @@ char	*expand_vars(char *str, t_env *env)
 	int		i;
 	char	*var;
 	char	*expanded_str;
+	char	quote_type;
 
 	i = 0;
+	quote_type = '\0';
 	expanded_str = ft_strdup(str);
 	while (expanded_str[i])
 	{
-		if (expanded_str[i] != '$')
+		toggle_quote(expanded_str[i], &quote_type);
+		if (expanded_str[i] != '$' || quote_type == '\'')
 			i += 1;
 		else
 		{
 			var = extract_var(&expanded_str[i]);
-			if (!var)
-				i += 1;
-			else
-			{
-				replace_var(&expanded_str, var, env);
-				i += ft_strlen(var);
-			}
+			i += replace_var(&expanded_str, i, var, env);
 			free(var);
 		}
 	}
@@ -97,7 +108,7 @@ void	expand_shell(t_token *token_lst, t_env *env)
 	while (token_lst)
 	{
 		if (
-			(token_lst->type == DOUBLE_QUOTE || token_lst->type == SIMPLE_CMD)
+			(token_lst->type == DOUBLE_QUOTE || token_lst->type == CMD)
 			&& ft_memchr(token_lst->content, '$', token_lst->length)
 		)
 		{
@@ -106,7 +117,7 @@ void	expand_shell(t_token *token_lst, t_env *env)
 			free(tmp);
 		}
 		else if (
-			token_lst->type == SIMPLE_CMD
+			token_lst->type == CMD
 			&& ft_memchr(token_lst->content, '*', token_lst->length)
 		)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/01 12:05:42 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/24 17:45:36 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,26 @@
 # include <readline/history.h>
 
 # include "libft.h"
-# include "get_next_line.h"
 
 typedef enum e_type {
 	SINGLE_QUOTE,
 	DOUBLE_QUOTE,
+	HERE_DOC,
 	REDIRECT_IN,
 	REDIRECT_OUT,
-	HERE_DOC,
 	REDIRECT_APPEND,
 	PIPE,
-	DOLLAR_SIGN,
 	AND,
 	OR,
-	ASTERISK,
-	SIMPLE_CMD,
-	OPEN_QUOTE,
-	CLOSE_QUOTE
+	CMD,
 }	t_type;
 
 typedef struct s_token
 {
-	char			*content;
 	t_type			type;
+	char			*content;
 	int				length;
+
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -74,6 +70,12 @@ typedef struct s_ast
 	struct s_ast	*right;
 }	t_ast;
 
+// =================== src/lexer.c
+
+t_type		tkn_type(char *str);
+int			tkn_length(t_type type);
+t_token		*create_tokens_list(char *shell);
+
 // =================== src/env.c
 
 t_env		*copy_env(char **envp);
@@ -90,9 +92,6 @@ void		free_tokens(t_token **tokens_lst);
 
 // =================== src/parser.c
 
-t_type		tkn_type(char *str);
-bool		is_meta_char(t_type type);
-int			tkn_length(t_type type);
 t_token		*parse_shell(char *str);
 
 // =================== src/expantions.c
@@ -103,11 +102,15 @@ void		expand_shell(t_token *token_lst, t_env *env);
 
 // =================== src/expantions_utils.c
 
-char		*ft_find_n_replace(char *str, char *find, char *replace);
 char		*extract_var(char *str);
-void		replace_var(char **str, char *var, t_env *env);
+char		*ft_find_n_replace(char *str, int start_i, char *find, char *replace);
+int			replace_var(char **str, int start, char *var, t_env *env);
 t_dir		*read_dir_content(char *dir_path);
 bool		match_wildcard(char *pattern, char *text);
+
+// =================== src/handle_here_doc.c
+
+void		toggle_quote(char curr_char, char *quote_type);
 
 // =================== src/handle_here_doc.c
 

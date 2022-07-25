@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lst.c                                              :+:      :+:    :+:   */
+/*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/22 17:49:44 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/22 17:52:58 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,25 @@ t_token	*create_token(char *content, t_type type, int length)
 	return (new_token);
 }
 
+
+/**
+ * Get the last token in the list of tokens
+ * 
+ * @param	tokens_lst the list of tokens
+ * @return	t_token struct that holds the last token
+ */
+t_token	*last_token(t_token *tokens_lst)
+{
+	t_token	*tk;
+
+	if (!tokens_lst)
+		return (NULL);
+	tk = tokens_lst;
+	while (tk->next)
+		tk = tk->next;
+	return (tk);
+}
+
 /**
  * Add a token to a list
  * 
@@ -41,7 +60,7 @@ t_token	*create_token(char *content, t_type type, int length)
  */
 void	push_token(t_token **tokens_lst, t_token *new_token)
 {
-	t_token	*end_list;
+	t_token	*list_tail;
 
 	if (!tokens_lst)
 		return ;
@@ -49,11 +68,9 @@ void	push_token(t_token **tokens_lst, t_token *new_token)
 		*tokens_lst = new_token;
 	else
 	{
-		end_list = *tokens_lst;
-		while (end_list->next)
-			end_list = end_list->next;
-		new_token->prev = end_list;
-		end_list->next = new_token;
+		list_tail = last_token(*tokens_lst);
+		new_token->prev = list_tail;
+		list_tail->next = new_token;
 	}
 }
 
@@ -73,24 +90,6 @@ void	delete_token(t_token *token)
 		token->next->prev = token->prev;
 	free(token->content);
 	free(token);
-}
-
-/**
- * Get the last token in the list of tokens
- * 
- * @param	tokens_lst the list of tokens
- * @return	t_token struct that holds the last token
- */
-t_token	*last_token(t_token *tokens_lst)
-{
-	t_token	*tk;
-
-	if (!tokens_lst)
-		return (NULL);
-	tk = tokens_lst;
-	while (tk->next)
-		tk = tk->next;
-	return (tk);
 }
 
 /**

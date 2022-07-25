@@ -1,9 +1,10 @@
 CC			= cc
 NAME		= msh
 FLAGS		= -Wall -Wextra -Werror
-SRCS		= $(wildcard src/*.c)
+# SRCS		= $(wildcard src/*.c)
+SRCS		= src/token.c src/env.c src/lexer.c src/expansions.c src/expansions_utils.c src/utils.c
 INCS		= -I includes
-LIBS		= -Llibs -lft -lgnl -lreadline
+LIBS		= -Llibs -lft -lreadline
 
 all: libs $(NAME)
 
@@ -11,12 +12,9 @@ libs:
 	@make -C libs/libft
 	@cp libs/libft/libft.a libs
 	@cp libs/libft/libft.h includes
-	@make -C libs/get_next_line
-	@cp libs/get_next_line/libgnl.a libs
-	@cp libs/libft/libgnl.h includes
 
-$(NAME): $(SRCS) msh.c
-	$(CC) $(FLAGS) $(INCS) $(SRCS) msh.c $(LIBS) -o $(NAME)
+$(NAME): $(SRCS) main.c
+	$(CC) $(FLAGS) $(INCS) $(SRCS) main.c $(LIBS) -o $(NAME)
 
 clean:
 	rm -rf $(NAME)

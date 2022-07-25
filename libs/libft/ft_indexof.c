@@ -6,13 +6,13 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 09:47:23 by cipher            #+#    #+#             */
-/*   Updated: 2022/07/04 09:47:24 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/24 17:44:10 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_indexof(char *str, char c)
+int	ft_indexof(char *str, char c)
 {
 	int		i;
 

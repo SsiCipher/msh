@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:33:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 12:42:59 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/23 12:04:43 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,31 +38,8 @@ t_type	tkn_type(char *str)
 		return (OR);
 	else if (!ft_strncmp(str, "|", 1))
 		return (PIPE);
-	else if (!ft_strncmp(str, "(", 1))
-		return (OPEN_QUOTE);
-	else if (!ft_strncmp(str, ")", 1))
-		return (CLOSE_QUOTE);
 	else
-		return (SIMPLE_CMD);
-}
-
-/**
- * Check if the token is a meta character
- * 
- * @param	type the type of the token
- * @return	true if the token is meta character, false elseway
- */
-bool	is_meta_char(t_type type)
-{
-	return (
-		type == HERE_DOC
-		|| type == REDIRECT_APPEND
-		|| type == REDIRECT_IN
-		|| type == REDIRECT_OUT
-		|| type == AND
-		|| type == OR
-		|| type == PIPE
-	);
+		return (CMD);
 }
 
 /**
@@ -110,18 +87,18 @@ t_token	*parse_shell(char *str)
 			len = 0;
 			while (str[i + len] && !isspace(str[i + len]))
 				len++;
-			push_token(&tokens_lst, create_token(str + i, SIMPLE_CMD, len));
+			push_token(&tokens_lst, create_token(str + i, CMD, len));
 			i += len;
 		}
-		else if (t == SIMPLE_CMD)
+		else if (t == CMD)
 		{
 			len = 0;
 			while (
-				tkn_type(str + i + len) == SIMPLE_CMD
+				tkn_type(str + i + len) == CMD
 				&& !ft_isspace(str[i + len]) && str[i + len] != '\0'
 			)
 				len++;
-			push_token(&tokens_lst, create_token(str + i, SIMPLE_CMD, len));
+			push_token(&tokens_lst, create_token(str + i, CMD, len));
 			i += len;
 		}
 		else

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh.c                                              :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/01 11:00:43 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/24 18:33:00 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,24 @@ char *get_type_name(t_type type)
 {
 	if (type == SINGLE_QUOTE)
 		return ("SINGLE_QUOTE");
-	if (type == DOUBLE_QUOTE)
+	else if (type == DOUBLE_QUOTE)
 		return ("DOUBLE_QUOTE");
-	if (type == HERE_DOC)
-		return ("HERE_DOC");
-	if (type == REDIRECT_APPEND)
-		return ("REDIRECT_APPEND");
-	if (type == REDIRECT_IN)
-		return ("REDIRECT_IN");
-	if (type == REDIRECT_OUT)
-		return ("REDIRECT_OUT");
-	if (type == AND)
+	else if (type == HERE_DOC)
+		return ("R_HEREDOC");
+	else if (type == REDIRECT_APPEND)
+		return ("R_APPEND");
+	else if (type == REDIRECT_IN)
+		return ("R_IN");
+	else if (type == REDIRECT_OUT)
+		return ("R_OUT");
+	else if (type == AND)
 		return ("AND");
-	if (type == OR)
+	else if (type == OR)
 		return ("OR");
-	if (type == PIPE)
+	else if (type == PIPE)
 		return ("PIPE");
-	if (type == OPEN_QUOTE)
-		return ("OPEN_QUOTE");
-	if (type == CLOSE_QUOTE)
-		return ("CLOSE_QUOTE");
 	else
-		return ("SIMPLE_CMD");
+		return ("CMD");
 }
 
 void	print_tokens(t_token *tokens_lst)
@@ -80,7 +76,7 @@ void	print_tokens(t_token *tokens_lst)
 	curr_tk = tokens_lst;
 	while (curr_tk)
 	{
-		printf("content[ %4d ] = [ %-20s ]\t\t{ %s }\n", curr_tk->length, curr_tk->content, get_type_name(curr_tk->type));
+		printf("%s[%d] =\t[%s]\n", get_type_name(curr_tk->type), curr_tk->length, curr_tk->content);
 		curr_tk = curr_tk->next;
 	}
 }
@@ -97,13 +93,9 @@ int	main(int argc, char **argv, char **envp)
 	while (true)
 	{
 		shell = init_shell(env);
-		token_lst = parse_shell(shell);
+		token_lst = create_tokens_list(shell);
 		expand_shell(token_lst, env);
-		if (!check_errors(token_lst))
-		{
-			handle_here_docs(token_lst, env);
-			print_tokens(token_lst);
-		}
+		print_tokens(token_lst);
 		free(shell);
 		free_tokens(&token_lst);
 	}

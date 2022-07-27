@@ -122,4 +122,8 @@ char		*remove_quotes(char *limiter);
 bool		print_error(char *error_type, char *expected, char *tkn_content);
 bool		check_errors(t_token *token_lst);
 
+// =================== src/error_check.c
+
+char		*get_type_name(t_type type);
+
 #endif

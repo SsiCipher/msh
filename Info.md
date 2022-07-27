@@ -2,10 +2,6 @@
 
 ## Notes
 
-- think about unquoting: cases
-  - a"$VAR"c -> abc
-  - a"'$VAR'"c -> a'b'c
-
 ## Process
 
 1. Read input from user

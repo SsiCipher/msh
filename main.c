@@ -54,11 +54,11 @@ char *get_type_name(t_type type)
 	else if (type == HERE_DOC)
 		return ("R_HEREDOC");
 	else if (type == REDIRECT_APPEND)
-		return ("R_APPEND");
+		return ("APPEND_R");
 	else if (type == REDIRECT_IN)
-		return ("R_IN");
+		return ("IN_R");
 	else if (type == REDIRECT_OUT)
-		return ("R_OUT");
+		return ("OUT_R");
 	else if (type == AND)
 		return ("AND");
 	else if (type == OR)
@@ -95,7 +95,11 @@ int	main(int argc, char **argv, char **envp)
 		shell = init_shell(env);
 		token_lst = create_tokens_list(shell);
 		expand_shell(token_lst, env);
-		print_tokens(token_lst);
+		if (!check_errors(token_lst))
+		{
+			handle_here_docs(token_lst, env);
+			print_tokens(token_lst);
+		}
 		free(shell);
 		free_tokens(&token_lst);
 	}

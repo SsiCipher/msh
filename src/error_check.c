@@ -56,22 +56,22 @@ bool	check_errors(t_token *token_lst)
 		else if (
 			(tk->type == REDIRECT_IN || tk->type == REDIRECT_OUT
 				|| tk->type == REDIRECT_APPEND)
-			&& (!(tk->next) || tk->next->type != SIMPLE_CMD)
+			&& (!(tk->next) || tk->next->type != CMD)
 		)
 			return (print_error("syntax", "file", tk->content));
 		else if (
 			(tk->type == PIPE || tk->type == AND || tk->type == OR)
-			&& (!(tk->next) || tk->next->type != SIMPLE_CMD)
+			&& (!(tk->next) || tk->next->type != CMD)
 		)
 			return (print_error("syntax", "command", tk->content));
 		else if (
-			tk->type == DOUBLE_QUOTE && ft_countchr(tk->content, '"') != 2
+			tk->type == CMD && ft_countchr(tk->content, '"') % 2 != 0
 		)
-			return (print_error("syntax", "matching quote", NULL));
+			return (print_error("syntax", "matching `\"` quote", NULL));
 		else if (
-			tk->type == SINGLE_QUOTE && ft_countchr(tk->content, '\'') != 2
+			tk->type == CMD && ft_countchr(tk->content, '\'') % 2 != 0
 		)
-			return (print_error("syntax", "matching quote", NULL));
+			return (print_error("syntax", "matching `\'` quote", NULL));
 		tk = tk->next;
 	}
 	return (false);

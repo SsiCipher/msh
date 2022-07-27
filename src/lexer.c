@@ -79,7 +79,7 @@ t_token	*create_tokens_list(char *shell)
 			len = 0;
 			is_quoted = false;
 			quote_type = '\0';
-			while (tkn_type(&shell[i + len]) == CMD && shell[i + len])
+			while ((tkn_type(&shell[i + len]) == CMD || is_quoted) && shell[i + len])
 			{
 				if (shell[i + len] == '"' || shell[i + len] == '\'')
 				{

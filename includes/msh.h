@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/24 17:45:36 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/29 13:52:45 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,18 @@ typedef struct s_dir
 	int		length;
 }	t_dir;
 
-typedef struct s_ast
+typedef struct s_ast_node
 {
 	t_type			type;
-	char			*value;
-	struct s_ast	*left;
-	struct s_ast	*right;
-}	t_ast;
+	char			**argv;
+	int				argc;
+	int				input_fd;
+	int				output_fd;
+	int				exit_code;
+
+	struct s_ast_node	*left;
+	struct s_ast_node	*right;
+}	t_ast_node;
 
 // =================== src/lexer.c
 
@@ -125,5 +130,12 @@ bool		check_errors(t_token *token_lst);
 // =================== src/error_check.c
 
 char		*get_type_name(t_type type);
+
+// =================== src/tree.c
+
+t_ast_node	*create_node(t_type type);
+void		node_argv_push(t_ast_node *node, char *new_arg);
+void		update_io_fds(t_ast_node *node, t_type type, char *filename);
+t_ast_node	*create_ast(t_token *tkns_lst);
 
 #endif

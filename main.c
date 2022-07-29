@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/24 18:33:00 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/29 13:52:42 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*init_shell(t_env *env)
 	return (shell);
 }
 
-char *get_type_name(t_type type)
+char	*get_type_name(t_type type)
 {
 	if (type == SINGLE_QUOTE)
 		return ("SINGLE_QUOTE");
@@ -54,11 +54,11 @@ char *get_type_name(t_type type)
 	else if (type == HERE_DOC)
 		return ("R_HEREDOC");
 	else if (type == REDIRECT_APPEND)
-		return ("APPEND_R");
+		return ("R_APPEND");
 	else if (type == REDIRECT_IN)
-		return ("IN_R");
+		return ("R_IN");
 	else if (type == REDIRECT_OUT)
-		return ("OUT_R");
+		return ("R_OUT");
 	else if (type == AND)
 		return ("AND");
 	else if (type == OR)
@@ -81,11 +81,35 @@ void	print_tokens(t_token *tokens_lst)
 	}
 }
 
+void	print_node(t_ast_node *node)
+{
+	printf("%d,%d -> ", node->input_fd, node->output_fd);
+	if (node->type != CMD)
+		printf("%s", get_type_name(node->type));
+	else
+	{
+		for (int i = 0; i < node->argc; i++)
+			printf("%s%s", i == 0 ? "": " ", node->argv[i]);
+	}
+	printf("\n");
+}
+
+void	print_tree(t_ast_node *root, int level)
+{
+	if (!root)
+		return ;
+	print_tree(root->right, level + 1);
+	for (int i = 0; i < level * 16; i++) printf(" ");
+	print_node(root);
+	print_tree(root->left, level + 1);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_env	*env;
-	char	*shell;
-	t_token	*token_lst;
+	t_env		*env;
+	char		*shell;
+	t_token		*tokens_lst;
+	t_ast_node	*ast_tree;
 
 	(void)argc;
 	(void)argv;
@@ -93,15 +117,19 @@ int	main(int argc, char **argv, char **envp)
 	while (true)
 	{
 		shell = init_shell(env);
-		token_lst = create_tokens_list(shell);
-		expand_shell(token_lst, env);
-		if (!check_errors(token_lst))
+		tokens_lst = create_tokens_list(shell);
+		expand_shell(tokens_lst, env);
+		if (!check_errors(tokens_lst))
 		{
-			handle_here_docs(token_lst, env);
-			print_tokens(token_lst);
+			handle_here_docs(tokens_lst, env);
+			ast_tree = create_ast(tokens_lst);
+			printf("> ------- Tokens ------- <\n\n");
+			print_tokens(tokens_lst);
+			printf("\n> ------- AST ------- <\n\n");
+			print_tree(ast_tree, 0);
 		}
 		free(shell);
-		free_tokens(&token_lst);
+		free_tokens(&tokens_lst);
 	}
 	return (0);
 }

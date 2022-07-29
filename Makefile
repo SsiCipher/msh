@@ -4,6 +4,7 @@ FLAGS		= -Wall -Wextra -Werror
 SRCS		= src/here_doc.c \
 			src/error_check.c \
 			src/token.c \
+			src/tree.c \
 			src/env.c \
 			src/lexer.c \
 			src/expansions.c \

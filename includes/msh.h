@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/29 13:52:45 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/30 13:34:47 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,5 +137,20 @@ t_ast_node	*create_node(t_type type);
 void		node_argv_push(t_ast_node *node, char *new_arg);
 void		update_io_fds(t_ast_node *node, t_type type, char *filename);
 t_ast_node	*create_ast(t_token *tkns_lst);
+
+// =================== src/utils.c
+
+void		toggle_quote(char curr_char, char *quote_type);
+char   		*unquote_text(char *str);
+
+// =================== src/builtins.c
+
+void		ft_echo(int argc, char **argv);
+void		ft_cd(char *path, t_env *env);
+void		ft_pwd(void);
+void		ft_export(char *new_var, t_env *env);
+void		ft_unset(char *variable_name, t_env *env);
+void		ft_env(t_env *env);
+void		ft_exit(int exit_code);
 
 #endif

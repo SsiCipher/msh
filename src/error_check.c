@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/24 17:45:02 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/30 13:58:43 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,22 @@ bool	check_errors(t_token *token_lst)
 		)
 			return (print_error("syntax", "file", tk->content));
 		else if (
-			(tk->type == PIPE || tk->type == AND || tk->type == OR)
+			(tk->type == AND || tk->type == OR)
 			&& (!(tk->next) || tk->next->type != CMD)
 		)
 			return (print_error("syntax", "command", tk->content));
+		else if (
+			tk->type == PIPE
+			&& (
+				!(tk->next)
+				&& (tk->next->type != REDIRECT_IN
+				|| tk->next->type != REDIRECT_OUT
+				|| tk->next->type != REDIRECT_APPEND
+				|| tk->next->type != HERE_DOC
+				|| tk->next->type != CMD)
+			)
+		)
+			return (print_error("syntax", "commandd", tk->content));
 		else if (
 			tk->type == CMD && ft_countchr(tk->content, '"') % 2 != 0
 		)

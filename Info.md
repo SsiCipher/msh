@@ -14,10 +14,12 @@
 
 ## TODO
 
-- [ ] rewrite the lexer for better tokens
-- [ ] remove unnecessary types from enum t_type
+- [x] rewrite the lexer for better tokens
+- [x] remove unnecessary types from enum t_type
 - [ ] better parsing errors
 - [ ] integrate ast & further improve it (test using it: traverse, fork, dup, exec)
+- [ ] handle here_docs as input redirection
+- [ ] understand & handle parenthesis in AST
 - [ ] improve folder structure and file naming
 - [ ] revisit builtin commands
 - [ ] start executing
@@ -32,3 +34,8 @@
 - '&&'	->	cmd		-> msh: syntax error: expected cmd after '&&'
 - '||'	->	cmd		-> msh: syntax error: expected cmd after '||'
 - '"''	->	quote	-> msh: syntax error: expected a matching '"''
+
+# info
+
+- in heredoc limiter just remove quotes no expansion
+- if redirection and prev is not a cmd use it for next cmd (new case to create a node in ast tree without argv)

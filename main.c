@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/29 13:52:42 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/30 13:02:08 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,3 +133,19 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
+
+// int main(int argc, char const *argv[])
+// {
+// 	// t_env		*env;
+
+// 	(void)argc;
+// 	(void)argv;
+
+// 	char **av = ft_split(argv[1], ' ');
+// 	int l = 0;
+// 	while (av[l])
+// 		l++;
+// 	ft_echo(l, av);
+
+// 	return (0);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/01 11:12:19 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/30 13:45:52 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*remove_quotes(char *limiter)
 	int		j;
 	int		len;
 	char	*unquoted_limiter;
-	
+
 	i = -1;
 	len = 0;
 	while (limiter[++i])
@@ -54,7 +54,6 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 	char	*temp;
 	char	*limiter;
 
-	(void)env;
 	tk = token_lst;
 	while (tk)
 	{
@@ -63,7 +62,7 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 			temp = tk->content;
 			tk->content = ft_strdup("");
 			free(temp);
-			limiter = remove_quotes(tk->next->content);
+			limiter = unquote_text(tk->next->content);
 			line = readline("> ");
 			while (line)
 			{
@@ -80,9 +79,9 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 			}
 			free(line);
 			free(limiter);
-			tk->length = ft_strlen(tk->content);
 			if (!ft_strchr(tk->next->content, '"') && !ft_strchr(tk->next->content, '\''))
 				tk->content = expand_vars(tk->content, env);
+			tk->length = ft_strlen(tk->content);
 			delete_token(tk->next);
 		}
 		tk = tk->next;

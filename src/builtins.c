@@ -3,21 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:08:23 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/30 12:12:53 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void	ft_echo(char *str, int print_newline)
+void	ft_echo(int argc, char **argv)
 {
-	ft_putstr_fd(str, 1);
-	if (print_newline)
+	int i;
+	bool print_newline;
+
+	if (argc > 1)
+	{
+		print_newline = ft_strcmp(argv[1], "-n") != 0;
+		i = 2 - print_newline;
+		while (argv[i])
+		{
+			if (i != 2 - print_newline)
+				ft_putchar_fd(' ', 1);
+			ft_putstr_fd(argv[i], 1);
+			i++;
+		}
+	}
+	if (argc == 1 || print_newline)
 		ft_putchar_fd('\n', 1);
 }
+
+// void	ft_cd(int argc, char **argv, t_env *env);
 
 void	ft_cd(char *path, t_env *env)
 {

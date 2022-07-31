@@ -6,13 +6,14 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/30 13:34:47 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/31 19:58:56 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MSH_H
 # define MSH_H
 
+# include <errno.h>
 # include <ctype.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -86,6 +87,7 @@ t_token		*create_tokens_list(char *shell);
 t_env		*copy_env(char **envp);
 void		free_env(t_env **env);
 char		*get_env_var(t_env *env, char *var_name);
+void		edit_env_var(t_env *env, char *var_name, char *new_value);
 
 // =================== src/lst.c
 
@@ -146,7 +148,7 @@ char   		*unquote_text(char *str);
 // =================== src/builtins.c
 
 void		ft_echo(int argc, char **argv);
-void		ft_cd(char *path, t_env *env);
+void		ft_cd(int argc, char **argv, t_env *env);
 void		ft_pwd(void);
 void		ft_export(char *new_var, t_env *env);
 void		ft_unset(char *variable_name, t_env *env);

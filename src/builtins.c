@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/30 12:12:53 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/31 20:01:11 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,34 +33,54 @@ void	ft_echo(int argc, char **argv)
 		ft_putchar_fd('\n', 1);
 }
 
-// void	ft_cd(int argc, char **argv, t_env *env);
-
-void	ft_cd(char *path, t_env *env)
+void	ft_cd(int argc, char **argv, t_env *env)
 {
-	int		i;
-	char	*tmp;
+	char	*path;
 	char	*prev_wd_path;
+	char	*new_wd_path;
+
+	if (argc == 2)
+		path = argv[1];
+	else if (argc > 2)
+	{
+		ft_putendl_fd("msh: cd: too many arguments", 2);
+		return ;
+	}
+	else
+	{
+		path = get_env_var(env, "HOME");
+		if (!path)
+		{
+			ft_putendl_fd("msh: cd: HOME not set", 2);
+			return ;
+		}
+	}
+	prev_wd_path = getcwd(NULL, 0);
+	if(chdir(path))
+	{
+		ft_putstr_fd("msh: cd: ", 2);
+		ft_putendl_fd(strerror(errno), 2);
+		return ;
+	}
+	new_wd_path = getcwd(NULL, 0);
+	edit_env_var(env, "OLDPWD", prev_wd_path);
+	edit_env_var(env, "PWD", new_wd_path);
+	free(prev_wd_path);
+	free(new_wd_path);
+}
+
+void	ft_ccd(char *path, t_env *env)
+{
+	char	*prev_wd_path;
+	char	*new_wd_path;
 
 	prev_wd_path = getcwd(NULL, 0);
 	chdir(path);
-	i = 0;
-	while (env->content[i])
-	{
-		if (!ft_strncmp(env->content[i], "PWD=", 4))
-		{
-			tmp = env->content[i];
-			env->content[i] = ft_strdup(path);
-			free(tmp);
-		}
-		else if (!ft_strncmp(env->content[i], "OLDPWD=", 7))
-		{
-			tmp = env->content[i];
-			env->content[i] = ft_strdup(prev_wd_path);
-			free(tmp);
-		}
-		i++;
-	}
+	new_wd_path = getcwd(NULL, 0);
+	edit_env_var(env, "OLDPWD", prev_wd_path);
+	edit_env_var(env, "PWD", new_wd_path);
 	free(prev_wd_path);
+	free(new_wd_path);
 }
 
 void	ft_pwd(void)

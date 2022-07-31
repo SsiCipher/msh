@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/30 09:18:01 by yanab            ###   ########.fr       */
+/*   Updated: 2022/07/31 19:36:29 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,41 @@ void	free_env(t_env **env)
 char	*get_env_var(t_env *env, char *var_name)
 {
 	size_t	i;
+	int		var_name_len;
 	char	*var_value;
 
 	i = -1;
 	var_name = ft_strjoin(var_name, "=");
+	var_name_len = ft_strlen(var_name);
 	while (++i < env->length)
 	{
-		if (!ft_strncmp(env->content[i], var_name, ft_strlen(var_name)))
+		if (!ft_strncmp(env->content[i], var_name, var_name_len))
 		{
 			var_value = ft_substr(env->content[i],
-					ft_strlen(var_name), ft_strlen(env->content[i]));
+					var_name_len, ft_strlen(env->content[i]));
 			free(var_name);
 			return (var_value);
 		}
 	}
 	free(var_name);
 	return (NULL);
+}
+
+void	edit_env_var(t_env *env, char *var_name, char *new_value)
+{
+	size_t	i;
+	int		var_name_len;
+
+	i = -1;
+	var_name = ft_strjoin(var_name, "=");
+	var_name_len = ft_strlen(var_name);
+	while (++i < env->length)
+	{
+		if (!ft_strncmp(env->content[i], var_name, var_name_len))
+		{
+			free(env->content[i]);
+			env->content[i] = ft_strjoin(var_name, new_value);
+		}
+	}
+	free(var_name);
 }

@@ -3,6 +3,7 @@ NAME		= msh
 FLAGS		= -Wall -Wextra -Werror
 SRCS		= src/env.c \
 			src/here_doc.c \
+			src/builtins.c \
 			src/error_check.c \
 			src/token.c \
 			src/tree.c \

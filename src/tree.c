@@ -40,6 +40,7 @@ void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 
 t_ast_node	*create_ast(t_token *tkns_lst)
 {
+	int			pipe_ends[2];
 	t_ast_node	*ast_root = NULL;
 	t_ast_node	*curr_node = NULL;
 	t_token		*curr_tkn = tkns_lst;
@@ -62,8 +63,6 @@ t_ast_node	*create_ast(t_token *tkns_lst)
 		}
 		else if (curr_tkn->type == PIPE || curr_tkn->type == AND || curr_tkn->type == OR)
 		{
-			int pipe_ends[2];
-
 			curr_node = create_node(curr_tkn->type);
 			if (curr_tkn->type == PIPE)
 			{
@@ -76,6 +75,16 @@ t_ast_node	*create_ast(t_token *tkns_lst)
 		}
 		else if (curr_tkn->type == REDIRECT_IN || curr_tkn->type == REDIRECT_OUT || curr_tkn->type == REDIRECT_APPEND)
 		{
+			if (!ast_root)
+			{
+				curr_node = create_node(CMD);
+				ast_root = curr_node;
+			}
+			else if (curr_node->type != CMD)
+			{
+				curr_node = create_node(CMD);
+				ast_root->right = curr_node;
+			}
 			update_io_fds(curr_node, curr_tkn->type, curr_tkn->next->content);
 			curr_tkn = curr_tkn->next;
 		}

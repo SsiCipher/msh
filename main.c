@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/30 13:02:08 by cipher           ###   ########.fr       */
+/*   Updated: 2022/07/31 19:51:22 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,48 +104,45 @@ void	print_tree(t_ast_node *root, int level)
 	print_tree(root->left, level + 1);
 }
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_env		*env;
-	char		*shell;
-	t_token		*tokens_lst;
-	t_ast_node	*ast_tree;
-
-	(void)argc;
-	(void)argv;
-	env = copy_env(envp);
-	while (true)
-	{
-		shell = init_shell(env);
-		tokens_lst = create_tokens_list(shell);
-		expand_shell(tokens_lst, env);
-		if (!check_errors(tokens_lst))
-		{
-			handle_here_docs(tokens_lst, env);
-			ast_tree = create_ast(tokens_lst);
-			printf("> ------- Tokens ------- <\n\n");
-			print_tokens(tokens_lst);
-			printf("\n> ------- AST ------- <\n\n");
-			print_tree(ast_tree, 0);
-		}
-		free(shell);
-		free_tokens(&tokens_lst);
-	}
-	return (0);
-}
-
-// int main(int argc, char const *argv[])
+// int	main(int argc, char **argv, char **envp)
 // {
-// 	// t_env		*env;
+// 	t_env		*env;
+// 	char		*shell;
+// 	t_token		*tokens_lst;
+// 	t_ast_node	*ast_tree;
 
 // 	(void)argc;
 // 	(void)argv;
-
-// 	char **av = ft_split(argv[1], ' ');
-// 	int l = 0;
-// 	while (av[l])
-// 		l++;
-// 	ft_echo(l, av);
-
+// 	env = copy_env(envp);
+// 	while (true)
+// 	{
+// 		shell = init_shell(env);
+// 		tokens_lst = create_tokens_list(shell);
+// 		expand_shell(tokens_lst, env);
+// 		if (!check_errors(tokens_lst))
+// 		{
+// 			handle_here_docs(tokens_lst, env);
+// 			ast_tree = create_ast(tokens_lst);
+// 			printf("> ------- Tokens ------- <\n\n");
+// 			print_tokens(tokens_lst);
+// 			printf("\n> ------- AST ------- <\n\n");
+// 			print_tree(ast_tree, 0);
+// 		}
+// 		free(shell);
+// 		free_tokens(&tokens_lst);
+// 	}
 // 	return (0);
 // }
+
+int main(int argc, char *argv[], char *envp[])
+{
+	t_env	*env = copy_env(envp);
+
+	(void)argc;
+	(void)argv;
+
+	ft_cd(argc, argv, env);
+	ft_env(env);
+
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/31 20:01:11 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/01 19:41:19 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_cd(int argc, char **argv, t_env *env)
 	}
 	else
 	{
-		path = get_env_var(env, "HOME");
+		path = get_var(env, "HOME");
 		if (!path)
 		{
 			ft_putendl_fd("msh: cd: HOME not set", 2);
@@ -63,30 +63,21 @@ void	ft_cd(int argc, char **argv, t_env *env)
 		return ;
 	}
 	new_wd_path = getcwd(NULL, 0);
-	edit_env_var(env, "OLDPWD", prev_wd_path);
-	edit_env_var(env, "PWD", new_wd_path);
+	edit_var(env, "OLDPWD", prev_wd_path);
+	edit_var(env, "PWD", new_wd_path);
 	free(prev_wd_path);
 	free(new_wd_path);
 }
 
-void	ft_ccd(char *path, t_env *env)
-{
-	char	*prev_wd_path;
-	char	*new_wd_path;
-
-	prev_wd_path = getcwd(NULL, 0);
-	chdir(path);
-	new_wd_path = getcwd(NULL, 0);
-	edit_env_var(env, "OLDPWD", prev_wd_path);
-	edit_env_var(env, "PWD", new_wd_path);
-	free(prev_wd_path);
-	free(new_wd_path);
-}
-
-void	ft_pwd(void)
+void	ft_pwd(int argc, char **argv)
 {
 	char	*current_wd;
 
+	if (argc > 1)
+	{
+		ft_putendl_fd("msh: pwd: too many arguments", 2);
+		return ;
+	}
 	current_wd = getcwd(NULL, 0);
 	ft_putendl_fd(current_wd, 1);
 	free(current_wd);

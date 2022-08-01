@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/31 19:51:22 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/01 19:32:01 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*create_prompt_str(t_env *env)
 	char	*user;
 	char	*cwd;
 
-	user = get_env_var(env, "USER");
+	user = get_var(env, "USER");
 	if (!user)
 		user = ft_strdup("MINISHELL");
 	cwd = getcwd(NULL, 0);
@@ -113,7 +113,7 @@ void	print_tree(t_ast_node *root, int level)
 
 // 	(void)argc;
 // 	(void)argv;
-// 	env = copy_env(envp);
+// 	env = create_env(envp);
 // 	while (true)
 // 	{
 // 		shell = init_shell(env);
@@ -136,13 +136,13 @@ void	print_tree(t_ast_node *root, int level)
 
 int main(int argc, char *argv[], char *envp[])
 {
-	t_env	*env = copy_env(envp);
+	t_env	*env = create_env(envp);
 
 	(void)argc;
 	(void)argv;
-
-	ft_cd(argc, argv, env);
+	// ft_cd(argc, argv, env);
+	delete_var(env, "BOILER_PROJS_DIR");
+	printf("------------ New Env ------------");
 	ft_env(env);
-
 	return (0);
 }

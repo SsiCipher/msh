@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/24 15:37:23 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/01 19:01:08 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	replace_var(char **str, int start, char *var, t_env *env)
 
 	if (!var)
 		return (1);
-	var_value = get_env_var(env, var + 1);
+	var_value = get_var(env, var + 1);
 	temp = *str;
 	*str = ft_find_n_replace(*str, start, var, var_value);
 	free(temp);

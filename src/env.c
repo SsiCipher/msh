@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/31 19:36:29 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/01 19:37:50 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * @param	envp the list of environment variables to duplicate
  * @return	t_env struct that holds the new copy of the envp
  */
-t_env	*copy_env(char **envp)
+t_env	*create_env(char **envp)
 {
 	int		i;
 	t_env	*new_envp;
@@ -60,7 +60,7 @@ void	free_env(t_env **env)
  * @param	var_name the name of the variable to search for
  * @return	the value of the variable if found or NULL
  */
-char	*get_env_var(t_env *env, char *var_name)
+char	*get_var(t_env *env, char *var_name)
 {
 	size_t	i;
 	int		var_name_len;
@@ -83,7 +83,25 @@ char	*get_env_var(t_env *env, char *var_name)
 	return (NULL);
 }
 
-void	edit_env_var(t_env *env, char *var_name, char *new_value)
+bool	contains_var(t_env *env, char *var_name)
+{
+	size_t	i;
+
+	i = -1;
+	var_name = ft_strjoin(var_name, "=");
+	while (++i < env->length)
+	{
+		if (!ft_strncmp(env->content[i], var_name, ft_strlen(var_name)))
+		{
+			free(var_name);
+			return (true);
+		}
+	}
+	free(var_name);
+	return (false);
+}
+
+void	edit_var(t_env *env, char *var_name, char *new_value)
 {
 	size_t	i;
 	int		var_name_len;
@@ -100,4 +118,31 @@ void	edit_env_var(t_env *env, char *var_name, char *new_value)
 		}
 	}
 	free(var_name);
+}
+
+void	delete_var(t_env *env, char *var_name)
+{
+	size_t	i;
+	size_t	j;
+	char	**new_content;
+
+	if (contains_var(env, var_name))
+	{
+		i = -1;
+		j = 0;
+		var_name = ft_strjoin(var_name, "=");
+		new_content = (char **)malloc(sizeof(char *) * env->length - 1);
+		while (++i < env->length)
+		{
+			if (ft_strncmp(env->content[i], var_name, ft_strlen(var_name)))
+				new_content[j++] = env->content[i];
+			else
+				free(env->content[i]);
+		}
+		new_content[j] = NULL;
+		free(env->content);
+		env->length -= 1;
+		env->content = new_content;
+		free(var_name);
+	}
 }

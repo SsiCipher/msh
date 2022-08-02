@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/01 19:41:02 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/02 20:48:43 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ t_token		*create_tokens_list(char *shell);
 t_env		*create_env(char **envp);
 void		free_env(t_env **env);
 char		*get_var(t_env *env, char *var_name);
+void		add_var(t_env *env, char *var_name, char *new_value);
 void		edit_var(t_env *env, char *var_name, char *new_value);
 void		delete_var(t_env *env, char *var_name);
 
@@ -151,7 +152,8 @@ char   		*unquote_text(char *str);
 void		ft_echo(int argc, char **argv);
 void		ft_cd(int argc, char **argv, t_env *env);
 void		ft_pwd(int argc, char **argv);
-void		ft_export(char *new_var, t_env *env);
+void		ft_export(int argc, char **argv, t_env *env);
+void		ftt_export(char *new_var, t_env *env);
 void		ft_unset(char *variable_name, t_env *env);
 void		ft_env(t_env *env);
 void		ft_exit(int exit_code);

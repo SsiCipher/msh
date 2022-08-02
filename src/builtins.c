@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/01 19:41:19 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/02 20:48:57 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	ft_pwd(int argc, char **argv)
 {
 	char	*current_wd;
 
+	(void)argv;
 	if (argc > 1)
 	{
 		ft_putendl_fd("msh: pwd: too many arguments", 2);
@@ -83,7 +84,12 @@ void	ft_pwd(int argc, char **argv)
 	free(current_wd);
 }
 
-void	ft_export(char *new_var, t_env *env)
+void	ft_export(int argc, char **argv, t_env *env)
+{
+	
+}
+
+void	ftt_export(char *new_var, t_env *env)
 {
 	char **new_env_content;
 

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/01 19:32:01 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/02 20:44:01 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,45 +104,64 @@ void	print_tree(t_ast_node *root, int level)
 	print_tree(root->left, level + 1);
 }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	t_env		*env;
-// 	char		*shell;
-// 	t_token		*tokens_lst;
-// 	t_ast_node	*ast_tree;
+/*
+echo
+cd
+pwd
+export
+unset
+env
+exit
+*/
 
-// 	(void)argc;
-// 	(void)argv;
-// 	env = create_env(envp);
-// 	while (true)
-// 	{
-// 		shell = init_shell(env);
-// 		tokens_lst = create_tokens_list(shell);
-// 		expand_shell(tokens_lst, env);
-// 		if (!check_errors(tokens_lst))
-// 		{
-// 			handle_here_docs(tokens_lst, env);
-// 			ast_tree = create_ast(tokens_lst);
-// 			printf("> ------- Tokens ------- <\n\n");
-// 			print_tokens(tokens_lst);
-// 			printf("\n> ------- AST ------- <\n\n");
-// 			print_tree(ast_tree, 0);
-// 		}
-// 		free(shell);
-// 		free_tokens(&tokens_lst);
-// 	}
-// 	return (0);
-// }
-
-int main(int argc, char *argv[], char *envp[])
+void	run_builtin(int argc, char **argv, t_env *env)
 {
-	t_env	*env = create_env(envp);
+	if (!ft_strcmp(argv[0], "echo"))
+		ft_echo(argc, argv);
+	else if (!ft_strcmp(argv[0], "cd"))
+		ft_cd(argc, argv, env);
+	else if (!ft_strcmp(argv[0], "pwd"))
+		ft_pwd(argc, argv);
+	else if (!ft_strcmp(argv[0], "env"))
+		ft_env(env);
+	else if (!ft_strcmp(argv[0], "exit"))
+		ft_exit(0);
+	else
+		printf("%s is not a valid command\n", argv[0]);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_env		*env;
+	char		*shell;
+	// t_token		*tokens_lst;
+	// t_ast_node	*ast_tree;
 
 	(void)argc;
 	(void)argv;
-	// ft_cd(argc, argv, env);
-	delete_var(env, "BOILER_PROJS_DIR");
-	printf("------------ New Env ------------");
-	ft_env(env);
+	env = create_env(envp);
+	while (true)
+	{
+		shell = init_shell(env);
+		char **av = ft_split(shell, ' ');
+		int ac = 0;
+		while (av[ac])
+			ac++;
+		// printf("ac=%d, cmd=%s\n", ac, av[0]);
+		run_builtin(ac, av, env);
+		// tokens_lst = create_tokens_list(shell);
+		// expand_shell(tokens_lst, env);
+		// if (!check_errors(tokens_lst))
+		// {
+		// 	handle_here_docs(tokens_lst, env);
+		// 	ast_tree = create_ast(tokens_lst);
+		// 	printf("> ------- Tokens ------- <\n\n");
+		// 	print_tokens(tokens_lst);
+		// 	printf("\n> ------- AST ------- <\n\n");
+		// 	print_tree(ast_tree, 0);
+		// }
+		// free_tokens(&tokens_lst);
+		free(shell);
+	}
 	return (0);
 }

@@ -39,3 +39,21 @@
 
 - in heredoc limiter just remove quotes no expansion
 - if redirection and prev is not a cmd use it for next cmd (new case to create a node in ast tree without argv)
+- export
+  - new variable no value
+  - new variable with value
+  - update variable with new value
+  - update variable with concat value
+
+A	&&	B
+A	||	B
+
+(A	&&	B)	&&	C
+(A	||	B)	||	C
+A	&&	(B	&&	C)
+A	||	(B	||	C)
+
+(A	||	B)	&&	C
+(A	&&	B)	||	C
+A	||	(B	&&	C)
+A	&&	(B	||	C)

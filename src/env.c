@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/01 19:37:50 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/02 17:57:39 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,13 @@ char	*get_var(t_env *env, char *var_name)
 	return (NULL);
 }
 
+/**
+ * Checks if a variable is in the env
+ * 
+ * @param	env t_env struct that holds all the environment variables
+ * @param	var_name the name of the variable to search for
+ * @return	true if the variable was found false if not
+ */
 bool	contains_var(t_env *env, char *var_name)
 {
 	size_t	i;
@@ -101,6 +108,30 @@ bool	contains_var(t_env *env, char *var_name)
 	return (false);
 }
 
+void	add_var(t_env *env, char *var_name, char *new_value)
+{
+	char	**new_content;
+
+	if (contains_var(env, var_name))
+		edit_var(env, var_name, new_value);
+	else
+	{
+		new_content = (char **)malloc(sizeof(char *) * env->length + 2);
+		ft_memmove(new_content, env->content, sizeof(char *) * env->length);
+		new_content[env->length] = ft_strjoin_many(3, var_name, "=", new_value);
+		new_content[env->length + 1] = NULL;
+		env->content = new_content;
+		env->length += 1;
+	}
+}
+
+/**
+ * Change the value of a variable in the env
+ * 
+ * @param	env t_env struct that holds all the environment variables
+ * @param	var_name the name of the variable to edit for
+ * @param	new_value the new value to use
+ */
 void	edit_var(t_env *env, char *var_name, char *new_value)
 {
 	size_t	i;
@@ -120,6 +151,12 @@ void	edit_var(t_env *env, char *var_name, char *new_value)
 	free(var_name);
 }
 
+/**
+ * Delete a variable from the env
+ * 
+ * @param	env t_env struct that holds all the environment variables
+ * @param	var_name the name of the variable to edit for
+ */
 void	delete_var(t_env *env, char *var_name)
 {
 	size_t	i;

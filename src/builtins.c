@@ -6,30 +6,40 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/02 20:48:57 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/03 21:41:35 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+void	print_builtin_error(char *cmd, char *error)
+{
+	ft_putstr_fd("msh: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(error, 2);
+}
 
 void	ft_echo(int argc, char **argv)
 {
 	int i;
 	bool print_newline;
 
+	i = 0;
+	print_newline = true;
 	if (argc > 1)
 	{
-		print_newline = ft_strcmp(argv[1], "-n") != 0;
-		i = 2 - print_newline;
+		while (!ft_strcmp(argv[++i], "-n"))
+			print_newline = false;
 		while (argv[i])
 		{
-			if (i != 2 - print_newline)
-				ft_putchar_fd(' ', 1);
 			ft_putstr_fd(argv[i], 1);
+			if (i != argc - 1)
+				ft_putchar_fd(' ', 1);
 			i++;
 		}
 	}
-	if (argc == 1 || print_newline)
+	if (print_newline)
 		ft_putchar_fd('\n', 1);
 }
 
@@ -42,31 +52,28 @@ void	ft_cd(int argc, char **argv, t_env *env)
 	if (argc == 2)
 		path = argv[1];
 	else if (argc > 2)
-	{
-		ft_putendl_fd("msh: cd: too many arguments", 2);
-		return ;
-	}
+		print_builtin_error("cd", "too many arguments");
 	else
 	{
 		path = get_var(env, "HOME");
 		if (!path)
-		{
-			ft_putendl_fd("msh: cd: HOME not set", 2);
-			return ;
-		}
+			print_builtin_error("cd", "HOME not set");
 	}
-	prev_wd_path = getcwd(NULL, 0);
-	if(chdir(path))
+	if (path && argc <= 2)
 	{
-		ft_putstr_fd("msh: cd: ", 2);
-		ft_putendl_fd(strerror(errno), 2);
-		return ;
+		prev_wd_path = getcwd(NULL, 0);
+		if(chdir(path))
+			print_builtin_error("cd", strerror(errno));
+		else
+		{
+			printf("prev: %s\n", prev_wd_path);
+			new_wd_path = getcwd(NULL, 0);
+			edit_var(env, "OLDPWD", prev_wd_path);
+			edit_var(env, "PWD", new_wd_path);
+			free(new_wd_path);
+		}
+		free(prev_wd_path);
 	}
-	new_wd_path = getcwd(NULL, 0);
-	edit_var(env, "OLDPWD", prev_wd_path);
-	edit_var(env, "PWD", new_wd_path);
-	free(prev_wd_path);
-	free(new_wd_path);
 }
 
 void	ft_pwd(int argc, char **argv)
@@ -86,7 +93,9 @@ void	ft_pwd(int argc, char **argv)
 
 void	ft_export(int argc, char **argv, t_env *env)
 {
-	
+	(void)argc;
+	(void)argv;
+	(void)env;
 }
 
 void	ftt_export(char *new_var, t_env *env)

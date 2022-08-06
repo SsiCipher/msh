@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/02 20:48:43 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/06 02:45:24 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,5 +157,12 @@ void		ftt_export(char *new_var, t_env *env);
 void		ft_unset(char *variable_name, t_env *env);
 void		ft_env(t_env *env);
 void		ft_exit(int exit_code);
+
+// =================== src/debug.c
+
+char		*get_type_name(t_type type);
+void		print_tokens(t_token *tokens_lst);
+void		print_node(t_ast_node *node);
+void		print_tree(t_ast_node *root, int level);
 
 #endif

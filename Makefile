@@ -10,7 +10,8 @@ SRCS		= src/env.c \
 			src/lexer.c \
 			src/expansions.c \
 			src/expansions_utils.c \
-			src/utils.c
+			src/utils.c \
+			src/debug.c
 INCS		= -I includes
 LIBS		= -Llibs -lft -lreadline
 

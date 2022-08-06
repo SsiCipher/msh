@@ -37,6 +37,12 @@
 
 # info
 
+- exit
+  - print "exit"
+  - over long long is not numeric value
+  - alphabets is not numeric value
+  - many numeric values dont exit print many args
+
 - fix segfault in cd -> mkdir t - cd t - rm t - cd ../t
   - do anything while in directory that is deleted
 

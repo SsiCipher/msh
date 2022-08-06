@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 15:37:54 by cipher            #+#    #+#             */
-/*   Updated: 2022/07/30 13:10:22 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/04 09:39:27 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ void	toggle_quote(char curr_char, char *quote_type)
 	}
 }
 
+/**
+ * Remove quotes from a string
+ * 
+ * @param	str the string to remove quotes from
+ * @return	a new string with quotes removed
+ */
 char    *unquote_text(char *str)
 {
 	int		i;

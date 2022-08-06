@@ -6,40 +6,11 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/30 13:45:52 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/05 08:28:27 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-/**
- * Remove all quotes from a string 
- * 
- * @param	limiter the limiter string to remove quotes from
- * @return	a new string with quotes removed
- */
-char	*remove_quotes(char *limiter)
-{
-	int		i;
-	int		j;
-	int		len;
-	char	*unquoted_limiter;
-
-	i = -1;
-	len = 0;
-	while (limiter[++i])
-		len += (limiter[i] != '"' && limiter[i] != '\'');
-	unquoted_limiter = (char *)malloc(sizeof(char) * (len + 1));
-	i = -1;
-	j = 0;
-	while (limiter[++i])
-	{
-		if (limiter[i] != '"' && limiter[i] != '\'')
-			unquoted_limiter[j++] = limiter[i];
-	}
-	unquoted_limiter[j] = '\0';
-	return (unquoted_limiter);
-}
 
 /**
  * Handle the start and read of here_docs + variable expansions

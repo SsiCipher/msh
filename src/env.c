@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/02 17:57:39 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/08 12:01:21 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_env	*create_env(char **envp)
 			sizeof(char *) * (new_envp->length + 1));
 	while (envp[++i])
 		new_envp->content[i] = ft_strdup(envp[i]);
-	envp[i] = NULL;
+	new_envp->content[i] = NULL;
 	return (new_envp);
 }
 
@@ -41,7 +41,7 @@ t_env	*create_env(char **envp)
  * 
  * @param	env t_env struct that holds the new copy of the envp
  */
-void	free_env(t_env **env)
+void	delete_env(t_env **env)
 {
 	int		i;
 
@@ -57,29 +57,32 @@ void	free_env(t_env **env)
  * Searches for a variable in the env
  * 
  * @param	env t_env struct that holds all the environment variables
- * @param	var_name the name of the variable to search for
+ * @param	name the name of the variable to search for
  * @return	the value of the variable if found or NULL
  */
-char	*get_var(t_env *env, char *var_name)
+char	*get_var(t_env *env, char *name)
 {
 	size_t	i;
-	int		var_name_len;
+	int		name_len;
 	char	*var_value;
 
-	i = -1;
-	var_name = ft_strjoin(var_name, "=");
-	var_name_len = ft_strlen(var_name);
-	while (++i < env->length)
+	i = 0;
+	name_len = ft_strlen(name);
+	while (env->content[i])
 	{
-		if (!ft_strncmp(env->content[i], var_name, var_name_len))
+		if (!ft_strncmp(env->content[i], name, name_len))
 		{
-			var_value = ft_substr(env->content[i],
-					var_name_len, ft_strlen(env->content[i]));
-			free(var_name);
-			return (var_value);
+			if (env->content[i][name_len] == '\0')
+				return (NULL);
+			else if (env->content[i][name_len] == '=')
+			{
+				var_value = ft_substr(env->content[i],
+						name_len + 1, ft_strlen(env->content[i]));
+				return (var_value);
+			}
 		}
+		i++;
 	}
-	free(var_name);
 	return (NULL);
 }
 
@@ -87,40 +90,49 @@ char	*get_var(t_env *env, char *var_name)
  * Checks if a variable is in the env
  * 
  * @param	env t_env struct that holds all the environment variables
- * @param	var_name the name of the variable to search for
+ * @param	name the name of the variable to search for
  * @return	true if the variable was found false if not
  */
-bool	contains_var(t_env *env, char *var_name)
+bool	contains_var(t_env *env, char *name)
 {
 	size_t	i;
+	int		name_len;
 
 	i = -1;
-	var_name = ft_strjoin(var_name, "=");
+	name_len = ft_strlen(name);
 	while (++i < env->length)
 	{
-		if (!ft_strncmp(env->content[i], var_name, ft_strlen(var_name)))
-		{
-			free(var_name);
+		if (!ft_strncmp(env->content[i], name, name_len)
+			&& (env->content[i][name_len] == '\0'
+			|| env->content[i][name_len] == '=')
+		)
 			return (true);
-		}
 	}
-	free(var_name);
 	return (false);
 }
 
-void	add_var(t_env *env, char *var_name, char *new_value)
+/**
+ * Checks if a variable is in the env
+ * 
+ * @param	env t_env struct that holds all the environment variables
+ * @param	name the name of the variable to search for
+ * @param	value the new value to use
+ * @return	true if the variable was found false if not
+ */
+void	add_var(t_env *env, char *name, char *value)
 {
-	char	**new_content;
-
-	if (contains_var(env, var_name))
-		edit_var(env, var_name, new_value);
+	if (contains_var(env, name))
+		edit_var(env, name, value, true);
 	else
 	{
-		new_content = (char **)malloc(sizeof(char *) * env->length + 2);
-		ft_memmove(new_content, env->content, sizeof(char *) * env->length);
-		new_content[env->length] = ft_strjoin_many(3, var_name, "=", new_value);
-		new_content[env->length + 1] = NULL;
-		env->content = new_content;
+		env->content = (char **)ft_realloc(env->content,
+				env->length * sizeof(char *),
+				(env->length + 2) * sizeof(char *));
+		if (value)
+			env->content[env->length] = ft_strjoin_many(3, name, "=", value);
+		else
+			env->content[env->length] = ft_strdup(name);
+		env->content[env->length + 1] = NULL;
 		env->length += 1;
 	}
 }
@@ -129,57 +141,67 @@ void	add_var(t_env *env, char *var_name, char *new_value)
  * Change the value of a variable in the env
  * 
  * @param	env t_env struct that holds all the environment variables
- * @param	var_name the name of the variable to edit for
- * @param	new_value the new value to use
+ * @param	name the name of the variable to edit for
+ * @param	value the new value to use
+ * @param	truncate true to truncate the value of the variable
  */
-void	edit_var(t_env *env, char *var_name, char *new_value)
+void	edit_var(t_env *env, char *name, char *value, bool truncate)
 {
 	size_t	i;
-	int		var_name_len;
+	char	*tmp;
+	int		name_len;
 
 	i = -1;
-	var_name = ft_strjoin(var_name, "=");
-	var_name_len = ft_strlen(var_name);
+	name_len = ft_strlen(name);
 	while (++i < env->length)
 	{
-		if (!ft_strncmp(env->content[i], var_name, var_name_len))
+		if (
+			!ft_strncmp(env->content[i], name, name_len)
+			&& (env->content[i][name_len] == '\0'
+			|| env->content[i][name_len] == '=')
+		)
 		{
-			free(env->content[i]);
-			env->content[i] = ft_strjoin(var_name, new_value);
+			tmp = env->content[i];
+			if (truncate)
+				env->content[i] = ft_strjoin_many(3, name, "=", value);
+			else
+				env->content[i] = ft_strjoin(env->content[i], value);
+			free(tmp);
 		}
 	}
-	free(var_name);
 }
 
 /**
  * Delete a variable from the env
  * 
  * @param	env t_env struct that holds all the environment variables
- * @param	var_name the name of the variable to edit for
+ * @param	name the name of the variable to edit for
  */
-void	delete_var(t_env *env, char *var_name)
+void	delete_var(t_env *env, char *name)
 {
 	size_t	i;
 	size_t	j;
+	int		name_len;
 	char	**new_content;
 
-	if (contains_var(env, var_name))
+	if (contains_var(env, name))
 	{
 		i = -1;
 		j = 0;
-		var_name = ft_strjoin(var_name, "=");
+		name_len = ft_strlen(name);
 		new_content = (char **)malloc(sizeof(char *) * env->length - 1);
 		while (++i < env->length)
 		{
-			if (ft_strncmp(env->content[i], var_name, ft_strlen(var_name)))
-				new_content[j++] = env->content[i];
-			else
+			if (!ft_strncmp(env->content[i], name, name_len)
+				&& (env->content[i][name_len] == '\0'
+				|| env->content[i][name_len] == '='))
 				free(env->content[i]);
+			else
+				new_content[j++] = env->content[i];
 		}
 		new_content[j] = NULL;
 		free(env->content);
 		env->length -= 1;
 		env->content = new_content;
-		free(var_name);
 	}
 }

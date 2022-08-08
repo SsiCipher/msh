@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/06 02:45:24 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/08 11:49:24 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,12 @@ typedef struct s_dir
 
 typedef struct s_ast_node
 {
-	t_type			type;
-	char			**argv;
-	int				argc;
-	int				input_fd;
-	int				output_fd;
-	int				exit_code;
+	t_type				type;
+	char				**argv;
+	int					argc;
+	int					input_fd;
+	int					output_fd;
+	int					exit_code;
 
 	struct s_ast_node	*left;
 	struct s_ast_node	*right;
@@ -85,11 +85,12 @@ t_token		*create_tokens_list(char *shell);
 // =================== src/env.c
 
 t_env		*create_env(char **envp);
-void		free_env(t_env **env);
-char		*get_var(t_env *env, char *var_name);
-void		add_var(t_env *env, char *var_name, char *new_value);
-void		edit_var(t_env *env, char *var_name, char *new_value);
-void		delete_var(t_env *env, char *var_name);
+void		delete_env(t_env **env);
+char		*get_var(t_env *env, char *name);
+bool		contains_var(t_env *env, char *name);
+void		add_var(t_env *env, char *name, char *value);
+void		edit_var(t_env *env, char *name, char *value, bool truncate);
+void		delete_var(t_env *env, char *name);
 
 // =================== src/lst.c
 
@@ -145,7 +146,7 @@ t_ast_node	*create_ast(t_token *tkns_lst);
 // =================== src/utils.c
 
 void		toggle_quote(char curr_char, char *quote_type);
-char   		*unquote_text(char *str);
+char		*unquote_text(char *str);
 
 // =================== src/builtins.c
 
@@ -153,10 +154,9 @@ void		ft_echo(int argc, char **argv);
 void		ft_cd(int argc, char **argv, t_env *env);
 void		ft_pwd(int argc, char **argv);
 void		ft_export(int argc, char **argv, t_env *env);
-void		ftt_export(char *new_var, t_env *env);
-void		ft_unset(char *variable_name, t_env *env);
-void		ft_env(t_env *env);
-void		ft_exit(int exit_code);
+void		ft_unset(int argc, char **argv, t_env *env);
+void		ft_env(int argc, char **argv, t_env *env);
+void		ft_exit(int argc, char **argv, t_env *env);
 
 // =================== src/debug.c
 

@@ -14,6 +14,10 @@ char	*get_type_name(t_type type)
 		return ("R_IN");
 	else if (type == REDIRECT_OUT)
 		return ("R_OUT");
+	else if (type == OPEN_PARENTH)
+		return ("OPEN_PARENTH");
+	else if (type == CLOSE_PARENTH)
+		return ("CLOSE_PARENTH");
 	else if (type == AND)
 		return ("AND");
 	else if (type == OR)
@@ -31,7 +35,7 @@ void	print_tokens(t_token *tokens_lst)
 	curr_tk = tokens_lst;
 	while (curr_tk)
 	{
-		printf("%s[%d] =\t[%s]\n", get_type_name(curr_tk->type), curr_tk->length, curr_tk->content);
+		printf("%s[%d]\t=\t[%s]\n", get_type_name(curr_tk->type), curr_tk->length, curr_tk->content);
 		curr_tk = curr_tk->next;
 	}
 }

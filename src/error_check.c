@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/30 13:58:43 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/10 02:53:31 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ bool	check_errors(t_token *token_lst)
 			return (print_error("syntax", "file", tk->content));
 		else if (
 			(tk->type == AND || tk->type == OR)
-			&& (!(tk->next) || tk->next->type != CMD)
+			&& (!(tk->next) || (tk->next->type != CMD && tk->next->type != OPEN_PARENTH))
 		)
 			return (print_error("syntax", "command", tk->content));
 		else if (

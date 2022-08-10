@@ -16,6 +16,10 @@ t_type	tkn_type(char *str)
 		return (REDIRECT_IN);
 	else if (!ft_strncmp(str, ">", 1))
 		return (REDIRECT_OUT);
+	else if (!ft_strncmp(str, "(", 1))
+		return (OPEN_PARENTH);
+	else if (!ft_strncmp(str, ")", 1))
+		return (CLOSE_PARENTH);
 	else if (!ft_strncmp(str, "&&", 2))
 		return (AND);
 	else if (!ft_strncmp(str, "||", 2))

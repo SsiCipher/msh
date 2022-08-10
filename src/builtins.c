@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/08 21:48:08 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/10 06:11:02 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,25 @@ void	print_builtin_error(char *cmd, char *error)
 	ft_putendl_fd(error, 2);
 }
 
+int is_n(char c)
+{
+	return (c == 'n');
+}
+
 void	ft_echo(int argc, char **argv)
 {
 	int i;
 	bool print_newline;
 
-	i = 0;
+	i = 1;
 	print_newline = true;
 	if (argc > 1)
 	{
-		while (!ft_strcmp(argv[++i], "-n"))
+		while (argv[i][0] == '-' && ft_every(&argv[i][1], is_n))
+		{
 			print_newline = false;
+			i++;	
+		}
 		while (argv[i])
 		{
 			ft_putstr_fd(argv[i], 1);

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/08 11:49:24 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/10 02:51:03 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ typedef enum e_type {
 	REDIRECT_OUT,
 	REDIRECT_APPEND,
 	PIPE,
+	OPEN_PARENTH,
+	CLOSE_PARENTH,
 	AND,
 	OR,
 	CMD,

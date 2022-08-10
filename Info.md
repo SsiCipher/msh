@@ -2,6 +2,8 @@
 
 ## Notes
 
+- handle if env var not found anywhere I interact with env
+
 ## Process
 
 1. Read input from user

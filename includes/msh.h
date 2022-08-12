@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/10 02:51:03 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/12 07:57:27 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,18 @@
 # include "libft.h"
 
 typedef enum e_type {
-	SINGLE_QUOTE,
-	DOUBLE_QUOTE,
-	HERE_DOC,
-	REDIRECT_IN,
-	REDIRECT_OUT,
-	REDIRECT_APPEND,
-	PIPE,
-	OPEN_PARENTH,
-	CLOSE_PARENTH,
-	AND,
 	OR,
+	AND,
 	CMD,
+	PIPE,
+	S_QUOTE,
+	D_QUOTE,
+	R_HEREDOC,
+	R_INPUT,
+	R_OUTPUT,
+	R_APPEND,
+	O_PARENTH,
+	C_PARENTH
 }	t_type;
 
 typedef struct s_token
@@ -70,6 +70,7 @@ typedef struct s_ast_node
 	t_type				type;
 	char				**argv;
 	int					argc;
+	bool				unlink_infile;
 	int					input_fd;
 	int					output_fd;
 	int					exit_code;

@@ -6,11 +6,13 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/05 08:28:27 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/12 07:36:09 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+// TODO: variable expansion in file
 
 /**
  * Handle the start and read of here_docs + variable expansions
@@ -22,17 +24,17 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 {
 	t_token	*tk;
 	char	*line;
-	char	*temp;
 	char	*limiter;
+	int		heredoc_fd;
 
 	tk = token_lst;
 	while (tk)
 	{
-		if (tk->type == HERE_DOC)
+		if (tk->type == R_HEREDOC)
 		{
-			temp = tk->content;
-			tk->content = ft_strdup("");
-			free(temp);
+			heredoc_fd = open("/tmp/.here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0666);
+			if (heredoc_fd == -1)
+				perror("Cannot open /tmp/.here_doc");
 			limiter = unquote_text(tk->next->content);
 			line = readline("> ");
 			while (line)
@@ -42,9 +44,8 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 					&& *(line + ft_strlen(limiter)) == '\0'
 				)
 					break ;
-				temp = tk->content;
-				tk->content = ft_strjoin_many(3, tk->content, line, "\n");
-				free(temp);
+				write(heredoc_fd, line, ft_strlen(line));
+				write(heredoc_fd, "\n", 1);
 				free(line);
 				line = readline("> ");
 			}
@@ -52,8 +53,10 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 			free(limiter);
 			if (!ft_strchr(tk->next->content, '"') && !ft_strchr(tk->next->content, '\''))
 				tk->content = expand_vars(tk->content, env);
-			tk->length = ft_strlen(tk->content);
-			delete_token(tk->next);
+			free(tk->next->content);
+			tk->next->content = ft_strdup("/tmp/.here_doc");
+			tk->next->length = 14;
+			close(heredoc_fd);
 		}
 		tk = tk->next;
 	}

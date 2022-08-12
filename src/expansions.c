@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/04 09:37:33 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/12 07:34:58 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	expand_shell(t_token *token_lst, t_env *env)
 	while (token_lst)
 	{
 		if (
-			(token_lst->prev && token_lst->prev->type != HERE_DOC && token_lst->type == CMD)
+			(token_lst->prev && token_lst->prev->type != R_HEREDOC && token_lst->type == CMD)
 			&& ft_memchr(token_lst->content, '$', token_lst->length)
 		)
 		{

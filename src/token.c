@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/04 09:35:33 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/11 10:42:07 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ t_token	*create_token(char *content, t_type type, int length)
 	new_token->prev = NULL;
 	return (new_token);
 }
-
 
 /**
  * Get the last token in the list of tokens
@@ -83,7 +82,6 @@ void	delete_token(t_token *token)
 {
 	if (!token)
 		return ;
-
 	if (token->prev)
 		token->prev->next = token->next;
 	if (token->next)

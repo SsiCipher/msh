@@ -3,6 +3,7 @@
 ## Notes
 
 - handle if env var not found anywhere I interact with env
+- (a && b) | c
 
 ## Process
 
@@ -29,15 +30,21 @@
 ## syntax check
 
 - '<<'	->	limiter	-> msh: syntax error: expected limiter after '<<'
-- '>'	->	file	-> msh: syntax error: expected file after '>'
-- '<'	->	file	-> msh: syntax error: expected file after '<'
-- '>>'	->	file	-> msh: syntax error: expected file after '>>'
-- '|'	->	cmd		-> msh: syntax error: expected cmd after '|'
-- '&&'	->	cmd		-> msh: syntax error: expected cmd after '&&'
-- '||'	->	cmd		-> msh: syntax error: expected cmd after '||'
-- '"''	->	quote	-> msh: syntax error: expected a matching '"''
+- '>'	  ->	file	  -> msh: syntax error: expected file after '>'
+- '<'	  ->	file	  -> msh: syntax error: expected file after '<'
+- '>>'	->	file	  -> msh: syntax error: expected file after '>>'
+- '|' 	->	cmd		  -> msh: syntax error: expected cmd after '|'
+- '&&'  ->	cmd		  -> msh: syntax error: expected cmd after '&&'
+- '||'	->	cmd		  -> msh: syntax error: expected cmd after '||'
+- '"''	->	quote	  -> msh: syntax error: expected a matching '"''
 
 # info
+
+- export
+  - a=1
+  - a+=2
+  - a
+  - a=
 
 - exit
   - print "exit"

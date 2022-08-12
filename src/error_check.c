@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/10 02:53:31 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/12 07:37:16 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,27 @@ bool	check_errors(t_token *token_lst)
 	tk = token_lst;
 	while (tk)
 	{
-		if (tk->type == HERE_DOC && (!(tk->next) || tk->next->type != CMD))
+		if (tk->type == R_HEREDOC && (!(tk->next) || tk->next->type != CMD))
 			return (print_error("syntax", "limiter", tk->content));
 		else if (
-			(tk->type == REDIRECT_IN || tk->type == REDIRECT_OUT
-				|| tk->type == REDIRECT_APPEND)
+			(tk->type == R_INPUT || tk->type == R_OUTPUT || tk->type == R_APPEND)
 			&& (!(tk->next) || tk->next->type != CMD)
 		)
 			return (print_error("syntax", "file", tk->content));
 		else if (
 			(tk->type == AND || tk->type == OR)
-			&& (!(tk->next) || (tk->next->type != CMD && tk->next->type != OPEN_PARENTH))
+			&& (!(tk->next) || (tk->next->type != CMD && tk->next->type != O_PARENTH))
 		)
 			return (print_error("syntax", "command", tk->content));
 		else if (
 			tk->type == PIPE
 			&& (
 				!(tk->next)
-				&& (tk->next->type != REDIRECT_IN
-				|| tk->next->type != REDIRECT_OUT
-				|| tk->next->type != REDIRECT_APPEND
-				|| tk->next->type != HERE_DOC
-				|| tk->next->type != CMD)
+				|| tk->next->type != R_INPUT
+				|| tk->next->type != R_OUTPUT
+				|| tk->next->type != R_APPEND
+				|| tk->next->type != R_HEREDOC
+				|| tk->next->type != CMD
 			)
 		)
 			return (print_error("syntax", "commandd", tk->content));

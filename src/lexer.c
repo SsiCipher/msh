@@ -9,17 +9,17 @@
 t_type	tkn_type(char *str)
 {
 	if (!ft_strncmp(str, "<<", 2))
-		return (HERE_DOC);
+		return (R_HEREDOC);
 	else if (!ft_strncmp(str, ">>", 2))
-		return (REDIRECT_APPEND);
+		return (R_APPEND);
 	else if (!ft_strncmp(str, "<", 1))
-		return (REDIRECT_IN);
+		return (R_INPUT);
 	else if (!ft_strncmp(str, ">", 1))
-		return (REDIRECT_OUT);
+		return (R_OUTPUT);
 	else if (!ft_strncmp(str, "(", 1))
-		return (OPEN_PARENTH);
+		return (O_PARENTH);
 	else if (!ft_strncmp(str, ")", 1))
-		return (CLOSE_PARENTH);
+		return (C_PARENTH);
 	else if (!ft_strncmp(str, "&&", 2))
 		return (AND);
 	else if (!ft_strncmp(str, "||", 2))
@@ -39,8 +39,8 @@ t_type	tkn_type(char *str)
 int	tkn_length(t_type type)
 {
 	if (
-		type == HERE_DOC
-		|| type == REDIRECT_APPEND
+		type == R_HEREDOC
+		|| type == R_APPEND
 		|| type == AND
 		|| type == OR
 	)

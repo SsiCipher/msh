@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:33:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/07/23 12:04:43 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/12 07:36:49 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,17 @@
 t_type	tkn_type(char *str)
 {
 	if (!ft_strncmp(str, "'", 1))
-		return (SINGLE_QUOTE);
+		return (S_QUOTE);
 	else if (!ft_strncmp(str, "\"", 1))
-		return (DOUBLE_QUOTE);
+		return (D_QUOTE);
 	if (!ft_strncmp(str, "<<", 2))
-		return (HERE_DOC);
+		return (R_HEREDOC);
 	else if (!ft_strncmp(str, ">>", 2))
-		return (REDIRECT_APPEND);
+		return (R_APPEND);
 	else if (!ft_strncmp(str, "<", 1))
-		return (REDIRECT_IN);
+		return (R_INPUT);
 	else if (!ft_strncmp(str, ">", 1))
-		return (REDIRECT_OUT);
+		return (R_OUTPUT);
 	else if (!ft_strncmp(str, "&&", 2))
 		return (AND);
 	else if (!ft_strncmp(str, "||", 2))
@@ -51,8 +51,8 @@ t_type	tkn_type(char *str)
 int	tkn_length(t_type type)
 {
 	if (
-		type == HERE_DOC
-		|| type == REDIRECT_APPEND
+		type == R_HEREDOC
+		|| type == R_APPEND
 		|| type == AND
 		|| type == OR
 	)
@@ -82,7 +82,7 @@ t_token	*parse_shell(char *str)
 		if (str[i] == '\0')
 			break ;
 		t = tkn_type(str + i);
-		if (tokens_lst && last_token(tokens_lst)->type == HERE_DOC)
+		if (tokens_lst && last_token(tokens_lst)->type == R_HEREDOC)
 		{
 			len = 0;
 			while (str[i + len] && !isspace(str[i + len]))
@@ -103,7 +103,7 @@ t_token	*parse_shell(char *str)
 		}
 		else
 		{
-			len = (t == SINGLE_QUOTE || t == DOUBLE_QUOTE);
+			len = (t == S_QUOTE || t == D_QUOTE);
 			while (
 				tkn_type(&str[i + len]) != t
 				&& str[i + len] != '\0'

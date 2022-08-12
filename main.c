@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/10 05:56:01 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/12 08:23:53 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,12 @@ char	*create_prompt_str(t_env *env)
 
 char	*init_shell(t_env *env)
 {
-	char *prompt;
-	char *shell;
+	char	*prompt;
+	char	*shell;
 
 	prompt = create_prompt_str(env);
 	shell = readline(prompt);
 	free(prompt);
-	if (!shell)
-		exit(1);
 	add_history(shell);
 	return (shell);
 }
@@ -65,35 +63,49 @@ void	run_builtin(int argc, char **argv, t_env *env)
 		printf("%s is not a valid command\n", argv[0]);
 }
 
+void	start_repl(t_env *env)
+{
+	char		*shell;
+	t_token		*tokens_lst;
+	// t_ast_node	*ast_tree;
+
+	while (true)
+	{		
+		shell = init_shell(env);
+		if (!shell)
+			continue ;
+		tokens_lst = create_tokens_list(shell);
+		expand_shell(tokens_lst, env);
+		if (!check_errors(tokens_lst))
+		{
+			handle_here_docs(tokens_lst, env);
+			printf("> ------- Tokens ------- <\n\n");
+			print_tokens(tokens_lst);
+			// ast_tree = create_ast(tokens_lst);
+			// printf("\n> ------- AST ------- <\n\n");
+			// print_tree(ast_tree, 0);
+		}
+		free_tokens(&tokens_lst);
+		free(shell);
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_env		*env;
-	char		*shell;
-	// t_token		*tokens_lst;
-	// t_ast_node	*ast_tree;
 
 	(void)argc;
 	(void)argv;
 	env = create_env(envp);
+	// start_repl(env);
 	while (true)
-	{
-		shell = init_shell(env);
+	{		
+		char *shell = init_shell(env);
+		if (!shell)
+			continue ;
 		char **av = ft_split(shell, ' ');
 		int ac = 0; while (av[ac]) ac++;
 		run_builtin(ac, av, env);
-		// tokens_lst = create_tokens_list(shell);
-		// expand_shell(tokens_lst, env);
-		// if (!check_errors(tokens_lst))
-		// {
-		// 	handle_here_docs(tokens_lst, env);
-		// 	ast_tree = create_ast(tokens_lst);
-		// 	printf("> ------- Tokens ------- <\n\n");
-		// 	print_tokens(tokens_lst);
-		// 	printf("\n> ------- AST ------- <\n\n");
-		// 	print_tree(ast_tree, 0);
-		// }
-		// free_tokens(&tokens_lst);
-		free(shell);
 	}
 	return (0);
 }

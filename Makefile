@@ -32,4 +32,4 @@ fclean: clean
 
 re: fclean all
 
-# .PHONY: all libs $(NAME) clean fclean re
+.PHONY: all libs clean fclean re

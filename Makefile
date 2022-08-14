@@ -23,7 +23,7 @@ libs:
 	@cp libs/libft/libft.h includes
 
 $(NAME): $(SRCS) main.c
-	$(CC) $(FLAGS) $(INCS) $(SRCS) main.c $(LIBS) -o $(NAME)
+	$(CC) $(FLAGS) $(INCS) $(SRCS) main.c $(LIBS) -g3 -o $(NAME)
 
 clean:
 	rm -rf $(NAME)

@@ -4,6 +4,7 @@
 
 - handle if env var not found anywhere I interact with env
 - (a && b) | c
+- change all printf to write to stderr (use ft_printf with custom fd)
 
 ## Process
 

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/12 07:57:27 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 16:22:13 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@
 # include <stdbool.h>
 # include <string.h>
 # include <unistd.h>
+# include <limits.h>
 # include <fcntl.h>
 # include <sys/types.h>
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+// # include <stdint.h>
 
 # include "libft.h"
 
@@ -92,7 +94,7 @@ void		delete_env(t_env **env);
 char		*get_var(t_env *env, char *name);
 bool		contains_var(t_env *env, char *name);
 void		add_var(t_env *env, char *name, char *value);
-void		edit_var(t_env *env, char *name, char *value, bool truncate);
+void		edit_var(t_env *env, char *name, char *value, bool append);
 void		delete_var(t_env *env, char *name);
 
 // =================== src/lst.c

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/12 13:10:52 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 13:53:41 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ bool	contains_var(t_env *env, char *name)
 void	add_var(t_env *env, char *name, char *value)
 {
 	if (contains_var(env, name))
-		edit_var(env, name, value, true);
+		edit_var(env, name, value, false);
 	else
 	{	
 		env->content = (char **)ft_realloc(env->content,
@@ -156,9 +156,9 @@ void	add_var(t_env *env, char *name, char *value)
  * @param	env t_env struct that holds all the environment variables
  * @param	name the name of the variable to edit for
  * @param	value the new value to use
- * @param	truncate true to truncate the value of the variable
+ * @param	append true to append the value to the variable
  */
-void	edit_var(t_env *env, char *name, char *value, bool truncate)
+void	edit_var(t_env *env, char *name, char *value, bool append)
 {
 	size_t	i;
 	char	*tmp;
@@ -175,9 +175,9 @@ void	edit_var(t_env *env, char *name, char *value, bool truncate)
 			if (is_var(env->content[i], name))
 			{
 				tmp = env->content[i];
-				if (!truncate && value)
+				if (!append && value)
 					env->content[i] = ft_strjoin_many(3, name, "=", value);
-				else if (!truncate && !value)
+				else if (!append && !value)
 					env->content[i] = ft_strdup(name);
 				else
 				{

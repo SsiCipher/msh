@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/12 08:23:53 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 13:51:36 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ char	*create_prompt_str(t_env *env)
 	if (!user)
 		user = ft_strdup("MINISHELL");
 	cwd = getcwd(NULL, 0);
-	prompt = ft_strjoin_many(
-			5,
-			"\e[1;32m", user, " • \e[1;36m\x1B[1;34m", cwd, "\x1B[0m » "
-			);
+	if (!cwd)
+		cwd = get_var(env, "PWD");
+	prompt = ft_strjoin_many(5,
+			"\e[1;32m", user, " • \e[1;36m\x1B[1;34m", cwd, "\x1B[0m » ");
 	free(user);
 	free(cwd);
 	return (prompt);
@@ -99,7 +99,7 @@ int	main(int argc, char **argv, char **envp)
 	env = create_env(envp);
 	// start_repl(env);
 	while (true)
-	{		
+	{
 		char *shell = init_shell(env);
 		if (!shell)
 			continue ;

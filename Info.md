@@ -52,6 +52,13 @@
   - over long long is not numeric value
   - alphabets is not numeric value
   - many numeric values dont exit print many args
+	- argc == 1	=>	exit							          = exit(0)
+	- argc == 2	=>	exit 1; exit 255; exit 256  = exit(argv[1])
+	- argc == 2	=>	exit m							        = exit(2) + error
+	- argc == 2	=>	exit 9223372036854775808		= exit(2) + error
+	- argc > 2	=>	exit 1m 3 4						      = exit(2) + error
+	- argc > 2	=>	exit 1 2; exit 89 2342 3		= no exit + error + exit_code = 1
+	- argc > 2	=>	exit 4 2m 23L					      = no exit + error + exit_code = 1
 
 - fix segfault in cd -> mkdir t - cd t - rm t - cd ../t
   - do anything while in directory that is deleted

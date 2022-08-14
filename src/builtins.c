@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 16:42:14 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 18:53:19 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,37 +196,52 @@ void	ft_env(int argc, char **argv, t_env *env)
 	}
 }
 
+long long	atoi_check(char *number)
+{
+	int					i;
+	int					sign;
+	unsigned long long	num;
+
+	i = 0;
+	if (*number == '\0' || ft_strlen(number) > 20)
+		return (-1);
+	sign = 1;
+	if (number[i] == '-' || number[i] == '+')
+	{
+		if (number[i++] == '-')
+			sign = -1;
+	}
+	num = 0;
+	while (number[i])
+	{
+		if (number[i] < '0' || number[i] > '9')
+			return (-1);
+		num = num * 10 + (number[i++] - '0');
+	}
+	if ((sign == 1 && num > LLONG_MAX) || (sign == -1 && num - 1 > LLONG_MAX))
+		return (-1);
+	return (num * sign);
+}
+
 void	ft_exit(int argc, char **argv, t_env *env)
 {
-	unsigned long long	exit_code;
+	long long	exit_code;
 
 	(void)env;
 	printf("exit\n");
 	if (argc == 1)
-		exit(130);
-	else if (argc == 2)
+		exit(EXIT_SUCCESS);
+	else
 	{
-		if (exit_code > LLONG_MAX || exit_code == -1)
+		exit_code = atoi_check(argv[1]);
+		if (exit_code == -1)
 		{
 			printf("msh: exit: %s: numeric argument required\n", argv[1]);
 			exit(2);
 		}
-		exit((unsigned short)exit_code);
+		if (argc > 2)
+			printf("msh: exit: too many arguments\n");
+		else
+			exit((unsigned short)exit_code);
 	}
-	else
-	{
-		
-	}
-
-	/*
-
-	- argc == 1	=>	exit							= exit(130)
-	- argc == 2	=>	exit 1; exit 255; exit 256		= exit(argv[1])
-	- argc == 2	=>	exit m							= exit(2) + error
-	- argc == 2	=>	exit 9223372036854775808		= exit(2) + error
-	- argc > 2	=>	exit 1 2; exit 89 2342 3		= no exit + error + exit_code = 1
-	- argc > 2	=>	exit 1m 3 4						= exit(2) + error
-	- argc > 2	=>	exit 4 2m 23L					= no exit + error + exit_code = 1
-
-	*/
 }

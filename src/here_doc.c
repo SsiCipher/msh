@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/12 07:36:09 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 23:14:20 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
 // TODO: variable expansion in file
+// TODO: random filename
 
 /**
  * Handle the start and read of here_docs + variable expansions

@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tree.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
+/*   Updated: 2022/08/14 23:30:40 by yanab            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "msh.h"
 
-t_ast_node *create_node(t_type type)
+t_ast_node	*create_node(t_type type)
 {
-	t_ast_node *node;
+	t_ast_node	*node;
 
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
 	node->type = type;
@@ -28,7 +40,7 @@ void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 {
 	if (type == R_INPUT && node->input_fd != STDIN_FILENO)
 		close(node->input_fd);
-	if ((type == R_OUTPUT || type == R_APPEND) && node->output_fd != STDOUT_FILENO)
+	if ((type == R_OUTPUT || type == R_APPEND) && node->output_fd != 1)
 		close(node->output_fd);
 	if (type == R_INPUT)
 		node->input_fd = open(filename, O_CREAT | O_RDONLY, 0666);
@@ -38,14 +50,18 @@ void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 		node->output_fd = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0666);
 }
 
+// TODO: handle heredoc redirection in tree
+
 t_ast_node	*create_ast(t_token *tkns_lst)
 {
-	int			pipe_ends[2];
-	t_ast_node	*ast_root = NULL;
-	t_ast_node	*curr_node = NULL;
-	t_token		*curr_tkn = tkns_lst;
+	t_ast_node	*ast_root;
+	t_ast_node	*curr_node;
+	t_token		*curr_tkn;
 	bool		inside_parenth;
 
+	ast_root = NULL;
+	curr_node = NULL;
+	curr_tkn = tkns_lst;
 	inside_parenth = false;
 	while (curr_tkn)
 	{
@@ -66,19 +82,23 @@ t_ast_node	*create_ast(t_token *tkns_lst)
 			}
 			node_argv_push(curr_node, curr_tkn->content);
 		}
-		else if (curr_tkn->type == PIPE || curr_tkn->type == AND || curr_tkn->type == OR)
+		else if (curr_tkn->type == PIPE || curr_tkn->type == AND
+			|| curr_tkn->type == OR)
 		{
 			curr_node = create_node(curr_tkn->type);
-			if (curr_tkn->type == PIPE)
+			if ((curr_tkn->type == PIPE && ast_root->type != CMD
+					&& ast_root->type != PIPE) || inside_parenth)
 			{
-				pipe(pipe_ends);
-				curr_node->input_fd = pipe_ends[0];
-				curr_node->output_fd = pipe_ends[1];
-			}
-			if ((curr_tkn->type == PIPE && ast_root->type != CMD && ast_root->type != PIPE) || inside_parenth)
-			{
-				curr_node->left = ast_root->right;
-				ast_root->right = curr_node;
+				if (ast_root->right && inside_parenth)
+				{
+					curr_node->left = ast_root->right;
+					ast_root->right = curr_node;
+				}
+				else
+				{
+					curr_node->left = ast_root;
+					ast_root = curr_node;
+				}
 			}
 			else
 			{
@@ -86,7 +106,8 @@ t_ast_node	*create_ast(t_token *tkns_lst)
 				ast_root = curr_node;
 			}
 		}
-		else if (curr_tkn->type == R_INPUT || curr_tkn->type == R_OUTPUT || curr_tkn->type == R_APPEND)
+		else if (curr_tkn->type == R_INPUT || curr_tkn->type == R_OUTPUT
+			|| curr_tkn->type == R_APPEND)
 		{
 			if (!ast_root)
 			{

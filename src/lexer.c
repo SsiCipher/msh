@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/14 23:31:18 by yanab             #+#    #+#             */
+/*   Updated: 2022/08/14 23:32:05 by yanab            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "msh.h"
 
 /**
@@ -75,7 +87,8 @@ t_token	*create_tokens_list(char *shell)
 		curr_tkn_type = tkn_type(&shell[i]);
 		if (curr_tkn_type != CMD && !is_quoted)
 		{
-			push_token(&lst, create_token(&shell[i], curr_tkn_type, tkn_length(curr_tkn_type)));
+			push_token(&lst, create_token(&shell[i], curr_tkn_type,
+					tkn_length(curr_tkn_type)));
 			i += tkn_length(curr_tkn_type);
 		}
 		else if (curr_tkn_type == CMD)
@@ -83,7 +96,8 @@ t_token	*create_tokens_list(char *shell)
 			len = 0;
 			is_quoted = false;
 			quote_type = '\0';
-			while ((tkn_type(&shell[i + len]) == CMD || is_quoted) && shell[i + len])
+			while ((tkn_type(&shell[i + len]) == CMD || is_quoted)
+				&& shell[i + len])
 			{
 				if (shell[i + len] == '"' || shell[i + len] == '\'')
 				{

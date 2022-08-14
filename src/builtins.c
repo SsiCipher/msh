@@ -3,18 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 18:53:19 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 22:09:51 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
+/*
+- exit code for each command
+- write errors to stderr
+*/
+
 void	print_builtin_error(char *cmd, char *error)
 {
-	printf("msh: %s: %s\n", cmd, error);
+	dprintf(STDERR_FILENO, "msh: %s: %s\n", cmd, error);
 }
 
 void	ft_echo(int argc, char **argv)
@@ -65,6 +70,7 @@ void	ft_cd(int argc, char **argv, t_env *env)
 {
 	char	*path;
 
+	path = NULL;
 	if (argc > 2)
 		print_builtin_error("cd", "too many arguments");
 	else if (argc == 2)
@@ -164,10 +170,10 @@ void	ft_export(int argc, char **argv, t_env *env)
 		{
 			tmp = ft_strdup(argv[i]);
 			append = parse_var(argv[i], &name, &value);
-			if (!check_name(name))
-				printf("msh: export: %s is not a valid identifier\n", tmp);
-			else
+			if (check_name(name))
 				edit_var(env, name, value, append);
+			else
+				printf("msh: export: %s is not a valid identifier\n", tmp);
 			free(tmp);
 		}
 	}

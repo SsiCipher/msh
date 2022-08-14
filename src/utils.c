@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 15:37:54 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/04 09:39:27 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 23:26:35 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	toggle_quote(char curr_char, char *quote_type)
  * @param	str the string to remove quotes from
  * @return	a new string with quotes removed
  */
-char    *unquote_text(char *str)
+char	*unquote_text(char *str)
 {
 	int		i;
 	int		j;

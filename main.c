@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 13:51:36 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 23:23:44 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	start_repl(t_env *env)
 {
 	char		*shell;
 	t_token		*tokens_lst;
-	// t_ast_node	*ast_tree;
+	t_ast_node	*ast_tree;
 
 	while (true)
 	{		
@@ -81,9 +81,9 @@ void	start_repl(t_env *env)
 			handle_here_docs(tokens_lst, env);
 			printf("> ------- Tokens ------- <\n\n");
 			print_tokens(tokens_lst);
-			// ast_tree = create_ast(tokens_lst);
-			// printf("\n> ------- AST ------- <\n\n");
-			// print_tree(ast_tree, 0);
+			ast_tree = create_ast(tokens_lst);
+			printf("\n> ------- AST ------- <\n\n");
+			print_tree(ast_tree, 0);
 		}
 		free_tokens(&tokens_lst);
 		free(shell);
@@ -97,15 +97,15 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = create_env(envp);
-	// start_repl(env);
-	while (true)
-	{
-		char *shell = init_shell(env);
-		if (!shell)
-			continue ;
-		char **av = ft_split(shell, ' ');
-		int ac = 0; while (av[ac]) ac++;
-		run_builtin(ac, av, env);
-	}
+	start_repl(env);
+	// while (true)
+	// {
+	// 	char *shell = init_shell(env);
+	// 	if (!shell)
+	// 		continue ;
+	// 	char **av = ft_split(shell, ' ');
+	// 	int ac = 0; while (av[ac]) ac++;
+	// 	run_builtin(ac, av, env);
+	// }
 	return (0);
 }

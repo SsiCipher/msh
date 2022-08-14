@@ -3,28 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/12 07:34:58 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 23:24:46 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-/*
-
-$VAR
-"$VAR"
-'$VAR'
-
-str $VAR str
-str"$VAR"str
-str'$VAR'str
-
-str'$VAR'$VAR
-
-*/
+// TODO: expand $? to the latest exit_code
 
 /**
  * find and replace all variables in str
@@ -57,6 +45,8 @@ char	*expand_vars(char *str, t_env *env)
 	}
 	return (expanded_str);
 }
+
+// TODO: handle *"a" -> match *a
 
 /**
  * get the files and directories that match pattern in path

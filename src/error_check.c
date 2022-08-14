@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/12 07:37:16 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/14 23:32:30 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ bool	print_error(char *error_type, char *expected, char *tkn_content)
 	return (true);
 }
 
+// TODO: check "| c" errors + unclosed parenthesis
+// TODO: better errors like bash
+
 /**
  * Check tokens for syntax errors
  * 
@@ -67,11 +70,11 @@ bool	check_errors(t_token *token_lst)
 			tk->type == PIPE
 			&& (
 				!(tk->next)
-				|| tk->next->type != R_INPUT
-				|| tk->next->type != R_OUTPUT
-				|| tk->next->type != R_APPEND
-				|| tk->next->type != R_HEREDOC
-				|| tk->next->type != CMD
+				|| (tk->next->type != R_INPUT
+				&& tk->next->type != R_OUTPUT
+				&& tk->next->type != R_APPEND
+				&& tk->next->type != R_HEREDOC
+				&& tk->next->type != CMD)
 			)
 		)
 			return (print_error("syntax", "commandd", tk->content));

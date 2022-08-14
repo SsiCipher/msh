@@ -23,9 +23,9 @@
 - [ ] better parsing errors
 - [ ] integrate ast & further improve it (test using it: traverse, fork, dup, exec)
 - [ ] handle here_docs as input redirection
-- [ ] understand & handle parenthesis in AST
+- [x] understand & handle parenthesis in AST
 - [ ] improve folder structure and file naming
-- [ ] revisit builtin commands
+- [x] revisit builtin commands
 - [ ] start executing
 
 ## syntax check
@@ -70,6 +70,15 @@
   - new variable with value
   - update variable with new value
   - update variable with concat value
+
+- variable expansion
+  - $VAR
+  - "$VAR"
+  - '$VAR'
+  - str $VAR str
+  - str"$VAR"str
+  - str'$VAR'str
+  - str'$VAR'$VAR
 
 A	&&	B
 A	||	B

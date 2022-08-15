@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 16:22:13 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/15 01:53:54 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-// # include <stdint.h>
 
 # include "libft.h"
 
@@ -122,10 +121,7 @@ char		*ft_find_n_replace(char *str, int start_i, char *find, char *replace);
 int			replace_var(char **str, int start, char *var, t_env *env);
 t_dir		*read_dir_content(char *dir_path);
 bool		match_wildcard(char *pattern, char *text);
-
-// =================== src/handle_here_doc.c
-
-void		toggle_quote(char curr_char, char *quote_type);
+void		free_dir(t_dir **dir);
 
 // =================== src/handle_here_doc.c
 
@@ -150,7 +146,7 @@ t_ast_node	*create_ast(t_token *tkns_lst);
 
 // =================== src/utils.c
 
-void		toggle_quote(char curr_char, char *quote_type);
+void		toggle_quote(char c, char *quote_type, bool *is_quoted);
 char		*unquote_text(char *str);
 
 // =================== src/builtins.c

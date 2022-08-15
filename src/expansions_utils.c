@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 23:22:31 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/15 01:53:29 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ int	replace_var(char **str, int start, char *var, t_env *env)
 	return (ft_strlen(var));
 }
 
+// TODO: change qsort to ft_qsort
+
 int	cmp_names(const void *p1, const void *p2)
 {
 	return (
@@ -124,6 +126,18 @@ t_dir	*read_dir_content(char *dir_path)
 	closedir(dir_stream);
 	qsort(dir->content, dir->length, sizeof(char *), cmp_names);
 	return (dir);
+}
+
+void	free_dir(t_dir **dir)
+{
+	int	i;
+
+	i = -1;
+	while (++i < (*dir)->length)
+		free((*dir)->content[i]);
+	free((*dir)->content);
+	free((*dir));
+	*dir = NULL;
 }
 
 /**

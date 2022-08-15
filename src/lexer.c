@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:31:18 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 23:32:05 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/15 01:45:54 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,43 @@ int	tkn_length(t_type type)
 /**
  * Tokenize the given string
  * 
+ * @param	shell the line read from the user
+ * @param	i the current index
+ * @param	lst the list of tokens
+ * @param	is_quoted a boolean reflecting quotation state
+ * @return	the length of the extracted cmd token
+ */
+int	extract_cmd(char *shell, int i, t_token **lst, bool *is_quoted)
+{
+	int			len;
+	char		quote_type;
+
+	len = 0;
+	*is_quoted = false;
+	quote_type = '\0';
+	while ((tkn_type(&shell[i + len]) == CMD || *is_quoted) && shell[i + len])
+	{
+		toggle_quote(shell[i + len], &quote_type, is_quoted);
+		if (ft_isspace(shell[i + len]) && !(*is_quoted))
+			break ;
+		else
+			len++;
+	}
+	push_token(lst, create_token(&shell[i], CMD, len));
+	return (len);
+}
+
+/**
+ * Tokenize the given string
+ * 
  * @param	str the string to parse
  * @return	tokens extraxted from the string
  */
 t_token	*create_tokens_list(char *shell)
 {
 	int			i;
-	int			len;
 	t_token		*lst;
 	bool		is_quoted;
-	char		quote_type;
 	t_type		curr_tkn_type;
 
 	i = 0;
@@ -92,34 +119,7 @@ t_token	*create_tokens_list(char *shell)
 			i += tkn_length(curr_tkn_type);
 		}
 		else if (curr_tkn_type == CMD)
-		{
-			len = 0;
-			is_quoted = false;
-			quote_type = '\0';
-			while ((tkn_type(&shell[i + len]) == CMD || is_quoted)
-				&& shell[i + len])
-			{
-				if (shell[i + len] == '"' || shell[i + len] == '\'')
-				{
-					if (quote_type == '\0')
-					{
-						is_quoted = true;
-						quote_type = shell[i + len];
-					}
-					else if (quote_type == shell[i + len])
-					{
-						is_quoted = false;
-						quote_type = '\0';
-					}
-				}
-				if (ft_isspace(shell[i + len]) && !is_quoted)
-					break ;
-				else
-					len++;
-			}
-			push_token(&lst, create_token(&shell[i], CMD, len));
-			i += len;
-		}
+			i += extract_cmd(shell, i, &lst, &is_quoted);
 	}
 	return (lst);
 }

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 23:24:46 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/15 02:00:18 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*expand_vars(char *str, t_env *env)
 	expanded_str = ft_strdup(str);
 	while (expanded_str[i])
 	{
-		toggle_quote(expanded_str[i], &quote_type);
+		toggle_quote(expanded_str[i], &quote_type, NULL);
 		if (expanded_str[i] != '$' || quote_type == '\'')
 			i += 1;
 		else
@@ -45,8 +45,6 @@ char	*expand_vars(char *str, t_env *env)
 	}
 	return (expanded_str);
 }
-
-// TODO: handle *"a" -> match *a
 
 /**
  * get the files and directories that match pattern in path
@@ -65,6 +63,7 @@ char	*expand_wildcard(char *pattern, char *path)
 	i = -1;
 	output = NULL;
 	dir = read_dir_content(path);
+	pattern = unquote_text(pattern);
 	while (dir->content[++i])
 	{
 		if (match_wildcard(pattern, dir->content[i]))
@@ -77,11 +76,8 @@ char	*expand_wildcard(char *pattern, char *path)
 			free(temp);
 		}
 	}
-	i = -1;
-	while (++i < dir->length)
-		free(dir->content[i]);
-	free(dir->content);
-	free(dir);
+	free(pattern);
+	free_dir(&dir);
 	return (output);
 }
 
@@ -98,7 +94,8 @@ void	expand_shell(t_token *token_lst, t_env *env)
 	while (token_lst)
 	{
 		if (
-			(token_lst->prev && token_lst->prev->type != R_HEREDOC && token_lst->type == CMD)
+			(token_lst->prev && token_lst->prev->type != R_HEREDOC
+				&& token_lst->type == CMD)
 			&& ft_memchr(token_lst->content, '$', token_lst->length)
 		)
 		{

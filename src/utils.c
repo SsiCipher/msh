@@ -6,22 +6,39 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 15:37:54 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/14 23:26:35 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/15 01:59:49 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void	toggle_quote(char curr_char, char *quote_type)
+/**
+ * Toggle the quote state based on the character
+ * 
+ * @param	c the current character
+ * @param	quote_type the quote type [', ", \0]
+ * @param	is_quoted a boolean reflecting the state
+ */
+void	toggle_quote(char c, char *quote_type, bool *is_quoted)
 {
-	if (curr_char == '"' || curr_char == '\'')
+	if (c == '\"' || c == '\'')
 	{
 		if (!(*quote_type))
-			*quote_type = curr_char;
-		else if (curr_char == *quote_type)
+		{
+			if (is_quoted)
+				*is_quoted = true; 
+			*quote_type = c;
+		}
+		else if (c == *quote_type)
+		{
+			if (is_quoted)
+				*is_quoted = false; 
 			*quote_type = '\0';
+		}
 	}
 }
+
+// TODO: change realloc to ft_realloc
 
 /**
  * Remove quotes from a string

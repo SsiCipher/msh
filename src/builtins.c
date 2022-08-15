@@ -3,23 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 22:09:51 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/15 17:51:57 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-/*
-- exit code for each command
-- write errors to stderr
-*/
+// TODO: exit code for each command
+// TODO: write errors to stderr
 
-void	print_builtin_error(char *cmd, char *error)
+void	print_builtin_error(char *cmd, char *pre_error, char *error)
 {
-	dprintf(STDERR_FILENO, "msh: %s: %s\n", cmd, error);
+	ft_putstr_fd("msh: ", STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	if (pre_error)
+	{
+		ft_putstr_fd(pre_error, STDERR_FILENO);
+	    ft_putstr_fd(": ", STDERR_FILENO);
+	}
+	ft_putstr_fd(error, STDERR_FILENO);
+	ft_putchar_fd('\n', STDERR_FILENO);
 }
 
 void	ft_echo(int argc, char **argv)
@@ -38,14 +45,14 @@ void	ft_echo(int argc, char **argv)
 		}
 		while (argv[i])
 		{
-			ft_putstr_fd(argv[i], 1);
+			ft_putstr_fd(argv[i], STDOUT_FILENO);
 			if (i != argc - 1)
-				ft_putchar_fd(' ', 1);
+				ft_putchar_fd(' ', STDOUT_FILENO);
 			i++;
 		}
 	}
 	if (print_newline)
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
 void	ft_cd_goto(char *path, t_env *env)
@@ -55,7 +62,7 @@ void	ft_cd_goto(char *path, t_env *env)
 
 	prev_wd_path = getcwd(NULL, 0);
 	if (chdir(path))
-		print_builtin_error("cd", strerror(errno));
+		print_builtin_error("cd", NULL, strerror(errno));
 	else
 	{
 		new_wd_path = getcwd(NULL, 0);
@@ -72,14 +79,14 @@ void	ft_cd(int argc, char **argv, t_env *env)
 
 	path = NULL;
 	if (argc > 2)
-		print_builtin_error("cd", "too many arguments");
+		print_builtin_error("cd", NULL, "too many arguments");
 	else if (argc == 2)
 		path = argv[1];
 	else
 	{
 		path = get_var(env, "HOME");
 		if (!path)
-			print_builtin_error("cd", "HOME not set");
+			print_builtin_error("cd", NULL, "HOME not set");
 	}
 	if (path && argc <= 2)
 		ft_cd_goto(path, env);
@@ -173,7 +180,8 @@ void	ft_export(int argc, char **argv, t_env *env)
 			if (check_name(name))
 				edit_var(env, name, value, append);
 			else
-				printf("msh: export: %s is not a valid identifier\n", tmp);
+				print_builtin_error("export", tmp, "is not a valid identifier");			
+				// printf("msh: export: %s is not a valid identifier\n", tmp);
 			free(tmp);
 		}
 	}
@@ -242,11 +250,13 @@ void	ft_exit(int argc, char **argv, t_env *env)
 		exit_code = atoi_check(argv[1]);
 		if (exit_code == -1)
 		{
-			printf("msh: exit: %s: numeric argument required\n", argv[1]);
+			print_builtin_error("exit", argv[1], "numeric argument required");
+			// printf("msh: exit: %s: numeric argument required\n", argv[1]);
 			exit(2);
 		}
 		if (argc > 2)
-			printf("msh: exit: too many arguments\n");
+			print_builtin_error("exit", NULL, "too many arguments");
+			// printf("msh: exit: too many arguments\n");
 		else
 			exit((unsigned short)exit_code);
 	}

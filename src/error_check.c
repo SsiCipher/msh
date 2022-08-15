@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 23:32:30 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/15 19:17:49 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ bool	print_error(char *error_type, char *expected, char *tkn_content)
 	return (true);
 }
 
-// TODO: check "| c" errors + unclosed parenthesis
+// TODO: check before and after pipe |
+// TODO: check unclosed quotes and parenthesis
 // TODO: better errors like bash
 
 /**
@@ -54,18 +55,22 @@ bool	check_errors(t_token *token_lst)
 	tk = token_lst;
 	while (tk)
 	{
+		// Heredoc
 		if (tk->type == R_HEREDOC && (!(tk->next) || tk->next->type != CMD))
 			return (print_error("syntax", "limiter", tk->content));
+		// Redirection
 		else if (
 			(tk->type == R_INPUT || tk->type == R_OUTPUT || tk->type == R_APPEND)
 			&& (!(tk->next) || tk->next->type != CMD)
 		)
 			return (print_error("syntax", "file", tk->content));
+		// Logic and/or
 		else if (
 			(tk->type == AND || tk->type == OR)
 			&& (!(tk->next) || (tk->next->type != CMD && tk->next->type != O_PARENTH))
 		)
 			return (print_error("syntax", "command", tk->content));
+		// Pipe
 		else if (
 			tk->type == PIPE
 			&& (
@@ -77,7 +82,8 @@ bool	check_errors(t_token *token_lst)
 				&& tk->next->type != CMD)
 			)
 		)
-			return (print_error("syntax", "commandd", tk->content));
+			return (print_error("syntax", "command", tk->content));
+		// unclosed quotes
 		else if (
 			tk->type == CMD && ft_countchr(tk->content, '"') % 2 != 0
 		)

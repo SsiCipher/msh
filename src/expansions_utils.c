@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 03:48:41 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/16 05:35:11 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,6 @@ int	replace_var(char **str, int start, char *var, t_env *env)
 
 // TODO: change qsort to ft_qsort
 
-int	cmp_names(const void *p1, const void *p2)
-{
-	return (
-		ft_strcmp(*(const char **)p1, *(const char **)p2)
-	);
-}
-
 /**
  * Read all the files in a directory into the t_dir struct
  * 
@@ -96,7 +89,7 @@ t_dir	*read_dir_content(char *dir_path)
 			sizeof(char *) * dir->length, sizeof(char *) * (dir->length + 1));
 	dir->content[dir->length] = NULL;
 	closedir(dir_stream);
-	qsort(dir->content, dir->length, sizeof(char *), cmp_names);
+	ft_qsort_str(dir->content, dir->length, ft_strcmp);
 	return (dir);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 23:14:20 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/16 05:45:05 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,20 @@
 
 // TODO: variable expansion in file
 // TODO: random filename
+
+bool	process_line(char *line, char *limiter, int heredoc_fd)
+{
+	
+	if (
+		!ft_strncmp(line, limiter, ft_strlen(limiter))
+		&& *(line + ft_strlen(limiter)) == '\0'
+	)
+		return (false);
+	write(heredoc_fd, line, ft_strlen(line));
+	write(heredoc_fd, "\n", 1);
+	free(line);
+	return (true);
+}
 
 /**
  * Handle the start and read of here_docs + variable expansions
@@ -40,19 +54,21 @@ void	handle_here_docs(t_token *token_lst, t_env *env)
 			line = readline("> ");
 			while (line)
 			{
-				if (
-					!ft_strncmp(line, limiter, ft_strlen(limiter))
-					&& *(line + ft_strlen(limiter)) == '\0'
-				)
+				// if (
+				// 	!ft_strncmp(line, limiter, ft_strlen(limiter))
+				// 	&& *(line + ft_strlen(limiter)) == '\0'
+				// )
+				// 	break ;
+				// write(heredoc_fd, line, ft_strlen(line));
+				// write(heredoc_fd, "\n", 1);
+				// free(line);
+				if (!process_line(line, limiter, heredoc_fd))
 					break ;
-				write(heredoc_fd, line, ft_strlen(line));
-				write(heredoc_fd, "\n", 1);
-				free(line);
 				line = readline("> ");
 			}
 			free(line);
 			free(limiter);
-			if (!ft_strchr(tk->next->content, '"') && !ft_strchr(tk->next->content, '\''))
+			if (!ft_strchr(tk->next->content, '\"') && !ft_strchr(tk->next->content, '\''))
 				tk->content = expand_vars(tk->content, env);
 			free(tk->next->content);
 			tk->next->content = ft_strdup("/tmp/.here_doc");

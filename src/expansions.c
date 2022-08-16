@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/15 02:00:18 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/16 03:42:19 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char	*expand_vars(char *str, t_env *env)
 {
 	int		i;
 	char	*var;
-	char	*expanded_str;
 	char	quote_type;
+	char	*expanded_str;
 
 	i = 0;
 	quote_type = '\0';
@@ -56,9 +56,9 @@ char	*expand_vars(char *str, t_env *env)
 char	*expand_wildcard(char *pattern, char *path)
 {
 	int		i;
-	char	*output;
 	t_dir	*dir;
-	char	*temp;
+	char	*tmp;
+	char	*output;
 
 	i = -1;
 	output = NULL;
@@ -68,12 +68,12 @@ char	*expand_wildcard(char *pattern, char *path)
 	{
 		if (match_wildcard(pattern, dir->content[i]))
 		{
-			temp = output;
+			tmp = output;
 			if (!output)
-				output = ft_strjoin_many(1, dir->content[i]);
+				output = ft_strdup(dir->content[i]);
 			else
 				output = ft_strjoin_many(3, output, " ", dir->content[i]);
-			free(temp);
+			free(tmp);
 		}
 	}
 	free(pattern);
@@ -90,25 +90,20 @@ char	*expand_wildcard(char *pattern, char *path)
 void	expand_shell(t_token *token_lst, t_env *env)
 {
 	char	*tmp;
+	bool	is_cmd;
 
 	while (token_lst)
 	{
-		if (
-			(token_lst->prev && token_lst->prev->type != R_HEREDOC
-				&& token_lst->type == CMD)
-			&& ft_memchr(token_lst->content, '$', token_lst->length)
-		)
+		tmp = token_lst->content;
+		is_cmd = (token_lst->prev && token_lst->prev->type != R_HEREDOC
+				&& token_lst->type == CMD);
+		if (is_cmd && ft_strchr(token_lst->content, '$'))
 		{
-			tmp = token_lst->content;
 			token_lst->content = expand_vars(token_lst->content, env);
 			free(tmp);
 		}
-		else if (
-			token_lst->type == CMD
-			&& ft_memchr(token_lst->content, '*', token_lst->length)
-		)
+		else if (is_cmd && ft_strchr(token_lst->content, '*'))
 		{
-			tmp = token_lst->content;
 			token_lst->content = expand_wildcard(token_lst->content, "./");
 			free(tmp);
 		}

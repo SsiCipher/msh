@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 05:35:11 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/16 19:41:48 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * extract a variable from a string
  * 
  * @param	str the string to extraxt from
- * @return	the variable of NULL if it's just a '$' 
+ * @return	the variable name | NULL if it's just a '$'
  */
 char	*extract_var(char *str)
 {
@@ -57,8 +57,6 @@ int	replace_var(char **str, int start, char *var, t_env *env)
 	return (ft_strlen(var));
 }
 
-// TODO: change qsort to ft_qsort
-
 /**
  * Read all the files in a directory into the t_dir struct
  * 
@@ -93,6 +91,11 @@ t_dir	*read_dir_content(char *dir_path)
 	return (dir);
 }
 
+/**
+ * Free all memory occupied by t_dir struct and set it to NULL
+ * 
+ * @param	dir the t_dir struct to free
+ */
 void	free_dir(t_dir **dir)
 {
 	int	i;
@@ -114,46 +117,38 @@ void	free_dir(t_dir **dir)
  */
 bool	match_wildcard(char *pattern, char *text)
 {
-	int		n;
-	int		m;
 	int		i;
 	int		j;
-	int		text_pointer;
-	int		patt_pointer;
+	int		text_p;
+	int		patt_p;
 
-	n = ft_strlen(text);
-	m = ft_strlen(pattern);
 	i = 0;
 	j = 0;
-	text_pointer = -1;
-	patt_pointer = -1;
-	if (m == 0)
-		return (n == 0);
-	if (pattern[0] != '.' && text[0] == '.')
-		return (false);
-	while (i < n)
+	text_p = -1;
+	patt_p = -1;
+	if (*pattern == '\0')
+		return (*text == '\0');
+	while (text[i])
 	{
-		if (text[i] == pattern[j])
+		if (pattern[j] && pattern[j] == '*')
+		{
+			text_p = i;
+			patt_p = j++;
+		}
+		else if (text[i] == pattern[j])
 		{
 			i++;
 			j++;
 		}
-		else if (j < m && pattern[j] == '*')
+		else if (patt_p != -1)
 		{
-			text_pointer = i;
-			patt_pointer = j;
-			j++;
-		}
-		else if (patt_pointer != -1)
-		{
-			j = patt_pointer + 1;
-			i = text_pointer + 1;
-			text_pointer++;
+			i = ++text_p;
+			j = patt_p + 1;
 		}
 		else
 			return (false);
 	}
-	while (j < m && pattern[j] == '*')
+	while (pattern[j] && pattern[j] == '*')
 		j++;
-	return (j == m);
+	return (pattern[j] == '\0');
 }

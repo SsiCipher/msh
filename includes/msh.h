@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/15 01:53:54 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/16 17:23:34 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,10 @@ void		expand_shell(t_token *token_lst, t_env *env);
 // =================== src/expantions_utils.c
 
 char		*extract_var(char *str);
-char		*ft_find_n_replace(char *str, int start_i, char *find, char *replace);
 int			replace_var(char **str, int start, char *var, t_env *env);
 t_dir		*read_dir_content(char *dir_path);
-bool		match_wildcard(char *pattern, char *text);
 void		free_dir(t_dir **dir);
+bool		match_wildcard(char *pattern, char *text);
 
 // =================== src/handle_here_doc.c
 

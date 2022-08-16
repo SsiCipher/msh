@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 03:42:19 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/16 18:28:07 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,16 @@ char	*expand_wildcard(char *pattern, char *path)
 	char	*output;
 
 	i = -1;
-	output = NULL;
+	output = ft_strdup("");
 	dir = read_dir_content(path);
 	pattern = unquote_text(pattern);
 	while (dir->content[++i])
 	{
-		if (match_wildcard(pattern, dir->content[i]))
+		if (match_wildcard(pattern, dir->content[i])
+			&& !(pattern[0] != '.' && dir->content[i][0] == '.'))
 		{
 			tmp = output;
-			if (!output)
+			if (*output == '\0')
 				output = ft_strdup(dir->content[i]);
 			else
 				output = ft_strjoin_many(3, output, " ", dir->content[i]);

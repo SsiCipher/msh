@@ -70,7 +70,7 @@ void	start_repl(t_env *env)
 	t_ast_node	*ast_tree;
 
 	while (true)
-	{		
+	{
 		shell = init_shell(env);
 		if (!shell)
 			continue ;

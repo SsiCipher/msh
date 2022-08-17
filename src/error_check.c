@@ -12,8 +12,6 @@
 
 #include "msh.h"
 
-// TODO: better errors like bash
-
 /**
  * Check tokens for syntax errors
  * 
@@ -21,26 +19,20 @@
  * @param	tkn_content the content of the token
  * @return	always true
  */
-bool	print_error(char *error_type, char *expected, char *tkn_content)
+bool	display_error(char *error, char *token)
 {
-	ft_putstr_fd("msh: ", 2);
-	ft_putstr_fd(error_type, 2);
-	ft_putstr_fd(" error: ", 2);
-	if (expected)
+	ft_putstr_fd("msh: syntax error: ", 2);
+	ft_putstr_fd(error, 2);
+	if (token)
 	{
-		ft_putstr_fd("expected a ", 2);
-		ft_putstr_fd(expected, 2);
-	}
-	if (tkn_content)
-	{
-		ft_putstr_fd(" after ", 2);
-		ft_putstr_fd(tkn_content, 2);
+		ft_putstr_fd(" `", 2);
+		ft_putstr_fd(token, 2);
+		ft_putstr_fd("`", 2);
 	}
 	ft_putchar_fd('\n', 2);
 	return (true);
 }
 
-// TODO: check unclosed quotes and parenthesis
 // TODO: fix norm errors
 
 bool	is_next_invalid(t_token *curr_tkn, t_type curr_type, t_type next_type)
@@ -94,25 +86,25 @@ bool	check_errors(t_token *tkn)
 	{
 		// Heredoc
 		if (is_next_invalid(tkn, R_HEREDOC, CMD))
-			return (print_error("syntax", "limiter", tkn->content));
+			return (display_error("unexpected token", "newline"));
 		// Redirection
 		else if (is_next_invalid(tkn, R_INPUT, CMD) || is_next_invalid(tkn, R_OUTPUT, CMD) || is_next_invalid(tkn, R_APPEND, CMD))
-			return (print_error("syntax", "file", tkn->content));
+			return (display_error("unexpected token", "newline"));
 		// Logical AND/OR
 		else if (
 			(is_both_invalid(tkn, OR, CMD) && is_next_invalid(tkn, OR, O_PARENTH) && is_prev_invalid(tkn, OR, C_PARENTH))
 			|| (is_both_invalid(tkn, AND, CMD) && is_next_invalid(tkn, AND, O_PARENTH) && is_prev_invalid(tkn, AND, C_PARENTH))
 		)
-			return (print_error("syntax", "command", tkn->content));
+			return (display_error("unexpected token", tkn->content));
 		// Pipe
 		else if (
 			is_both_invalid(tkn, PIPE, CMD) && is_next_invalid(tkn, PIPE, R_HEREDOC) && is_prev_invalid(tkn, PIPE, C_PARENTH)
 			&& is_next_invalid(tkn, PIPE, R_INPUT) && is_next_invalid(tkn, PIPE, R_OUTPUT) && is_next_invalid(tkn, PIPE, R_APPEND)
 		)
-			return (print_error("syntax", "command", tkn->content));
+			return (display_error("unexpected token", tkn->content));
 		// Quotes
 		else if (tkn->type == CMD && is_quotes_unclosed(tkn->content))
-			return (print_error("syntax", "matching quote", NULL));
+			return (display_error("unexpected end of file", NULL));
 		// Parenthesis
 		else if (tkn->type == O_PARENTH)
 		{
@@ -120,7 +112,7 @@ bool	check_errors(t_token *tkn)
 				is_next_invalid(tkn, O_PARENTH, CMD)
 				&& is_next_invalid(tkn, PIPE, R_INPUT) && is_next_invalid(tkn, PIPE, R_OUTPUT) && is_next_invalid(tkn, PIPE, R_APPEND)
 			)
-				return (print_error("syntax", "command", tkn->content));
+				return (display_error("unexpected end of file", NULL));
 			else
 				is_inside_parenth = true;
 		}
@@ -129,11 +121,11 @@ bool	check_errors(t_token *tkn)
 			if (is_inside_parenth)
 				is_inside_parenth = false;
 			else
-				return (print_error("syntax", "matching parethesis", NULL));
+				return (display_error("unexpected token", ")"));
 		}
 		tkn = tkn->next;
 	}
 	if (is_inside_parenth)
-		return (print_error("syntax", "matching parethesis", NULL));
+		return (display_error("unexpected end of file", NULL));
 	return (false);
 }

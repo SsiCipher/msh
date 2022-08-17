@@ -13,10 +13,10 @@
 #include "msh.h"
 
 /**
- * Check tokens for syntax errors
+ * display a syntax error
  * 
- * @param	expected the expected token after
- * @param	tkn_content the content of the token
+ * @param	error the error to display
+ * @param	token the token where the error occured
  * @return	always true
  */
 bool	display_error(char *error, char *token)

@@ -92,19 +92,34 @@ bool	check_errors(t_token *tkn)
 	is_inside_parenth = false;
 	while (tkn)
 	{
+		// Heredoc
 		if (is_next_invalid(tkn, R_HEREDOC, CMD))
 			return (print_error("syntax", "limiter", tkn->content));
+		// Redirection
 		else if (is_next_invalid(tkn, R_INPUT, CMD) || is_next_invalid(tkn, R_OUTPUT, CMD) || is_next_invalid(tkn, R_APPEND, CMD))
 			return (print_error("syntax", "file", tkn->content));
-		else if ((is_both_invalid(tkn, OR, CMD) && is_next_invalid(tkn, OR, O_PARENTH) && is_prev_invalid(tkn, OR, C_PARENTH)) || (is_both_invalid(tkn, AND, CMD) && is_next_invalid(tkn, AND, O_PARENTH) && is_prev_invalid(tkn, AND, C_PARENTH)))
+		// Logical AND/OR
+		else if (
+			(is_both_invalid(tkn, OR, CMD) && is_next_invalid(tkn, OR, O_PARENTH) && is_prev_invalid(tkn, OR, C_PARENTH))
+			|| (is_both_invalid(tkn, AND, CMD) && is_next_invalid(tkn, AND, O_PARENTH) && is_prev_invalid(tkn, AND, C_PARENTH))
+		)
 			return (print_error("syntax", "command", tkn->content));
-		else if (is_both_invalid(tkn, PIPE, CMD) && is_prev_invalid(tkn, PIPE, C_PARENTH) && is_next_invalid(tkn, PIPE, R_HEREDOC) && is_next_invalid(tkn, PIPE, R_INPUT) && is_next_invalid(tkn, PIPE, R_OUTPUT) && is_next_invalid(tkn, PIPE, R_APPEND))
+		// Pipe
+		else if (
+			is_both_invalid(tkn, PIPE, CMD) && is_next_invalid(tkn, PIPE, R_HEREDOC) && is_prev_invalid(tkn, PIPE, C_PARENTH)
+			&& is_next_invalid(tkn, PIPE, R_INPUT) && is_next_invalid(tkn, PIPE, R_OUTPUT) && is_next_invalid(tkn, PIPE, R_APPEND)
+		)
 			return (print_error("syntax", "command", tkn->content));
+		// Quotes
 		else if (tkn->type == CMD && is_quotes_unclosed(tkn->content))
 			return (print_error("syntax", "matching quote", NULL));
+		// Parenthesis
 		else if (tkn->type == O_PARENTH)
 		{
-			if (is_next_invalid(tkn, O_PARENTH, CMD))
+			if (
+				is_next_invalid(tkn, O_PARENTH, CMD)
+				&& is_next_invalid(tkn, PIPE, R_INPUT) && is_next_invalid(tkn, PIPE, R_OUTPUT) && is_next_invalid(tkn, PIPE, R_APPEND)
+			)
 				return (print_error("syntax", "command", tkn->content));
 			else
 				is_inside_parenth = true;

@@ -46,7 +46,7 @@ void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 	// if ((type == R_OUTPUT || type == R_APPEND) && node->output_fd != 1)
 	// 	close(node->output_fd);
 	// if (type == R_INPUT)
-	// 	node->input_fd = open(filename, O_CREAT | O_RDONLY, 0666);
+	// 	node->input_fd = open(filename, O_RDONLY, 0666);
 	// if (type == R_OUTPUT)
 	// 	node->output_fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
 	// if (type == R_APPEND)

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/11 10:42:07 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/17 18:42:04 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,15 @@ void	delete_token(t_token *token)
 void	free_tokens(t_token **tokens_lst)
 {
 	t_token	*curr;
+	t_token	*tmp;
 
 	curr = *tokens_lst;
 	while (curr)
 	{
 		free(curr->content);
+		tmp = curr->next;
 		free(curr);
-		curr = curr->next;
+		curr = tmp;
 	}
 	*tokens_lst = NULL;
 }

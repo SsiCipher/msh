@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/15 17:51:57 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/17 18:46:54 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	print_builtin_error(char *cmd, char *pre_error, char *error)
 	if (pre_error)
 	{
 		ft_putstr_fd(pre_error, STDERR_FILENO);
-	    ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
 	}
 	ft_putstr_fd(error, STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
@@ -180,8 +180,7 @@ void	ft_export(int argc, char **argv, t_env *env)
 			if (check_name(name))
 				edit_var(env, name, value, append);
 			else
-				print_builtin_error("export", tmp, "is not a valid identifier");			
-				// printf("msh: export: %s is not a valid identifier\n", tmp);
+				print_builtin_error("export", tmp, "is not a valid identifier");
 			free(tmp);
 		}
 	}
@@ -251,12 +250,10 @@ void	ft_exit(int argc, char **argv, t_env *env)
 		if (exit_code == -1)
 		{
 			print_builtin_error("exit", argv[1], "numeric argument required");
-			// printf("msh: exit: %s: numeric argument required\n", argv[1]);
 			exit(2);
 		}
 		if (argc > 2)
 			print_builtin_error("exit", NULL, "too many arguments");
-			// printf("msh: exit: too many arguments\n");
 		else
 			exit((unsigned short)exit_code);
 	}

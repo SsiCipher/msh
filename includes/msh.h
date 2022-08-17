@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 17:23:34 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/17 18:59:06 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,41 +80,59 @@ typedef struct s_ast_node
 	struct s_ast_node	*right;
 }	t_ast_node;
 
-// =================== src/lexer.c
+/* ============= src/builtins.c ============= */
 
-t_type		tkn_type(char *str);
-int			tkn_length(t_type type);
-t_token		*create_tokens_list(char *shell);
+void		print_builtin_error(char *cmd, char *pre_error, char *error);
+void		ft_echo(int argc, char **argv);
+void		ft_cd_goto(char *path, t_env *env);
+void		ft_cd(int argc, char **argv, t_env *env);
+void		ft_pwd(int argc, char **argv);
+bool		parse_var(char *line, char **name, char **value);
+bool		check_name(char *name);
+void		ft_export_list(t_env *env);
+void		ft_export(int argc, char **argv, t_env *env);
+void		ft_unset(int argc, char **argv, t_env *env);
+void		ft_env(int argc, char **argv, t_env *env);
+long long	atoi_check(char *number);
+void		ft_exit(int argc, char **argv, t_env *env);
 
-// =================== src/env.c
+/* ============= src/debug.c ============= */
+
+char		*get_type_name(t_type type);
+void		print_tokens(t_token *tokens_lst);
+void		print_node(t_ast_node *node);
+void		print_tree(t_ast_node *root, int level);
+
+/* ============= src/env.c ============= */
 
 t_env		*create_env(char **envp);
 void		delete_env(t_env **env);
 char		*get_var(t_env *env, char *name);
+bool		is_var(char *env_line, char *name);
 bool		contains_var(t_env *env, char *name);
 void		add_var(t_env *env, char *name, char *value);
-void		edit_var(t_env *env, char *name, char *value, bool append);
+void		edit_var(t_env *env, char *name, char *value, bool	append);
 void		delete_var(t_env *env, char *name);
 
-// =================== src/lst.c
+/* ============= src/error_check.c ============= */
 
-t_token		*create_token(char *content, t_type type, int length);
-void		push_token(t_token **tokens_lst, t_token *new_token);
-void		delete_token(t_token *token);
-t_token		*last_token(t_token *tokens_lst);
-void		free_tokens(t_token **tokens_lst);
+bool		display_error(char *error, char *token);
+bool		is_next_invalid(t_token *curr_tkn, t_type curr_type,
+				t_type next_type);
+bool		is_prev_invalid(t_token *curr_tkn, t_type curr_type,
+				t_type prev_type);
+bool		is_both_invalid(t_token *curr_tkn, t_type curr_type,
+				t_type prev_type);
+bool		is_quotes_unclosed(char *str);
+bool		check_errors(t_token *tkn);
 
-// =================== src/parser.c
-
-t_token		*parse_shell(char *str);
-
-// =================== src/expantions.c
+/* ============= src/expansions.c ============= */
 
 char		*expand_vars(char *str, t_env *env);
 char		*expand_wildcard(char *pattern, char *path);
 void		expand_shell(t_token *token_lst, t_env *env);
 
-// =================== src/expantions_utils.c
+/* ============= src/expansions_utils.c ============= */
 
 char		*extract_var(char *str);
 int			replace_var(char **str, int start, char *var, t_env *env);
@@ -122,47 +140,51 @@ t_dir		*read_dir_content(char *dir_path);
 void		free_dir(t_dir **dir);
 bool		match_wildcard(char *pattern, char *text);
 
-// =================== src/handle_here_doc.c
+/* ============= src/here_doc.c ============= */
 
-void		handle_here_docs(t_token *token_lst, t_env *env);
-char		*remove_quotes(char *limiter);
+int			open_heredoc_file(t_env *env, char **file_path);
+char		*start_heredoc(char *limiter, bool	is_limiter_quoted, t_env *env);
+void		handle_heredocs(t_token *tkn, t_env *env);
 
-// =================== src/error_check.c
+/* ============= src/lexer.c ============= */
 
-bool		print_error(char *error_type, char *expected, char *tkn_content);
-bool		check_errors(t_token *token_lst);
+t_type		tkn_type(char *str);
+int			tkn_length(t_type type);
+int			extract_cmd(char *shell, int i, t_token **lst, bool	*is_quoted);
+t_token		*create_tokens_list(char *shell);
 
-// =================== src/error_check.c
+/* ============= src/lst.c ============= */
 
-char		*get_type_name(t_type type);
+t_token		*create_token(char *content, t_type type, int length);
+void		push_token(t_token **tokens_lst, t_token *new_token);
+void		delete_token(t_token *token);
+t_token		*last_token(t_token *tokens_lst);
+void		free_tokens(t_token **tokens_lst);
 
-// =================== src/tree.c
+/* ============= src/parser.c ============= */
+
+t_type		tkn_type(char *str);
+int			tkn_length(t_type type);
+t_token		*parse_shell(char *str);
+
+/* ============= src/token.c ============= */
+
+t_token		*create_token(char *content, t_type type, int length);
+t_token		*last_token(t_token *tokens_lst);
+void		push_token(t_token **tokens_lst, t_token *new_token);
+void		delete_token(t_token *token);
+void		free_tokens(t_token **tokens_lst);
+
+/* ============= src/tree.c ============= */
 
 t_ast_node	*create_node(t_type type);
 void		node_argv_push(t_ast_node *node, char *new_arg);
 void		update_io_fds(t_ast_node *node, t_type type, char *filename);
 t_ast_node	*create_ast(t_token *tkns_lst);
 
-// =================== src/utils.c
+/* ============= src/utils.c ============= */
 
-void		toggle_quote(char c, char *quote_type, bool *is_quoted);
+void		toggle_quote(char c, char *quote_type, bool	*is_quoted);
 char		*unquote_text(char *str);
-
-// =================== src/builtins.c
-
-void		ft_echo(int argc, char **argv);
-void		ft_cd(int argc, char **argv, t_env *env);
-void		ft_pwd(int argc, char **argv);
-void		ft_export(int argc, char **argv, t_env *env);
-void		ft_unset(int argc, char **argv, t_env *env);
-void		ft_env(int argc, char **argv, t_env *env);
-void		ft_exit(int argc, char **argv, t_env *env);
-
-// =================== src/debug.c
-
-char		*get_type_name(t_type type);
-void		print_tokens(t_token *tokens_lst);
-void		print_node(t_ast_node *node);
-void		print_tree(t_ast_node *root, int level);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_qsort_str.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 05:28:31 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 05:31:00 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/17 08:11:18 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ int	ft_sort_str(char **array, int size, int (*cmp)(const char *, const char *))
 	return (i - 1);
 }
 
-void	ft_qsort_str(char **array, int size, int (*cmp)(const char *, const char *))
+void	ft_qsort_str(char **array, int size,
+	int (*cmp)(const char *, const char *))
 {
 	int	pivot_i;
 

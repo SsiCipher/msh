@@ -3,78 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 05:45:05 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/17 18:42:00 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-// TODO: variable expansion in file
-// TODO: random filename
+// TODO: change expand vars to discard quotes when called from heredoc
 
-bool	process_line(char *line, char *limiter, int heredoc_fd)
+/**
+ * Open the heredoc file based on $SHLVL variable
+ * 
+ * @param	env t_env struct containing all the environment variables
+ * @param	file_path a variable to set to the heredoc file path
+ */
+int	open_heredoc_file(t_env *env, char **file_path)
 {
-	
-	if (
-		!ft_strncmp(line, limiter, ft_strlen(limiter))
-		&& *(line + ft_strlen(limiter)) == '\0'
-	)
-		return (false);
-	write(heredoc_fd, line, ft_strlen(line));
-	write(heredoc_fd, "\n", 1);
-	free(line);
-	return (true);
+	int		fd;
+	char	*shlvl;
+
+	*file_path = NULL;
+	shlvl = get_var(env, "SHLVL");
+	if (shlvl)
+	{
+		*file_path = ft_strjoin("/tmp/.heredoc_", shlvl);
+		fd = open(*file_path, O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	}
+	free(shlvl);
+	return (fd);
 }
 
 /**
  * Handle the start and read of here_docs + variable expansions
  * 
- * @param	token_list t_token struct containing the list of tokens
+ * @param	limter the limiter to stop the heredoc read
+ * @param	is_limiter_quoted boolean reflecting wheter or not the limiter is quoted
  * @param	env t_env struct containing all the environment variables
  */
-void	handle_here_docs(t_token *token_lst, t_env *env)
+char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
 {
-	t_token	*tk;
+	int		fd;
 	char	*line;
-	char	*limiter;
-	int		heredoc_fd;
+	char	*tmp;
+	char	*file_path;
 
-	tk = token_lst;
-	while (tk)
+	fd = open_heredoc_file(env, &file_path);
+	line = readline("> ");
+	while (line)
 	{
-		if (tk->type == R_HEREDOC)
+		if (!ft_strncmp(line, limiter, ft_strlen(limiter))
+			&& *(line + ft_strlen(limiter)) == '\0')
+			break ;
+		tmp = line;
+		if (!is_limiter_quoted)
+			line = expand_vars(line, env);
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+		free(tmp);
+		line = readline("> ");
+	}
+	free(line);
+	close(fd);
+	return (file_path);
+}
+
+/**
+ * Handle the start and read of here_docs + variable expansions
+ * 
+ * @param	tkn t_token struct containing the list of tokens
+ * @param	env t_env struct containing all the environment variables
+ */
+void	handle_heredocs(t_token *tkn, t_env *env)
+{
+	char	*limiter;
+	char	*file_path;
+	bool	is_limiter_quoted;
+
+	while (tkn)
+	{
+		if (tkn->type == R_HEREDOC)
 		{
-			heredoc_fd = open("/tmp/.here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0666);
-			if (heredoc_fd == -1)
-				perror("Cannot open /tmp/.here_doc");
-			limiter = unquote_text(tk->next->content);
-			line = readline("> ");
-			while (line)
-			{
-				// if (
-				// 	!ft_strncmp(line, limiter, ft_strlen(limiter))
-				// 	&& *(line + ft_strlen(limiter)) == '\0'
-				// )
-				// 	break ;
-				// write(heredoc_fd, line, ft_strlen(line));
-				// write(heredoc_fd, "\n", 1);
-				// free(line);
-				if (!process_line(line, limiter, heredoc_fd))
-					break ;
-				line = readline("> ");
-			}
-			free(line);
+			is_limiter_quoted = (ft_strchr(tkn->next->content, '\"')
+					|| ft_strchr(tkn->next->content, '\''));
+			limiter = unquote_text(tkn->next->content);
+			file_path = start_heredoc(limiter, is_limiter_quoted, env);
 			free(limiter);
-			if (!ft_strchr(tk->next->content, '\"') && !ft_strchr(tk->next->content, '\''))
-				tk->content = expand_vars(tk->content, env);
-			free(tk->next->content);
-			tk->next->content = ft_strdup("/tmp/.here_doc");
-			tk->next->length = 14;
-			close(heredoc_fd);
+			free(tkn->next->content);
+			tkn->next->content = file_path;
+			tkn->next->length = ft_strlen(file_path);
 		}
-		tk = tk->next;
+		tkn = tkn->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 17:23:40 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/17 18:12:53 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	start_repl(t_env *env)
 		expand_shell(tokens_lst, env);
 		if (!check_errors(tokens_lst))
 		{
-			handle_here_docs(tokens_lst, env);
+			handle_heredocs(tokens_lst, env);
 			printf("> ------- Tokens ------- <\n\n");
 			print_tokens(tokens_lst);
 			ast_tree = create_ast(tokens_lst);

@@ -98,6 +98,7 @@ char	*ft_strjoin_arr(char **arr);
 int		ft_indexof(char *str, char c);
 int		ft_every_char(const char *str, char c);
 char	*ft_find_n_replace(char *str, int start_i, char *find, char *replace);
-void	ft_qsort_str(char **array, int size, int (*cmp)(const char *, const char *));
+void	ft_qsort_str(char **array, int size,
+			int (*cmp)(const char *, const char *));
 
 #endif

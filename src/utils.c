@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 15:37:54 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/15 01:59:49 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/17 08:19:31 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void	toggle_quote(char c, char *quote_type, bool *is_quoted)
 		if (!(*quote_type))
 		{
 			if (is_quoted)
-				*is_quoted = true; 
+				*is_quoted = true;
 			*quote_type = c;
 		}
 		else if (c == *quote_type)
 		{
 			if (is_quoted)
-				*is_quoted = false; 
+				*is_quoted = false;
 			*quote_type = '\0';
 		}
 	}

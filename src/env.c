@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 13:53:41 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/17 08:14:12 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,15 @@ char	*get_var(t_env *env, char *name)
 bool	is_var(char *env_line, char *name)
 {
 	int		name_len;
-	
+
 	name_len = ft_strlen(name);
-	return (!ft_strncmp(env_line, name, name_len)
-		&& (env_line[name_len] == '\0'
-		|| env_line[name_len] == '='));
+	return (
+		!ft_strncmp(env_line, name, name_len)
+		&& (
+			env_line[name_len] == '\0'
+			|| env_line[name_len] == '='
+		)
+	);
 }
 
 /**

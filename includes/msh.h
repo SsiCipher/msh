@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/17 18:59:06 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/18 08:35:44 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,10 @@ void		delete_var(t_env *env, char *name);
 
 /* ============= src/error_check.c ============= */
 
+bool		check_errors(t_token *tkn);
+
+/* ============= src/error_check_utils.c ============= */
+
 bool		display_error(char *error, char *token);
 bool		is_next_invalid(t_token *curr_tkn, t_type curr_type,
 				t_type next_type);
@@ -124,11 +128,10 @@ bool		is_prev_invalid(t_token *curr_tkn, t_type curr_type,
 bool		is_both_invalid(t_token *curr_tkn, t_type curr_type,
 				t_type prev_type);
 bool		is_quotes_unclosed(char *str);
-bool		check_errors(t_token *tkn);
 
 /* ============= src/expansions.c ============= */
 
-char		*expand_vars(char *str, t_env *env);
+char		*expand_vars(char *str, bool ignore_quotes, t_env *env);
 char		*expand_wildcard(char *pattern, char *path);
 void		expand_shell(t_token *token_lst, t_env *env);
 
@@ -140,7 +143,7 @@ t_dir		*read_dir_content(char *dir_path);
 void		free_dir(t_dir **dir);
 bool		match_wildcard(char *pattern, char *text);
 
-/* ============= src/here_doc.c ============= */
+/* ============= src/heredoc.c ============= */
 
 int			open_heredoc_file(t_env *env, char **file_path);
 char		*start_heredoc(char *limiter, bool	is_limiter_quoted, t_env *env);

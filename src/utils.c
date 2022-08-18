@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/24 15:37:54 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/17 08:19:31 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/18 09:04:10 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ void	toggle_quote(char c, char *quote_type, bool *is_quoted)
 	}
 }
 
-// TODO: change realloc to ft_realloc
-
 /**
  * Remove quotes from a string
  * 
@@ -50,35 +48,26 @@ char	*unquote_text(char *str)
 {
 	int		i;
 	int		j;
-	int		len;
 	char	*output;
 	char	quote_type;
 
-	i = 0;
+	i = -1;
 	j = 0;
-	len = 0;
-	output = NULL;
+	output = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	quote_type = '\0';
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[i] != '\'' && str[i] != '"')
-		{
-			output = realloc(output, sizeof(char) * (len + 1));
 			output[j++] = str[i];
-		}
 		else
 		{
 			quote_type = str[i++];
 			while (str[i] != quote_type)
-			{
-				output = realloc(output, sizeof(char) * (len + 1));
 				output[j++] = str[i++];
-			}
 			quote_type = '\0';
 		}
-		i++;
 	}
-	output = realloc(output, sizeof(char) * (len + 1));
 	output[j] = '\0';
+	output = ft_realloc(output, ft_strlen(output) + 1, ft_strlen(output) + 1);
 	return (output);
 }

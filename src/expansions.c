@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/16 18:28:07 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/18 08:16:50 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @param	env t_env struct containing environment variables
  * @return	str string with variables replaced with their values
  */
-char	*expand_vars(char *str, t_env *env)
+char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 {
 	int		i;
 	char	*var;
@@ -34,7 +34,7 @@ char	*expand_vars(char *str, t_env *env)
 	while (expanded_str[i])
 	{
 		toggle_quote(expanded_str[i], &quote_type, NULL);
-		if (expanded_str[i] != '$' || quote_type == '\'')
+		if (expanded_str[i] != '$' || (!ignore_quotes && quote_type == '\''))
 			i += 1;
 		else
 		{
@@ -100,7 +100,7 @@ void	expand_shell(t_token *token_lst, t_env *env)
 				&& token_lst->type == CMD);
 		if (is_cmd && ft_strchr(token_lst->content, '$'))
 		{
-			token_lst->content = expand_vars(token_lst->content, env);
+			token_lst->content = expand_vars(token_lst->content, false, env);
 			free(tmp);
 		}
 		else if (is_cmd && ft_strchr(token_lst->content, '*'))

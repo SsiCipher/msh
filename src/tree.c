@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tree.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/14 23:30:40 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/18 09:05:00 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,21 @@ void	node_argv_push(t_ast_node *node, char *new_arg)
 	node->argc += 1;
 }
 
+// (void)node;
+// (void)type;
+// (void)filename;
 void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 {
-	(void)node;
-	(void)type;
-	(void)filename;
-	// if (type == R_INPUT && node->input_fd != STDIN_FILENO)
-	// 	close(node->input_fd);
-	// if ((type == R_OUTPUT || type == R_APPEND) && node->output_fd != 1)
-	// 	close(node->output_fd);
-	// if (type == R_INPUT)
-	// 	node->input_fd = open(filename, O_RDONLY, 0666);
-	// if (type == R_OUTPUT)
-	// 	node->output_fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-	// if (type == R_APPEND)
-	// 	node->output_fd = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0666);
+	if (type == R_INPUT && node->input_fd != STDIN_FILENO)
+		close(node->input_fd);
+	if ((type == R_OUTPUT || type == R_APPEND) && node->output_fd != 1)
+		close(node->output_fd);
+	if (type == R_INPUT)
+		node->input_fd = open(filename, O_RDONLY, 0666);
+	if (type == R_OUTPUT)
+		node->output_fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+	if (type == R_APPEND)
+		node->output_fd = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0666);
 }
 
 // TODO: handle heredoc redirection in tree

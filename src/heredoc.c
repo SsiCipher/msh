@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/17 18:42:00 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/18 08:46:34 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-// TODO: change expand vars to discard quotes when called from heredoc
 
 /**
  * Open the heredoc file based on $SHLVL variable
@@ -40,7 +38,7 @@ int	open_heredoc_file(t_env *env, char **file_path)
  * Handle the start and read of here_docs + variable expansions
  * 
  * @param	limter the limiter to stop the heredoc read
- * @param	is_limiter_quoted boolean reflecting wheter or not the limiter is quoted
+ * @param	is_limiter_quoted true if the limiter is quoted, false otherwise
  * @param	env t_env struct containing all the environment variables
  */
 char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
@@ -59,7 +57,7 @@ char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
 			break ;
 		tmp = line;
 		if (!is_limiter_quoted)
-			line = expand_vars(line, env);
+			line = expand_vars(line, true, env);
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);

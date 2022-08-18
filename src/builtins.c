@@ -6,14 +6,13 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/17 18:46:54 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/18 08:14:29 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
 // TODO: exit code for each command
-// TODO: write errors to stderr
 
 void	print_builtin_error(char *cmd, char *pre_error, char *error)
 {

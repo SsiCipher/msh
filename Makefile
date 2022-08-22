@@ -4,7 +4,7 @@ FLAGS		= -Wall -Wextra -Werror
 SRCS		= src/env.c src/heredoc.c src/builtins.c \
 			src/error_check.c src/error_check_utils.c src/token.c \
 			src/tree.c src/lexer.c src/expansions.c src/expansions_utils.c \
-			src/utils.c src/debug.c
+			src/utils.c src/debug.c src/env_ops.c
 INCS		= -I includes
 LIBS		= -l readline -L libs -l ft
 

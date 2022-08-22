@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/18 08:46:34 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 01:40:56 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	open_heredoc_file(t_env *env, char **file_path)
 	int		fd;
 	char	*shlvl;
 
+	fd = -1;
 	*file_path = NULL;
 	shlvl = get_var(env, "SHLVL");
 	if (shlvl)

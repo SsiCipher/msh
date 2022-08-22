@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 10:36:12 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/12 07:55:02 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 05:09:24 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	print_node(t_ast_node *node)
 		{
 			if (i != 0)
 				printf(" ");
-			printf("%s", node->argv[i]);
+			printf("|%s|", node->argv[i]);
 		}
 	}
 	printf("\n");

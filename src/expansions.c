@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/18 08:16:50 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 05:08:07 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,19 @@ char	*expand_wildcard(char *pattern, char *path)
 	return (output);
 }
 
+void	unquote_tokens(t_token *token_lst)
+{
+	char *tmp;
+
+	while (token_lst)
+	{
+		tmp = token_lst->content;
+		token_lst->content = unquote_text(token_lst->content);
+		free(tmp);
+		token_lst = token_lst->next;
+	}
+}
+
 /**
  * expand speacial characters ($, *) in tokens
  * 
@@ -92,22 +105,25 @@ void	expand_shell(t_token *token_lst, t_env *env)
 {
 	char	*tmp;
 	bool	is_cmd;
+	t_token	*curr;
 
-	while (token_lst)
+	curr = token_lst;
+	while (curr)
 	{
-		tmp = token_lst->content;
-		is_cmd = (token_lst->prev && token_lst->prev->type != R_HEREDOC
-				&& token_lst->type == CMD);
-		if (is_cmd && ft_strchr(token_lst->content, '$'))
+		tmp = curr->content;
+		is_cmd = (curr->prev && curr->prev->type != R_HEREDOC
+				&& curr->type == CMD);
+		if (is_cmd && ft_strchr(curr->content, '$'))
 		{
-			token_lst->content = expand_vars(token_lst->content, false, env);
+			curr->content = expand_vars(curr->content, false, env);
 			free(tmp);
 		}
-		else if (is_cmd && ft_strchr(token_lst->content, '*'))
+		else if (is_cmd && ft_strchr(curr->content, '*'))
 		{
-			token_lst->content = expand_wildcard(token_lst->content, "./");
+			curr->content = expand_wildcard(curr->content, "./");
 			free(tmp);
 		}
-		token_lst = token_lst->next;
+		curr = curr->next;
 	}
+	unquote_tokens(token_lst);
 }

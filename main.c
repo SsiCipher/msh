@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/18 08:35:25 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 05:11:21 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	start_repl(t_env *env)
 			continue ;
 		tokens_lst = create_tokens_list(shell);
 		expand_shell(tokens_lst, env);
-		if (!check_errors(tokens_lst))
+		if (tokens_lst && !check_errors(tokens_lst))
 		{
 			handle_heredocs(tokens_lst, env);
 			printf("> ------- Tokens ------- <\n\n");

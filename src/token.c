@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/17 18:42:04 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 10:15:27 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,6 @@ t_token	*create_token(char *content, t_type type, int length)
 }
 
 /**
- * Get the last token in the list of tokens
- * 
- * @param	tokens_lst the list of tokens
- * @return	t_token struct that holds the last token
- */
-t_token	*last_token(t_token *tokens_lst)
-{
-	t_token	*tk;
-
-	if (!tokens_lst)
-		return (NULL);
-	tk = tokens_lst;
-	while (tk->next)
-		tk = tk->next;
-	return (tk);
-}
-
-/**
  * Add a token to a list
  * 
  * @param	tokens_lst the list to add the token to
@@ -67,10 +49,20 @@ void	push_token(t_token **tokens_lst, t_token *new_token)
 		*tokens_lst = new_token;
 	else
 	{
-		list_tail = last_token(*tokens_lst);
+		list_tail = *tokens_lst;
+		while (list_tail->next)
+			list_tail = list_tail->next;
 		new_token->prev = list_tail;
 		list_tail->next = new_token;
 	}
+}
+
+void	insert_token(t_token *target_token, t_token *new_token)
+{
+	// new_token->prev = target_token;
+	new_token->next = target_token;
+	// target_token->next->prev = new_token;
+	target_token->next = new_token;
 }
 
 /**

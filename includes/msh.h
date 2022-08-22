@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/18 08:35:44 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 10:13:08 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,8 @@ bool		is_quotes_unclosed(char *str);
 /* ============= src/expansions.c ============= */
 
 char		*expand_vars(char *str, bool ignore_quotes, t_env *env);
-char		*expand_wildcard(char *pattern, char *path);
+// char		*expand_wildcard(char *pattern, char *path);
+void		expand_wildcard(t_token *tkn, char *path);
 void		expand_shell(t_token *token_lst, t_env *env);
 
 /* ============= src/expansions_utils.c ============= */
@@ -156,14 +157,6 @@ int			tkn_length(t_type type);
 int			extract_cmd(char *shell, int i, t_token **lst, bool	*is_quoted);
 t_token		*create_tokens_list(char *shell);
 
-/* ============= src/lst.c ============= */
-
-t_token		*create_token(char *content, t_type type, int length);
-void		push_token(t_token **tokens_lst, t_token *new_token);
-void		delete_token(t_token *token);
-t_token		*last_token(t_token *tokens_lst);
-void		free_tokens(t_token **tokens_lst);
-
 /* ============= src/parser.c ============= */
 
 t_type		tkn_type(char *str);
@@ -173,8 +166,8 @@ t_token		*parse_shell(char *str);
 /* ============= src/token.c ============= */
 
 t_token		*create_token(char *content, t_type type, int length);
-t_token		*last_token(t_token *tokens_lst);
 void		push_token(t_token **tokens_lst, t_token *new_token);
+void		insert_token(t_token *target_token, t_token *new_token);
 void		delete_token(t_token *token);
 void		free_tokens(t_token **tokens_lst);
 

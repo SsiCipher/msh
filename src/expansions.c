@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 05:08:07 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/22 10:12:52 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,38 +53,57 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
  * @param	path the path to search
  * @return	a string of names concatenated with space ' '
  */
-char	*expand_wildcard(char *pattern, char *path)
+void	expand_wildcard(t_token *tkn, char *path)
 {
 	int		i;
 	t_dir	*dir;
-	char	*tmp;
-	char	*output;
+	char	*pattern;
 
 	i = -1;
-	output = ft_strdup("");
 	dir = read_dir_content(path);
-	pattern = unquote_text(pattern);
+	pattern = unquote_text(tkn->content);
 	while (dir->content[++i])
 	{
-		if (match_wildcard(pattern, dir->content[i])
-			&& !(pattern[0] != '.' && dir->content[i][0] == '.'))
-		{
-			tmp = output;
-			if (*output == '\0')
-				output = ft_strdup(dir->content[i]);
-			else
-				output = ft_strjoin_many(3, output, " ", dir->content[i]);
-			free(tmp);
-		}
+		if (match_wildcard(pattern, dir->content[i]) && !(pattern[0] != '.' && dir->content[i][0] == '.'))
+			insert_token(tkn, create_token(dir->content[i], CMD, ft_strlen(dir->content[i])));
 	}
 	free(pattern);
+	delete_token(tkn);
 	free_dir(&dir);
-	return (output);
 }
+
+// char	*expand_wildcard(char *pattern, char *path)
+// {
+// 	int		i;
+// 	t_dir	*dir;
+// 	char	*tmp;
+// 	char	*output;
+
+// 	i = -1;
+// 	output = ft_strdup("");
+// 	dir = read_dir_content(path);
+// 	pattern = unquote_text(pattern);
+// 	while (dir->content[++i])
+// 	{
+// 		if (match_wildcard(pattern, dir->content[i])
+// 			&& !(pattern[0] != '.' && dir->content[i][0] == '.'))
+// 		{
+// 			tmp = output;
+// 			if (*output == '\0')
+// 				output = ft_strdup(dir->content[i]);
+// 			else
+// 				output = ft_strjoin_many(3, output, " ", dir->content[i]);
+// 			free(tmp);
+// 		}
+// 	}
+// 	free(pattern);
+// 	free_dir(&dir);
+// 	return (output);
+// }
 
 void	unquote_tokens(t_token *token_lst)
 {
-	char *tmp;
+	char	*tmp;
 
 	while (token_lst)
 	{
@@ -95,6 +114,10 @@ void	unquote_tokens(t_token *token_lst)
 	}
 }
 
+// xTODO: Don't expand heredoc limiter
+// xTODO: expand * to separate tokens
+// TODO: Don't expand "*"
+
 /**
  * expand speacial characters ($, *) in tokens
  * 
@@ -104,15 +127,16 @@ void	unquote_tokens(t_token *token_lst)
 void	expand_shell(t_token *token_lst, t_env *env)
 {
 	char	*tmp;
-	bool	is_cmd;
 	t_token	*curr;
+	bool	is_cmd;
 
 	curr = token_lst;
 	while (curr)
 	{
 		tmp = curr->content;
-		is_cmd = (curr->prev && curr->prev->type != R_HEREDOC
-				&& curr->type == CMD);
+		is_cmd = (curr->type == CMD
+				&& (!curr->prev
+					|| (curr->prev && curr->prev->type != R_HEREDOC)));
 		if (is_cmd && ft_strchr(curr->content, '$'))
 		{
 			curr->content = expand_vars(curr->content, false, env);
@@ -120,8 +144,7 @@ void	expand_shell(t_token *token_lst, t_env *env)
 		}
 		else if (is_cmd && ft_strchr(curr->content, '*'))
 		{
-			curr->content = expand_wildcard(curr->content, "./");
-			free(tmp);
+			expand_wildcard(curr, "./");
 		}
 		curr = curr->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 05:33:57 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 05:45:18 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,21 @@ t_ast_node	*create_node(t_type type)
 	return (node);
 }
 
+void	free_tree(t_ast_node *root)
+{
+	int	i;
+	
+	if (!root)
+		return ;
+	free_tree(root->right);
+	free_tree(root->left);
+	i = -1;
+	while (root->argv[++i])
+		free(root->argv[i]);
+	free(root->argv);
+	free(root);
+}
+
 void	node_argv_push(t_ast_node *node, char *new_arg)
 {
 	node->argv = realloc(node->argv, sizeof(char *) * (node->argc + 2));
@@ -36,9 +51,6 @@ void	node_argv_push(t_ast_node *node, char *new_arg)
 	node->argc += 1;
 }
 
-// (void)node;
-// (void)type;
-// (void)filename;
 void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 {
 	if (type == R_INPUT && node->input_fd != STDIN_FILENO)

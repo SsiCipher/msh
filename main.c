@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/24 07:40:25 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/25 05:44:58 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	start_repl(t_env *env)
 
 	while (true)
 	{
+		ast_tree = NULL;
 		shell = init_shell(env);
 		if (!shell)
 			continue ;
@@ -78,13 +79,14 @@ void	start_repl(t_env *env)
 		expand_shell(tokens_lst, env);
 		if (tokens_lst && !check_errors(tokens_lst))
 		{
-			// handle_heredocs(tokens_lst, env);
+			handle_heredocs(tokens_lst, env);
 			printf("> ------- Tokens ------- <\n\n");
 			print_tokens(tokens_lst);
 			ast_tree = create_ast(tokens_lst);
 			printf("\n> ------- AST ------- <\n\n");
 			print_tree(ast_tree, 0);
 		}
+		free_tree(ast_tree);
 		free_tokens(&tokens_lst);
 		free(shell);
 	}

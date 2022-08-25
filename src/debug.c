@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 10:36:12 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/22 05:28:54 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 04:51:10 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	print_node(t_ast_node *node)
 		{
 			if (i != 0)
 				printf(" ");
-			printf("|%s|", node->argv[i]);
+			printf("[%s]", node->argv[i]);
 		}
 	}
 	printf("\n");

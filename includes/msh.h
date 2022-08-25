@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/24 04:33:36 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/25 05:40:45 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,8 @@ bool		is_quotes_unclosed(char *str);
 
 /* ============= src/expansions.c ============= */
 
+t_token		*expand_variables(t_token *tkn, t_env *env);
 char		*expand_vars(char *str, bool ignore_quotes, t_env *env);
-// char		*expand_wildcard(char *pattern, char *path);
 t_token		*expand_wildcard(t_token *tkn, char *path);
 void		expand_shell(t_token *token_lst, t_env *env);
 
@@ -175,6 +175,7 @@ t_token		*edit_token(t_token *tkn, char *content, t_type type);
 /* ============= src/tree.c ============= */
 
 t_ast_node	*create_node(t_type type);
+void		free_tree(t_ast_node *root);
 void		node_argv_push(t_ast_node *node, char *new_arg);
 void		update_io_fds(t_ast_node *node, t_type type, char *filename);
 t_ast_node	*create_ast(t_token *tkns_lst);

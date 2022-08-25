@@ -2,6 +2,11 @@
 
 ## cases
 
+- echo *$NON_VALID => expand wildcard
+- echo *$VALID => expand variable
+
+- echo "*"*
+
 - cmd > file
 - cmd < file
 - cmd >> file
@@ -20,7 +25,7 @@
 
 - handle if env var not found anywhere I interact with env
 - (a && b) | c
-- change all printf to write to stderr (use ft_printf with custom fd)
+- change all printf to write to stderr (use ft_fprintf)
 
 ## Process
 

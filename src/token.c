@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/24 04:33:25 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/25 05:34:55 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ void	free_tokens(t_token **tokens_lst)
  */
 t_token	*edit_token(t_token *tkn, char *content, t_type type)
 {
+	free(tkn->content);
 	tkn->content = ft_strdup(content);
 	tkn->type = type;
 	tkn->length = ft_strlen(content);

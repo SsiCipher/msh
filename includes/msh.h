@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 10:13:08 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/24 04:33:36 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ bool		is_quotes_unclosed(char *str);
 
 char		*expand_vars(char *str, bool ignore_quotes, t_env *env);
 // char		*expand_wildcard(char *pattern, char *path);
-void		expand_wildcard(t_token *tkn, char *path);
+t_token		*expand_wildcard(t_token *tkn, char *path);
 void		expand_shell(t_token *token_lst, t_env *env);
 
 /* ============= src/expansions_utils.c ============= */
@@ -167,9 +167,10 @@ t_token		*parse_shell(char *str);
 
 t_token		*create_token(char *content, t_type type, int length);
 void		push_token(t_token **tokens_lst, t_token *new_token);
-void		insert_token(t_token *target_token, t_token *new_token);
+t_token		*insert_token(t_token *target_token, t_token *new_token);
 void		delete_token(t_token *token);
 void		free_tokens(t_token **tokens_lst);
+t_token		*edit_token(t_token *tkn, char *content, t_type type);
 
 /* ============= src/tree.c ============= */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 10:15:27 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/24 04:33:25 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,26 @@ void	push_token(t_token **tokens_lst, t_token *new_token)
 	}
 }
 
-void	insert_token(t_token *target_token, t_token *new_token)
+/**
+ * Insert a new token after the given target_token
+ * 
+ * @param	target_token the token to insert after
+ * @param	new_token the new token to add
+ * @return	the adress of the new token
+ */
+t_token	*insert_token(t_token *target_token, t_token *new_token)
 {
-	// new_token->prev = target_token;
-	new_token->next = target_token;
-	// target_token->next->prev = new_token;
+	t_token	*target_next;
+
+	new_token->prev = target_token;
+	if (target_token->next)
+	{
+		target_next = target_token->next;
+		new_token->next = target_next;
+		target_next->prev = new_token;
+	}
 	target_token->next = new_token;
+	return (new_token);
 }
 
 /**
@@ -101,4 +115,20 @@ void	free_tokens(t_token **tokens_lst)
 		curr = tmp;
 	}
 	*tokens_lst = NULL;
+}
+
+/**
+ * Edit the given token's content and type
+ * 
+ * @param	token the token to edit
+ * @param	content the content of the token
+ * @param	type the type of the token from the t_type enum
+ * @return	the adress of the new token
+ */
+t_token	*edit_token(t_token *tkn, char *content, t_type type)
+{
+	tkn->content = ft_strdup(content);
+	tkn->type = type;
+	tkn->length = ft_strlen(content);
+	return (tkn);
 }

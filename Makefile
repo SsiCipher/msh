@@ -1,9 +1,8 @@
 CC			= cc
 NAME		= msh
-FLAGS		= -Wall -Wextra -Werror
-SRCS		= src/env.c src/heredoc.c \
-			src/error_check.c src/error_check_utils.c src/token.c \
-			src/tree.c src/lexer.c src/expansions.c src/expansions_utils.c \
+FLAGS		= -Wall -Wextra -Werror -g -fsanitize=address
+SRCS		= src/env.c src/error_check.c src/error_check_utils.c \
+			src/token.c src/tree.c src/lexer.c src/expansions.redo.c src/expansions_utils.c \
 			src/utils.c src/debug.c src/env_ops.c \
 			src/builtins/cd.c src/builtins/echo.c src/builtins/env.c src/builtins/exit.c \
 			src/builtins/export.c src/builtins/pwd.c src/builtins/unset.c src/builtins/utils.c

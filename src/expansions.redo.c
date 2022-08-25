@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansions.c                                       :+:      :+:    :+:   */
+/*   expansions.redo.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/23 10:32:05 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/24 10:56:40 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-// TODO: expand $? to the latest exit_code
 
 /**
  * find and replace all variables in str
@@ -21,7 +19,7 @@
  * @param	env t_env struct containing environment variables
  * @return	str string with variables replaced with their values
  */
-char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
+t_token	*expand_variables(t_token *tkn, bool ignore_quotes, t_env *env)
 {
 	int		i;
 	char	*var;
@@ -30,7 +28,7 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 
 	i = 0;
 	quote_type = '\0';
-	expanded_str = ft_strdup(str);
+	expanded_str = ft_strdup(tkn->content);
 	while (expanded_str[i])
 	{
 		toggle_quote(expanded_str[i], &quote_type, NULL);
@@ -43,7 +41,9 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 			free(var);
 		}
 	}
-	return (expanded_str);
+	free(tkn->content);
+	tkn->content = expanded_str;
+	return (tkn);
 }
 
 /**
@@ -57,71 +57,30 @@ t_token	*expand_wildcard(t_token *tkn, char *path)
 {
 	int		i;
 	t_dir	*dir;
+	t_token	*new_tkn;
 	char	*pattern;
-	t_token	*last_tkn;
 
 	i = -1;
+	new_tkn = NULL;
 	dir = read_dir_content(path);
 	pattern = unquote_text(tkn->content);
-	while (dir->content[++i])
+	while (++i < dir->length)
 	{
-		if (match_wildcard(pattern, dir->content[i]) && !(pattern[0] != '.' && dir->content[i][0] == '.'))
+		if (match_wildcard(pattern, dir->content[i])
+			&& !(pattern[0] != '.' && dir->content[i][0] == '.'))
 		{
-			// printf("%s\n", dir->content[i]);
-			insert_token(tkn, create_token(dir->content[i], CMD, ft_strlen(dir->content[i])));
+			if (!new_tkn)
+				new_tkn = edit_token(tkn, dir->content[i], CMD);
+			else
+				new_tkn = insert_token(new_tkn, create_token(dir->content[i], CMD, ft_strlen(dir->content[i])));
 		}
 	}
-	last_tkn = tkn->next;
-	// delete_token(tkn);
-	free(pattern);
 	free_dir(&dir);
-	return (last_tkn);
+	free(pattern);
+	if (!new_tkn)
+		return (tkn);
+	return (new_tkn);
 }
-
-// char	*expand_wildcard(char *pattern, char *path)
-// {
-// 	int		i;
-// 	t_dir	*dir;
-// 	char	*tmp;
-// 	char	*output;
-// 	i = -1;
-// 	output = ft_strdup("");
-// 	dir = read_dir_content(path);
-// 	pattern = unquote_text(pattern);
-// 	while (dir->content[++i])
-// 	{
-// 		if (match_wildcard(pattern, dir->content[i])
-// 			&& !(pattern[0] != '.' && dir->content[i][0] == '.'))
-// 		{
-// 			tmp = output;
-// 			if (*output == '\0')
-// 				output = ft_strdup(dir->content[i]);
-// 			else
-// 				output = ft_strjoin_many(3, output, " ", dir->content[i]);
-// 			free(tmp);
-// 		}
-// 	}
-// 	free(pattern);
-// 	free_dir(&dir);
-// 	return (output);
-// }
-
-void	unquote_tokens(t_token *token_lst)
-{
-	char	*tmp;
-
-	while (token_lst)
-	{
-		tmp = token_lst->content;
-		token_lst->content = unquote_text(token_lst->content);
-		free(tmp);
-		token_lst = token_lst->next;
-	}
-}
-
-// xTODO: Don't expand heredoc limiter
-// xTODO: expand * to separate tokens
-// TODO: Don't expand "*"
 
 /**
  * expand speacial characters ($, *) in tokens
@@ -131,27 +90,15 @@ void	unquote_tokens(t_token *token_lst)
  */
 void	expand_shell(t_token *token_lst, t_env *env)
 {
-	char	*tmp;
 	t_token	*curr;
-	bool	is_cmd;
 
 	curr = token_lst;
 	while (curr)
 	{
-		tmp = curr->content;
-		is_cmd = (curr->type == CMD
-				&& (!curr->prev
-					|| (curr->prev && curr->prev->type != R_HEREDOC)));
-		if (is_cmd && ft_strchr(curr->content, '$'))
-		{
-			curr->content = expand_vars(curr->content, false, env);
-			free(tmp);
-		}
-		else if (is_cmd && ft_strchr(curr->content, '*'))
-		{
+		if (ft_strchr(curr->content, '$'))
+			curr = expand_variables(curr, false, env);
+		else if (ft_strchr(curr->content, '*'))
 			curr = expand_wildcard(curr, "./");
-		}
 		curr = curr->next;
 	}
-	unquote_tokens(token_lst);
 }

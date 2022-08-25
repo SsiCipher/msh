@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:36:33 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 05:50:40 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,16 @@ bool	check_errors(t_token *tkn)
 		else if (
 			(is_both_invalid(tkn, OR, CMD)
 				&& is_next_invalid(tkn, OR, O_PARENTH)
-				&& is_prev_invalid(tkn, OR, C_PARENTH))
+				&& is_prev_invalid(tkn, OR, C_PARENTH)
+				&& is_next_invalid(tkn, OR, R_INPUT)
+				&& is_next_invalid(tkn, OR, R_OUTPUT)
+				&& is_next_invalid(tkn, OR, R_APPEND))
 			|| (is_both_invalid(tkn, AND, CMD)
 				&& is_next_invalid(tkn, AND, O_PARENTH)
-				&& is_prev_invalid(tkn, AND, C_PARENTH))
+				&& is_prev_invalid(tkn, AND, C_PARENTH)
+				&& is_next_invalid(tkn, AND, R_INPUT)
+				&& is_next_invalid(tkn, AND, R_OUTPUT)
+				&& is_next_invalid(tkn, AND, R_APPEND))
 		)
 			return (display_error("unexpected token", tkn->content));
 		else if (

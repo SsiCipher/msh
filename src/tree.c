@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:47:14 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 05:51:46 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	free_tree(t_ast_node *root)
 	free_tree(root->right);
 	free_tree(root->left);
 	i = -1;
-	while (root->argv[++i])
+	while (root->argv != NULL && root->argv[++i])
 		free(root->argv[i]);
 	free(root->argv);
 	free(root);

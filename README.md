@@ -1,17 +1,25 @@
 # msh
 
-My try on creating a minishell
+Minishell is a 42 cursus project to better learn the inner workings of the bash on of the most important parts in any linux system
 
 ## Test builtins
 
 ```c
 
-char **av = ft_split(shell, ' ');
-int ac = 0; while (av[ac]) ac++;
-run_builtin(ac, av, env);
+// Test builtins
+while (true)
+{
+    char *shell = init_shell(env);
+    if (!shell)
+        continue ;
+    char **av = ft_split(shell, ' ');
+    int ac = 0; while (av[ac]) ac++;
+    run_builtin(ac, av, env);
+}
 
-// wildcard match
+------------
 
+// Test wildcard match
 void    test(char *pattern, char *text)
 {
     bool is_match = (

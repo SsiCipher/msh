@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tree.c                                             :+:      :+:    :+:   */
+/*   ast_tree.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:51:46 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 10:49:58 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	update_io_fds(t_ast_node *node, t_type type, char *filename)
 		node->output_fd = open(filename, O_CREAT | O_APPEND | O_WRONLY, 0666);
 }
 
+// TODO: handle "a && b | c"
 // TODO: handle heredoc redirection in tree
 
 t_ast_node	*create_ast(t_token *tkns_lst)

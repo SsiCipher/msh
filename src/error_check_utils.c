@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 05:37:47 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 15:11:47 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ bool	display_error(char *error, char *token)
  * @param	next_type the next token's expected type
  * @return	true if the next token is of type 'next_type', false otherwise
  */
-bool	is_next_invalid(t_token *curr_tkn, t_type curr_type, t_type next_type)
+bool	is_next_valid(t_token *curr_tkn, t_type curr_type, t_type next_type)
 {
 	return (
-		curr_tkn->type == curr_type
-		&& (!curr_tkn->next || curr_tkn->next->type != next_type)
+		curr_tkn->type != curr_type
+		|| (curr_tkn->next && curr_tkn->next->type == next_type)
 	);
 }
 
@@ -57,11 +57,11 @@ bool	is_next_invalid(t_token *curr_tkn, t_type curr_type, t_type next_type)
  * @param	prev_type the previous token's expected type
  * @return	true if the previous token is of type 'prev_type', false otherwise
  */
-bool	is_prev_invalid(t_token *curr_tkn, t_type curr_type, t_type prev_type)
+bool	is_prev_valid(t_token *curr_tkn, t_type curr_type, t_type prev_type)
 {
 	return (
-		curr_tkn->type == curr_type
-		&& (!curr_tkn->prev || curr_tkn->prev->type != prev_type)
+		curr_tkn->type != curr_type
+		|| (curr_tkn->prev && curr_tkn->prev->type == prev_type)
 	);
 }
 
@@ -73,11 +73,11 @@ bool	is_prev_invalid(t_token *curr_tkn, t_type curr_type, t_type prev_type)
  * @param	valid_type both token's expected type
  * @return	true if the both token is of type 'expected_type', false otherwise
  */
-bool	is_both_invalid(t_token *curr_tkn, t_type curr_type, t_type valid_type)
+bool	is_both_valid(t_token *curr_tkn, t_type curr_type, t_type valid_type)
 {
 	return (
-		is_prev_invalid(curr_tkn, curr_type, valid_type)
-		|| is_next_invalid(curr_tkn, curr_type, valid_type)
+		is_prev_valid(curr_tkn, curr_type, valid_type)
+		&& is_next_valid(curr_tkn, curr_type, valid_type)
 	);
 }
 

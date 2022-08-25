@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:30:43 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 09:14:16 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 	return (expanded_str);
 }
 
+// TODO: match quoted * as a literal character
+
 /**
  * get the files and directories that match pattern in path
  * 
@@ -96,6 +98,8 @@ t_token	*expand_wildcard(t_token *tkn, char *pattern)
 		return (tkn);
 	return (new_tkn);
 }
+
+// TODO: handle mixed expansions -> *$VAR => expand * if VAR doesn't exist
 
 /**
  * expand speacial characters ($, *) in tokens

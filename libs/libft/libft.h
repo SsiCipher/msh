@@ -92,7 +92,7 @@ void	ft_swap(int *arr, int i, int j);
 int		ft_intlen(int n);
 void	ft_qsort(int *array, int size, int (*cmp)(int, int));
 int		ft_countchr(char *str, char c);
-char	*ft_strjoin_many(int strs_count, ...);
+char	*ft_multijoin(int strs_count, ...);
 int		ft_strcasecmp(const char *s1, const char *s2);
 char	*ft_strjoin_arr(char **arr);
 int		ft_indexof(char *str, char c);

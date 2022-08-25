@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_many.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:58 by yanab             #+#    #+#             */
-/*   Updated: 2022/06/27 06:09:56 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 09:43:27 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin_many(int strs_count, ...)
+char	*ft_multijoin(int strs_count, ...)
 {
 	va_list	ap;
 	int		i;

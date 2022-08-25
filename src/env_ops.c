@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_ops.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:47:34 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 10:08:13 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ char	*get_var(t_env *env, char *name)
 	int		name_len;
 	char	*var_value;
 
-	i = 0;
+	i = -1;
 	name_len = ft_strlen(name);
-	while (env->content[i])
+	while (env->content[++i])
 	{
-		if (!ft_strncmp(env->content[i], name, name_len))
+		if (is_var(env->content[i], name))
 		{
 			if (env->content[i][name_len] == '\0')
 				return (NULL);
@@ -40,7 +40,6 @@ char	*get_var(t_env *env, char *name)
 				return (var_value);
 			}
 		}
-		i++;
 	}
 	return (NULL);
 }
@@ -62,8 +61,10 @@ void	add_var(t_env *env, char *name, char *value)
 		env->content = (char **)ft_realloc(env->content,
 				env->length * sizeof(char *),
 				(env->length + 2) * sizeof(char *));
+		if (!env->content)
+			return ;
 		if (value)
-			env->content[env->length] = ft_strjoin_many(3, name, "=", value);
+			env->content[env->length] = ft_multijoin(3, name, "=", value);
 		else
 			env->content[env->length] = ft_strdup(name);
 		env->content[env->length + 1] = NULL;
@@ -88,26 +89,19 @@ void	edit_var(t_env *env, char *name, char *value, bool append)
 		add_var(env, name, value);
 	else
 	{
-		if (!value)
-			return ;
 		i = -1;
-		while (++i < env->length)
+		while (++i < env->length && value)
 		{
 			if (is_var(env->content[i], name))
 			{
 				tmp = env->content[i];
-				if (!append && value)
-					env->content[i] = ft_strjoin_many(3, name, "=", value);
-				else if (!append && !value)
-					env->content[i] = ft_strdup(name);
+				if (
+					(!append && value)
+					|| (append && ft_indexof(env->content[i], '=') == -1)
+				)
+					env->content[i] = ft_multijoin(3, name, "=", value);
 				else
-				{
-					if (ft_indexof(env->content[i], '=') == -1)
-						env->content[i] = ft_strjoin_many(3, env->content[i],
-								"=", value);
-					else
-						env->content[i] = ft_strjoin(env->content[i], value);
-				}
+					env->content[i] = ft_strjoin(tmp, value);
 				free(tmp);
 			}
 		}
@@ -131,6 +125,8 @@ void	delete_var(t_env *env, char *name)
 		i = -1;
 		j = 0;
 		new_content = (char **)malloc(sizeof(char *) * env->length - 1);
+		if (!new_content)
+			return ;
 		while (++i < env->length)
 		{
 			if (is_var(env->content[i], name))

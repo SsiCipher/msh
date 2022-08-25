@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:18:16 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:34:55 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 10:19:31 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ t_token	*create_token(char *content, t_type type, int length)
 	t_token	*new_token;
 
 	new_token = (t_token *)malloc(sizeof(t_token));
+	if (!new_token)
+		return (NULL);
 	new_token->content = ft_substr(content, 0, length);
 	new_token->type = type;
 	new_token->length = length;
@@ -43,9 +45,9 @@ void	push_token(t_token **tokens_lst, t_token *new_token)
 {
 	t_token	*list_tail;
 
-	if (!tokens_lst)
+	if (!tokens_lst || !new_token)
 		return ;
-	if (*tokens_lst == NULL)
+	if (!(*tokens_lst))
 		*tokens_lst = new_token;
 	else
 	{
@@ -68,6 +70,8 @@ t_token	*insert_token(t_token *target_token, t_token *new_token)
 {
 	t_token	*target_next;
 
+	if (!target_token || !new_token)
+		return (NULL);
 	new_token->prev = target_token;
 	if (target_token->next)
 	{
@@ -80,23 +84,6 @@ t_token	*insert_token(t_token *target_token, t_token *new_token)
 }
 
 /**
- * Delete a token from the list and free its content
- * 
- * @param	token the token to delete
- */
-void	delete_token(t_token *token)
-{
-	if (!token)
-		return ;
-	if (token->prev)
-		token->prev->next = token->next;
-	if (token->next)
-		token->next->prev = token->prev;
-	free(token->content);
-	free(token);
-}
-
-/**
  * Free the memory allocated for the tokens list and set it to NULL
  * 
  * @param	tokens_lst the list to free
@@ -106,6 +93,8 @@ void	free_tokens(t_token **tokens_lst)
 	t_token	*curr;
 	t_token	*tmp;
 
+	if (!tokens_lst)
+		return ;
 	curr = *tokens_lst;
 	while (curr)
 	{
@@ -127,6 +116,8 @@ void	free_tokens(t_token **tokens_lst)
  */
 t_token	*edit_token(t_token *tkn, char *content, t_type type)
 {
+	if (!tkn || !content)
+		return (NULL);
 	free(tkn->content);
 	tkn->content = ft_strdup(content);
 	tkn->type = type;

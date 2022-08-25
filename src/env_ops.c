@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:33 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 04:46:04 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 05:47:34 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ void	edit_var(t_env *env, char *name, char *value, bool append)
 				else
 				{
 					if (ft_indexof(env->content[i], '=') == -1)
-						env->content[i] = ft_strjoin_many(3, env->content[i], "=", value);
+						env->content[i] = ft_strjoin_many(3, env->content[i],
+								"=", value);
 					else
 						env->content[i] = ft_strjoin(env->content[i], value);
 				}

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:45:18 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 05:47:14 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_ast_node	*create_node(t_type type)
 void	free_tree(t_ast_node *root)
 {
 	int	i;
-	
+
 	if (!root)
 		return ;
 	free_tree(root->right);

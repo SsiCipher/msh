@@ -6,13 +6,11 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 05:23:24 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/25 05:46:55 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-// TODO: exit code for each command
 
 void	ft_echo(int argc, char **argv)
 {

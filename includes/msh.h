@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/26 18:44:06 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/26 19:36:47 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ typedef struct s_node
 	struct s_node		*left;
 	struct s_node		*right;
 }	t_node;
+
+extern int exit_code;
 
 /* ==========<< src/ast_tree_utils.c >>========== */
 

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 18:55:13 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/26 19:44:40 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,12 @@ char	*extract_var(char *str)
 	)
 		name_len++;
 	if (name_len == 0)
-		return (NULL);
+	{
+		if (str[name_len + 1] == '?')
+			name_len = 1;
+		else
+			return (NULL);
+	}
 	return (ft_substr(str, 0, name_len + 1));
 }
 
@@ -49,7 +54,11 @@ int	replace_var(char **str, int start, char *var, t_env *env)
 
 	if (!var)
 		return (1);
-	var_value = get_var(env, var + 1);
+	// printf("%s\n", var);
+	if (!ft_strncmp(var, "$?", 2))
+		var_value = ft_itoa(exit_code);
+	else
+		var_value = get_var(env, var + 1);
 	temp = *str;
 	*str = ft_find_n_replace(*str, start, var, var_value);
 	free(temp);

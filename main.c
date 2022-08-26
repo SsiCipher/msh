@@ -6,11 +6,13 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/26 18:43:36 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/26 19:39:55 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+int	exit_code = 127;
 
 char	*create_prompt_str(t_env *env)
 {

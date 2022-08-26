@@ -101,14 +101,6 @@
   - str'$VAR'str
   - str'$VAR'$VAR
 
-A	&&	B
-A	||	B
-
-(A	&&	B)	&&	C
-(A	||	B)	||	C
-A	&&	(B	&&	C)
-A	||	(B	||	C)
-
 (A	||	B)	&&	C
 (A	&&	B)	||	C
 A	||	(B	&&	C)

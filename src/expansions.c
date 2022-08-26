@@ -6,11 +6,13 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 18:55:08 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/26 19:29:04 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+// TODO: expand $? to be the value of the global variable exit_code
 
 /**
  * Expand variables in token
@@ -62,6 +64,7 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 }
 
 // TODO: match quoted * as a literal character
+// TODO: handle mixed expansions -> *$VAR => expand * if VAR doesn't exist
 
 /**
  * get the files and directories that match pattern in path
@@ -99,8 +102,6 @@ t_token	*expand_wildcard(t_token *tkn, char *pattern)
 	return (new_tkn);
 }
 
-// TODO: handle mixed expansions -> *$VAR => expand * if VAR doesn't exist
-
 /**
  * expand speacial characters ($, *) in tokens
  * 
@@ -111,13 +112,15 @@ void	expand_shell(t_token *token_lst, t_env *env)
 {
 	t_token	*curr;
 	char	*wildcard_pattern;
+	bool	is_limiter;
 
 	curr = token_lst;
 	while (curr)
 	{
-		if (ft_strchr(curr->content, '$'))
+		is_limiter = (curr->prev && curr->prev->type == R_HEREDOC);
+		if (ft_strchr(curr->content, '$') && !is_limiter)
 			curr = expand_variables(curr, env);
-		else if (ft_strchr(curr->content, '*'))
+		else if (ft_strchr(curr->content, '*') && !is_limiter)
 		{
 			wildcard_pattern = unquote_text(curr->content);
 			curr = expand_wildcard(curr, wildcard_pattern);

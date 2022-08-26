@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 10:19:34 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/26 18:43:36 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,24 @@ void	run_builtin(int argc, char **argv, t_env *env)
 		printf("%s is not a valid command\n", argv[0]);
 }
 
+void	increment_shlvl(t_env *env)
+{
+	char	*shlvl;
+	int		lvl;
+
+	shlvl = get_var(env, "SHLVL");
+	lvl = ft_atoi(shlvl);
+	free(shlvl);
+	shlvl = ft_itoa(lvl + 1);
+	edit_var(env, "SHLVL", shlvl, false);
+	free(shlvl);
+}
+
 void	start_repl(t_env *env)
 {
 	char		*shell;
 	t_token		*tokens_lst;
-	t_ast_node	*ast_tree;
+	t_node		*ast_tree;
 
 	while (true)
 	{
@@ -99,6 +112,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = create_env(envp);
+	increment_shlvl(env);
 	start_repl(env);
 	return (0);
 }

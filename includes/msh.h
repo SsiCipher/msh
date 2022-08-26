@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 15:19:33 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/26 18:44:06 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_dir
 	int		length;
 }	t_dir;
 
-typedef struct s_ast_node
+typedef struct s_node
 {
 	t_type				type;
 	char				**argv;
@@ -76,17 +76,20 @@ typedef struct s_ast_node
 	int					output_fd;
 	int					exit_code;
 
-	struct s_ast_node	*left;
-	struct s_ast_node	*right;
-}	t_ast_node;
+	struct s_node		*left;
+	struct s_node		*right;
+}	t_node;
+
+/* ==========<< src/ast_tree_utils.c >>========== */
+
+t_node		*create_node(t_type type);
+void		free_tree(t_node *root);
+void		node_argv_push(t_node *node, char *new_arg);
+void		update_io_fds(t_node *node, t_type type, char *filename);
 
 /* ==========<< src/ast_tree.c >>========== */
 
-t_ast_node	*create_node(t_type type);
-void		free_tree(t_ast_node *root);
-void		node_argv_push(t_ast_node *node, char *new_arg);
-void		update_io_fds(t_ast_node *node, t_type type, char *filename);
-t_ast_node	*create_ast(t_token *tkns_lst);
+t_node		*create_ast(t_token *tkns_lst);
 
 /* ==========<< src/builtins.c >>========== */
 
@@ -108,8 +111,8 @@ void		ft_exit(int argc, char **argv, t_env *env);
 
 char		*get_type_name(t_type type);
 void		print_tokens(t_token *tokens_lst);
-void		print_node(t_ast_node *node);
-void		print_tree(t_ast_node *root, int level);
+void		print_node(t_node *node);
+void		print_tree(t_node *root, int level);
 
 /* ==========<< src/env.c >>========== */
 

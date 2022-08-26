@@ -4,9 +4,10 @@ FLAGS		= -Wall -Wextra -Werror
 INCS		= -I includes
 LIBS		= -lreadline -Llibs -lft
 SRCS		= src/env.c src/env_ops.c \
+			src/token.c src/lexer.c \
 			src/error_check.c src/error_check_utils.c \
 			src/expansions.c src/expansions_utils.c \
-			src/token.c src/ast_tree.c src/lexer.c \
+			src/ast_tree.c src/ast_tree_utils.c \
 			src/heredoc.c src/utils.c src/debug.c \
 			src/builtins/cd.c src/builtins/echo.c src/builtins/env.c src/builtins/exit.c \
 			src/builtins/export.c src/builtins/pwd.c src/builtins/unset.c src/builtins/utils.c

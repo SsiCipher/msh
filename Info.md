@@ -41,7 +41,7 @@
 
 - [x] rewrite the lexer for better tokens
 - [x] remove unnecessary types from enum t_type
-- [ ] better parsing errors
+- [x] better parsing errors
 - [ ] integrate ast & further improve it (test using it: traverse, fork, dup, exec)
 - [ ] handle here_docs as input redirection
 - [x] understand & handle parenthesis in AST

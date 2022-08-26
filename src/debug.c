@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 10:36:12 by cipher            #+#    #+#             */
-/*   Updated: 2022/08/25 04:51:10 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/26 18:41:52 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	print_tokens(t_token *tokens_lst)
 	}
 }
 
-void	print_node(t_ast_node *node)
+void	print_node(t_node *node)
 {
 	int	i;
 
@@ -75,7 +75,7 @@ void	print_node(t_ast_node *node)
 	printf("\n");
 }
 
-void	print_tree(t_ast_node *root, int level)
+void	print_tree(t_node *root, int level)
 {
 	int	i;
 

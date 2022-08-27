@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:20:19 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/27 05:39:10 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*init_shell(t_env *env)
 {
 	char	*prompt;
 	char	*shell;
-
+	
 	prompt = create_prompt_str(env);
 	shell = readline(prompt);
 	free(prompt);
@@ -51,7 +51,10 @@ void	increment_shlvl(t_env *env)
 	int		lvl;
 
 	shlvl = get_var(env, "SHLVL");
-	lvl = ft_atoi(shlvl);
+	if (shlvl)
+		lvl = ft_atoi(shlvl);
+	else
+		lvl = 0;
 	free(shlvl);
 	shlvl = ft_itoa(lvl + 1);
 	edit_var(env, "SHLVL", shlvl, false);
@@ -69,15 +72,18 @@ void	start_repl(t_env *env)
 		ast_tree = NULL;
 		shell = init_shell(env);
 		if (!shell)
+		{	
+			printf("\n");
 			continue ;
+		}
 		tokens_lst = create_tokens_list(shell);
 		expand_shell(tokens_lst, env);
 		if (tokens_lst && !check_errors(tokens_lst))
 		{
 			handle_heredocs(tokens_lst, env);
+			ast_tree = create_ast(tokens_lst);
 			printf("> ------- Tokens ------- <\n\n");
 			print_tokens(tokens_lst);
-			ast_tree = create_ast(tokens_lst);
 			printf("\n> ------- AST ------- <\n\n");
 			print_tree(ast_tree, 0);
 		}

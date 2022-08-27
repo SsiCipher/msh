@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:23:03 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/27 05:25:04 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	unquote_tokens(t_token *tkn_lst)
 	{
 		if (
 			(curr_tkn->prev && curr_tkn->prev->type != R_HEREDOC)
-			&& !ft_strchr(curr_tkn->content, "*")
+			&& !ft_strchr(curr_tkn->content, '*')
 		)
 		{
 			tmp = curr_tkn->content;

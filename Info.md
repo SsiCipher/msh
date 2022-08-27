@@ -7,20 +7,6 @@
 
 - echo "*"*
 
-- cmd > file
-- cmd < file
-- cmd >> file
-- cmd << limiter
-- \> file cmd
-- < file cmd
-- \>> file cmd
-- << limiter cmd
-- cmd | cmd
-- cmd && cmd
-- cmd || cmd
-- (cmd_group) && (cmd_group)
-- (cmd_group) || (cmd_group)
-
 ## Notes
 
 - handle if env var not found anywhere I interact with env

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:19:45 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/27 05:49:38 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,13 @@ char	*extract_var(char *str)
 	int		name_len;
 
 	name_len = 0;
+	printf("%c\n", str[1]);
 	while (
-		ft_isalnum(str[name_len + 1])
+		(!ft_isdigit(str[1]) && ft_isalnum(str[name_len + 1]))
 		|| str[name_len + 1] == '_'
 	)
+		name_len++;
+	if (ft_isdigit(str[1]))
 		name_len++;
 	if (name_len == 0)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/26 19:36:47 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/27 05:20:26 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ typedef struct s_node
 	struct s_node		*right;
 }	t_node;
 
-extern int exit_code;
+extern int	g_exit_code;
 
 /* ==========<< src/ast_tree_utils.c >>========== */
 
@@ -151,9 +151,10 @@ bool		is_quotes_unclosed(char *str);
 
 /* ==========<< src/expansions.c >>========== */
 
-t_token		*expand_variables(t_token *tkn, t_env *env);
+t_token		*expand_tkn_vars(t_token *tkn, t_env *env);
 char		*expand_vars(char *str, bool ignore_quotes, t_env *env);
 t_token		*expand_wildcard(t_token *tkn, char *path);
+void		unquote_tokens(t_token *tkn_lst);
 void		expand_shell(t_token *token_lst, t_env *env);
 
 /* ==========<< src/expansions_utils.c >>========== */

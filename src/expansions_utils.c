@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/26 19:44:40 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/27 05:19:45 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,8 @@ int	replace_var(char **str, int start, char *var, t_env *env)
 
 	if (!var)
 		return (1);
-	// printf("%s\n", var);
 	if (!ft_strncmp(var, "$?", 2))
-		var_value = ft_itoa(exit_code);
+		var_value = ft_itoa(g_exit_code);
 	else
 		var_value = get_var(env, var + 1);
 	temp = *str;

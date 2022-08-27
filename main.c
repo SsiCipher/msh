@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/26 19:39:55 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/27 05:20:19 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int	exit_code = 127;
+int	g_exit_code = 0;
 
 char	*create_prompt_str(t_env *env)
 {
@@ -43,26 +43,6 @@ char	*init_shell(t_env *env)
 	free(prompt);
 	add_history(shell);
 	return (shell);
-}
-
-void	run_builtin(int argc, char **argv, t_env *env)
-{
-	if (!ft_strcmp(argv[0], "echo"))
-		ft_echo(argc, argv);
-	else if (!ft_strcmp(argv[0], "cd"))
-		ft_cd(argc, argv, env);
-	else if (!ft_strcmp(argv[0], "pwd"))
-		ft_pwd(argc, argv);
-	else if (!ft_strcmp(argv[0], "export"))
-		ft_export(argc, argv, env);
-	else if (!ft_strcmp(argv[0], "unset"))
-		ft_unset(argc, argv, env);
-	else if (!ft_strcmp(argv[0], "env"))
-		ft_env(argc, argv, env);
-	else if (!ft_strcmp(argv[0], "exit"))
-		ft_exit(argc, argv, env);
-	else
-		printf("%s is not a valid command\n", argv[0]);
 }
 
 void	increment_shlvl(t_env *env)

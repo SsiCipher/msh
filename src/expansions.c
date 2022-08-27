@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/26 19:29:04 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/27 05:23:03 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,9 @@
  * @param	env t_env struct containing environment variables
  * @return	the token used
  */
-t_token	*expand_variables(t_token *tkn, t_env *env)
+t_token	*expand_tkn_vars(t_token *tkn, t_env *env)
 {
-	char	*tmp;
-
-	tmp = tkn->content;
 	tkn->content = expand_vars(tkn->content, false, env);
-	free(tmp);
 	return (tkn);
 }
 
@@ -48,6 +44,7 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 	i = 0;
 	quote_type = '\0';
 	expanded_str = ft_strdup(str);
+	free(str);
 	while (expanded_str[i])
 	{
 		toggle_quote(expanded_str[i], &quote_type, NULL);
@@ -67,10 +64,10 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 // TODO: handle mixed expansions -> *$VAR => expand * if VAR doesn't exist
 
 /**
- * get the files and directories that match pattern in path
+ * Get the files and directories that match pattern in path
  * 
+ * @param	path the token to use for the expansion
  * @param	pattern the pattern to match
- * @param	path the path to search
  * @return	a string of names concatenated with space ' '
  */
 t_token	*expand_wildcard(t_token *tkn, char *pattern)
@@ -103,7 +100,33 @@ t_token	*expand_wildcard(t_token *tkn, char *pattern)
 }
 
 /**
- * expand speacial characters ($, *) in tokens
+ * Unquote all tokens content
+ * 
+ * @param	tkn_lst the head of the token list 
+ */
+void	unquote_tokens(t_token *tkn_lst)
+{
+	t_token	*curr_tkn;
+	char	*tmp;
+
+	curr_tkn = tkn_lst;
+	while (curr_tkn)
+	{
+		if (
+			(curr_tkn->prev && curr_tkn->prev->type != R_HEREDOC)
+			&& !ft_strchr(curr_tkn->content, "*")
+		)
+		{
+			tmp = curr_tkn->content;
+			curr_tkn->content = unquote_text(curr_tkn->content);
+			free(tmp);
+		}
+		curr_tkn = curr_tkn->next;
+	}
+}
+
+/**
+ * Expand speacial characters ($, *) in tokens
  * 
  * @param	token_lst the list of tokens to expand
  * @param	env t_env struct that holds all the environment variables
@@ -119,7 +142,7 @@ void	expand_shell(t_token *token_lst, t_env *env)
 	{
 		is_limiter = (curr->prev && curr->prev->type == R_HEREDOC);
 		if (ft_strchr(curr->content, '$') && !is_limiter)
-			curr = expand_variables(curr, env);
+			curr = expand_tkn_vars(curr, env);
 		else if (ft_strchr(curr->content, '*') && !is_limiter)
 		{
 			wildcard_pattern = unquote_text(curr->content);
@@ -128,4 +151,5 @@ void	expand_shell(t_token *token_lst, t_env *env)
 		}
 		curr = curr->next;
 	}
+	unquote_tokens(token_lst);
 }

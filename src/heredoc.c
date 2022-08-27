@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 18:55:17 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/27 05:15:27 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
 {
 	int		fd;
 	char	*line;
-	char	*tmp;
 	char	*file_path;
 
 	fd = open_heredoc_file(env, &file_path);
@@ -56,13 +55,10 @@ char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
 		if (!ft_strncmp(line, limiter, ft_strlen(limiter))
 			&& *(line + ft_strlen(limiter)) == '\0')
 			break ;
-		tmp = line;
 		if (!is_limiter_quoted)
 			line = expand_vars(line, true, env);
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		ft_putendl_fd(line, fd);
 		free(line);
-		free(tmp);
 		line = readline("> ");
 	}
 	free(line);

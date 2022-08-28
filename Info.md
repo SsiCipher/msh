@@ -4,8 +4,8 @@
 
 - echo *$NON_VALID => expand wildcard
 - echo *$VALID => expand variable
-- echo "*"*
-- (a && b) | c
+- (A && B) || C
+- A && (C || B)
 
 # info
 

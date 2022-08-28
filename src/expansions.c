@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 22:47:26 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 23:11:42 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 	return (expanded_str);
 }
 
-// TODO: match quoted * as a literal character
 // TODO: handle mixed expansions -> *$VAR => expand * if VAR doesn't exist
 
 /**
@@ -159,7 +158,6 @@ void	expand_shell(t_token *token_lst, t_env *env)
 		else if (ft_strchr(curr->content, '*') && !is_limiter)
 		{
 			wildcard_pattern = unquote_text(curr->content, true);
-			printf("pattern: %s\n", wildcard_pattern);
 			curr = expand_wildcard(curr, wildcard_pattern);
 			free(wildcard_pattern);
 		}

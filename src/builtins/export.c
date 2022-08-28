@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 05:25:37 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/27 16:41:55 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void	ft_export_list(t_env *env)
 				&env->content[i][eq_i + 1]);
 	}
 }
+
+// TODO: Print variables sorted by ascii
 
 void	ft_export(int argc, char **argv, t_env *env)
 {

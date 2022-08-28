@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:39:10 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/27 20:06:59 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	g_exit_code = 0;
 
-char	*create_prompt_str(t_env *env)
+char	*init_prompt_str(t_env *env)
 {
 	char	*prompt;
 	char	*user;
@@ -33,12 +33,12 @@ char	*create_prompt_str(t_env *env)
 	return (prompt);
 }
 
-char	*init_shell(t_env *env)
+char	*read_shell(t_env *env)
 {
 	char	*prompt;
 	char	*shell;
-	
-	prompt = create_prompt_str(env);
+
+	prompt = init_prompt_str(env);
 	shell = readline(prompt);
 	free(prompt);
 	add_history(shell);
@@ -56,12 +56,19 @@ void	increment_shlvl(t_env *env)
 	else
 		lvl = 0;
 	free(shlvl);
-	shlvl = ft_itoa(lvl + 1);
+	if (lvl < 999)
+		shlvl = ft_itoa(lvl + 1);
+	else
+	{
+		ft_putendl_fd("msh: warning:\
+shell level (1000) too high, resetting to 1", STDERR_FILENO);
+		shlvl = ft_itoa(1);
+	}
 	edit_var(env, "SHLVL", shlvl, false);
 	free(shlvl);
 }
 
-void	start_repl(t_env *env)
+void	msh_repl(t_env *env)
 {
 	char		*shell;
 	t_token		*tokens_lst;
@@ -70,12 +77,9 @@ void	start_repl(t_env *env)
 	while (true)
 	{
 		ast_tree = NULL;
-		shell = init_shell(env);
+		shell = read_shell(env);
 		if (!shell)
-		{	
-			printf("\n");
-			continue ;
-		}
+			ft_exit(1, NULL, NULL);
 		tokens_lst = create_tokens_list(shell);
 		expand_shell(tokens_lst, env);
 		if (tokens_lst && !check_errors(tokens_lst))
@@ -101,6 +105,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	env = create_env(envp);
 	increment_shlvl(env);
-	start_repl(env);
+	msh_repl(env);
+	free_env(&env);
 	return (0);
 }

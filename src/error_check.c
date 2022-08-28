@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 18:54:37 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/28 18:32:03 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,23 @@
 bool	check_redirection(t_token *tkn)
 {
 	if (!is_next_valid(tkn, R_HEREDOC, CMD))
-		return (display_error("unexpected token", "newline"));
+		return (print_error("unexpected token", NULL, "newline"));
 	else if (
 		!is_next_valid(tkn, R_INPUT, CMD)
 		|| !is_next_valid(tkn, R_OUTPUT, CMD)
 		|| !is_next_valid(tkn, R_APPEND, CMD)
 	)
-		return (display_error("unexpected token", "newline"));
+		return (print_error("unexpected token", NULL, "newline"));
+	else if (
+		tkn->prev
+		&& (
+			tkn->prev->type == R_INPUT
+			|| tkn->prev->type == R_OUTPUT
+			|| tkn->prev->type == R_APPEND
+		)
+		&& tkn->type == CMD && tkn->content[0] == '$'
+	)
+		return (print_error("ambiguous redirect", tkn->content, NULL));
 	return (false);
 }
 
@@ -57,7 +67,7 @@ bool	check_logical_and_or(t_token *tkn)
 			&& !is_next_valid(tkn, AND, R_APPEND)
 		)
 	)
-		return (display_error("unexpected token", tkn->content));
+		return (print_error("unexpected token", NULL, tkn->content));
 	return (false);
 }
 
@@ -77,7 +87,7 @@ bool	check_pipe(t_token *tkn)
 		&& !is_next_valid(tkn, PIPE, R_OUTPUT)
 		&& !is_next_valid(tkn, PIPE, R_APPEND)
 	)
-		return (display_error("unexpected token", tkn->content));
+		return (print_error("unexpected token", NULL, tkn->content));
 	return (false);
 }
 
@@ -97,7 +107,7 @@ bool	check_parenthesis(t_token *tkn, bool *is_inside_parenth)
 			&& !is_next_valid(tkn, O_PARENTH, R_OUTPUT)
 			&& !is_next_valid(tkn, O_PARENTH, R_APPEND)
 		)
-			return (display_error("unexpected end of file", NULL));
+			return (print_error("unexpected end of file", NULL, NULL));
 		else
 			*is_inside_parenth = true;
 	}
@@ -106,7 +116,7 @@ bool	check_parenthesis(t_token *tkn, bool *is_inside_parenth)
 		if (*is_inside_parenth)
 			*is_inside_parenth = false;
 		else
-			return (display_error("unexpected token", ")"));
+			return (print_error("unexpected token", NULL, ")"));
 	}
 	return (false);
 }
@@ -132,10 +142,10 @@ bool	check_errors(t_token *tkn)
 		)
 			return (true);
 		else if (tkn->type == CMD && is_quotes_unclosed(tkn->content))
-			return (display_error("unexpected end of file", NULL));
+			return (print_error("unexpected end of file", NULL, NULL));
 		tkn = tkn->next;
 	}
 	if (is_inside_parenth)
-		return (display_error("unexpected end of file", NULL));
+		return (print_error("unexpected end of file", NULL, NULL));
 	return (false);
 }

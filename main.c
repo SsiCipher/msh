@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 20:06:59 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/28 16:15:59 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,37 @@
 
 int	g_exit_code = 0;
 
+void	increment_shlvl(t_env *env)
+{
+	char	*shlvl;
+	int		lvl;
+
+	shlvl = get_var(env, "SHLVL");
+	if (shlvl)
+		lvl = ft_atoi(shlvl);
+	else
+		lvl = 0;
+	free(shlvl);
+	if (lvl < 999)
+		shlvl = ft_itoa(lvl + 1);
+	else
+		shlvl = ft_strdup("");
+	edit_var(env, "SHLVL", shlvl, false);
+	free(shlvl);
+}
+
 char	*init_prompt_str(t_env *env)
 {
-	char	*prompt;
-	char	*user;
 	char	*cwd;
+	char	*user;
+	char	*prompt;
 
-	user = get_var(env, "USER");
-	if (!user)
-		user = ft_strdup("MINISHELL");
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		cwd = get_var(env, "PWD");
+	user = get_var(env, "USER");
+	if (!user)
+		user = ft_strdup("MINISHELL");
 	prompt = ft_multijoin(5,
 			"\e[1;32m", user, " • \e[1;36m\x1B[1;34m", cwd, "\x1B[0m » ");
 	free(user);
@@ -43,29 +62,6 @@ char	*read_shell(t_env *env)
 	free(prompt);
 	add_history(shell);
 	return (shell);
-}
-
-void	increment_shlvl(t_env *env)
-{
-	char	*shlvl;
-	int		lvl;
-
-	shlvl = get_var(env, "SHLVL");
-	if (shlvl)
-		lvl = ft_atoi(shlvl);
-	else
-		lvl = 0;
-	free(shlvl);
-	if (lvl < 999)
-		shlvl = ft_itoa(lvl + 1);
-	else
-	{
-		ft_putendl_fd("msh: warning:\
-shell level (1000) too high, resetting to 1", STDERR_FILENO);
-		shlvl = ft_itoa(1);
-	}
-	edit_var(env, "SHLVL", shlvl, false);
-	free(shlvl);
 }
 
 void	msh_repl(t_env *env)
@@ -91,9 +87,9 @@ void	msh_repl(t_env *env)
 			printf("\n> ------- AST ------- <\n\n");
 			print_tree(ast_tree, 0);
 		}
+		free(shell);
 		free_tree(ast_tree);
 		free_tokens(&tokens_lst);
-		free(shell);
 	}
 }
 

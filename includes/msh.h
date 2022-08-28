@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:20:26 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 16:35:47 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ bool		check_errors(t_token *tkn);
 
 /* ==========<< src/error_check_utils.c >>========== */
 
-bool		display_error(char *error, char *token);
+bool		print_error(char *error, char *type, char *token);
 bool		is_next_valid(t_token *curr_tkn, t_type curr_type,
 				t_type next_type);
 bool		is_prev_valid(t_token *curr_tkn, t_type curr_type,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_check_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:56:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 18:54:39 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/28 18:32:00 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,14 @@
  * @param	token the token where the error occured
  * @return	always true
  */
-bool	display_error(char *error, char *token)
+bool	print_error(char *error, char *type, char *token)
 {
-	ft_putstr_fd("msh: syntax error: ", 2);
+	ft_putstr_fd("msh: ", 2);
+	if (!type)
+		ft_putstr_fd("syntax error", 2);
+	else
+		ft_putstr_fd(type, 2);
+	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(error, 2);
 	if (token)
 	{

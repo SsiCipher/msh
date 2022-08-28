@@ -6,13 +6,11 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:25:04 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 18:31:57 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-// TODO: expand $? to be the value of the global variable exit_code
 
 /**
  * Expand variables in token
@@ -23,7 +21,26 @@
  */
 t_token	*expand_tkn_vars(t_token *tkn, t_env *env)
 {
-	tkn->content = expand_vars(tkn->content, false, env);
+	char	*expanded_value;
+
+	expanded_value = expand_vars(tkn->content, false, env);
+	if (
+		(
+			tkn->prev
+			&& (
+				tkn->prev->type == R_INPUT
+				|| tkn->prev->type == R_OUTPUT
+				|| tkn->prev->type == R_APPEND
+			)
+		)
+		&& expanded_value[0] == '\0'
+	)
+		free(expanded_value);
+	else
+	{
+		free(tkn->content);
+		tkn->content = expanded_value;
+	}
 	return (tkn);
 }
 
@@ -44,7 +61,6 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 	i = 0;
 	quote_type = '\0';
 	expanded_str = ft_strdup(str);
-	free(str);
 	while (expanded_str[i])
 	{
 		toggle_quote(expanded_str[i], &quote_type, NULL);
@@ -106,14 +122,14 @@ t_token	*expand_wildcard(t_token *tkn, char *pattern)
  */
 void	unquote_tokens(t_token *tkn_lst)
 {
-	t_token	*curr_tkn;
 	char	*tmp;
+	t_token	*curr_tkn;
 
 	curr_tkn = tkn_lst;
 	while (curr_tkn)
 	{
 		if (
-			(curr_tkn->prev && curr_tkn->prev->type != R_HEREDOC)
+			!(curr_tkn->prev && curr_tkn->prev->type == R_HEREDOC)
 			&& !ft_strchr(curr_tkn->content, '*')
 		)
 		{

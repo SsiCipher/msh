@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 05:15:27 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 18:31:51 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	open_heredoc_file(t_env *env, char **file_path)
 char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
 {
 	int		fd;
+	char	*tmp;
 	char	*line;
 	char	*file_path;
 
@@ -55,8 +56,12 @@ char	*start_heredoc(char *limiter, bool is_limiter_quoted, t_env *env)
 		if (!ft_strncmp(line, limiter, ft_strlen(limiter))
 			&& *(line + ft_strlen(limiter)) == '\0')
 			break ;
+		tmp = line;
 		if (!is_limiter_quoted)
+		{
 			line = expand_vars(line, true, env);
+			free(tmp);
+		}
 		ft_putendl_fd(line, fd);
 		free(line);
 		line = readline("> ");

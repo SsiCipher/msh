@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:06:17 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 18:31:51 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 22:38:50 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	handle_heredocs(t_token *tkn, t_env *env)
 		{
 			is_limiter_quoted = (ft_strchr(tkn->next->content, '\"')
 					|| ft_strchr(tkn->next->content, '\''));
-			limiter = unquote_text(tkn->next->content);
+			limiter = unquote_text(tkn->next->content, false);
 			file_path = start_heredoc(limiter, is_limiter_quoted, env);
 			free(limiter);
 			free(tkn->next->content);

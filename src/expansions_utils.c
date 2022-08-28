@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:54:46 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 16:41:04 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 22:47:46 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,10 @@ bool	match_wildcard(char *pattern, char *text)
 			text_p = i;
 			patt_p = j++;
 		}
-		else if (text[i] == pattern[j])
+		else if (
+			(text[i] == pattern[j])
+			|| (pattern[i] == '\\' && pattern[i + 1] == '*' && text[j] == '*')
+		)
 		{
 			i++;
 			j++;

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 18:31:57 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 22:47:26 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,13 +128,10 @@ void	unquote_tokens(t_token *tkn_lst)
 	curr_tkn = tkn_lst;
 	while (curr_tkn)
 	{
-		if (
-			!(curr_tkn->prev && curr_tkn->prev->type == R_HEREDOC)
-			&& !ft_strchr(curr_tkn->content, '*')
-		)
+		if (!(curr_tkn->prev && curr_tkn->prev->type == R_HEREDOC))
 		{
 			tmp = curr_tkn->content;
-			curr_tkn->content = unquote_text(curr_tkn->content);
+			curr_tkn->content = unquote_text(curr_tkn->content, false);
 			free(tmp);
 		}
 		curr_tkn = curr_tkn->next;
@@ -161,7 +158,8 @@ void	expand_shell(t_token *token_lst, t_env *env)
 			curr = expand_tkn_vars(curr, env);
 		else if (ft_strchr(curr->content, '*') && !is_limiter)
 		{
-			wildcard_pattern = unquote_text(curr->content);
+			wildcard_pattern = unquote_text(curr->content, true);
+			printf("pattern: %s\n", wildcard_pattern);
 			curr = expand_wildcard(curr, wildcard_pattern);
 			free(wildcard_pattern);
 		}

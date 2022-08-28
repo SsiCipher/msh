@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 16:35:47 by yanab            ###   ########.fr       */
+/*   Updated: 2022/08/28 22:38:33 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,6 @@ t_token		*edit_token(t_token *tkn, char *content, t_type type);
 /* ==========<< src/utils.c >>========== */
 
 void		toggle_quote(char c, char *quote_type, bool *is_quoted);
-char		*unquote_text(char *str);
+char		*unquote_text(char *str, bool escape_wildcard);
 
 #endif

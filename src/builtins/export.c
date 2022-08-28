@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 16:41:55 by cipher           ###   ########.fr       */
+/*   Updated: 2022/08/28 18:45:21 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,20 +54,22 @@ void	ft_export_list(t_env *env)
 {
 	size_t	i;
 	int		eq_i;
+	char	**tmp_env;
 
 	i = -1;
+	tmp_env = malloc(sizeof(char *) * env->length);
+	ft_memmove(tmp_env, env->content, sizeof(char *) * env->length);
+	ft_qsort_str(tmp_env, env->length, ft_strcmp);
 	while (++i < env->length)
 	{
-		eq_i = ft_indexof(env->content[i], '=');
+		eq_i = ft_indexof(tmp_env[i], '=');
 		if (eq_i == -1)
-			printf("declare -x %s\n", env->content[i]);
+			printf("declare -x %s\n", tmp_env[i]);
 		else
-			printf("declare -x %.*s=\"%s\"\n", eq_i, env->content[i],
-				&env->content[i][eq_i + 1]);
+			printf("declare -x %.*s=\"%s\"\n", eq_i, tmp_env[i],
+				&tmp_env[i][eq_i + 1]);
 	}
 }
-
-// TODO: Print variables sorted by ascii
 
 void	ft_export(int argc, char **argv, t_env *env)
 {

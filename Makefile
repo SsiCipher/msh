@@ -3,12 +3,12 @@ NAME		= msh
 FLAGS		= -Wall -Wextra -Werror
 INCS		= -I includes
 LIBS		= -lreadline -Llibs -lft
-SRCS		= src/env.c src/env_ops.c \
-			src/token.c src/lexer.c \
-			src/error_check.c src/error_check_utils.c \
-			src/expansions.c src/expansions_utils.c \
-			src/ast_tree.c src/ast_tree_utils.c \
-			src/heredoc.c src/utils.c src/debug.c \
+SRCS		= src/parsing/env.c src/parsing/env_ops.c \
+			src/parsing/token.c src/parsing/lexer.c \
+			src/parsing/error_check.c src/parsing/error_check_utils.c \
+			src/parsing/expansions.c src/parsing/expansions_utils.c \
+			src/parsing/ast_tree.c src/parsing/ast_tree_utils.c \
+			src/parsing/heredoc.c src/parsing/utils.c src/parsing/debug.c \
 			src/builtins/cd.c src/builtins/echo.c src/builtins/env.c src/builtins/exit.c \
 			src/builtins/export.c src/builtins/pwd.c src/builtins/unset.c src/builtins/utils.c
 

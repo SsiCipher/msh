@@ -10,7 +10,8 @@ SRCS		= src/parsing/env.c src/parsing/env_ops.c \
 			src/parsing/ast_tree.c src/parsing/ast_tree_utils.c \
 			src/parsing/heredoc.c src/parsing/utils.c src/parsing/debug.c \
 			src/builtins/cd.c src/builtins/echo.c src/builtins/env.c src/builtins/exit.c \
-			src/builtins/export.c src/builtins/pwd.c src/builtins/unset.c src/builtins/utils.c
+			src/builtins/export.c src/builtins/pwd.c src/builtins/unset.c src/builtins/utils.c \
+			src/execution/exec.c src/execution/exec_utils.c
 
 all: libs $(NAME)
 

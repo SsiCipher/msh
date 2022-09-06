@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 22:45:27 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/06 07:49:10 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*read_shell(t_env *env)
 	return (shell);
 }
 
-void	msh_repl(t_env *env)
+t_node	*msh_repl(t_env *env)
 {
 	char		*shell;
 	t_token		*tokens_lst;
@@ -88,20 +88,23 @@ void	msh_repl(t_env *env)
 			print_tree(ast_tree, 0);
 		}
 		free(shell);
-		free_tree(ast_tree);
 		free_tokens(&tokens_lst);
+		return (ast_tree);
 	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_env		*env;
+	t_node		*ast_tree;
 
 	(void)argc;
 	(void)argv;
 	env = create_env(envp);
 	increment_shlvl(env);
-	msh_repl(env);
+	ast_tree = msh_repl(env);
+	g_exit_code = exec_node(ast_tree);
+	free_tree(ast_tree);
 	free_env(&env);
 	return (0);
 }

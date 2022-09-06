@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 22:38:33 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/06 07:48:01 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,10 @@ typedef struct s_node
 }	t_node;
 
 extern int	g_exit_code;
+
+/* ==========<< src/execution/exec.c >>========== */
+
+int			exec_node(t_node *node);
 
 /* ==========<< src/ast_tree_utils.c >>========== */
 

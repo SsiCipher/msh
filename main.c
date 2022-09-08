@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/06 07:49:10 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/07 22:30:59 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*read_shell(t_env *env)
 	return (shell);
 }
 
-t_node	*msh_repl(t_env *env)
+void	msh_repl(t_env *env)
 {
 	char		*shell;
 	t_token		*tokens_lst;
@@ -82,29 +82,27 @@ t_node	*msh_repl(t_env *env)
 		{
 			handle_heredocs(tokens_lst, env);
 			ast_tree = create_ast(tokens_lst);
-			printf("> ------- Tokens ------- <\n\n");
-			print_tokens(tokens_lst);
-			printf("\n> ------- AST ------- <\n\n");
-			print_tree(ast_tree, 0);
+			// printf("> ------- Tokens ------- <\n\n");
+			// print_tokens(tokens_lst);
+			// printf("\n> ------- AST ------- <\n\n");
+			// print_tree(ast_tree, 0);
+			g_exit_code = exec_node(ast_tree, env);
 		}
 		free(shell);
+		free_tree(ast_tree);
 		free_tokens(&tokens_lst);
-		return (ast_tree);
 	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_env		*env;
-	t_node		*ast_tree;
 
 	(void)argc;
 	(void)argv;
 	env = create_env(envp);
 	increment_shlvl(env);
-	ast_tree = msh_repl(env);
-	g_exit_code = exec_node(ast_tree);
-	free_tree(ast_tree);
+	msh_repl(env);
 	free_env(&env);
 	return (0);
 }

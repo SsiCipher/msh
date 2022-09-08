@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/06 07:48:01 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/07 22:29:23 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ extern int	g_exit_code;
 
 /* ==========<< src/execution/exec.c >>========== */
 
-int			exec_node(t_node *node);
+void		print_err(char *error_msg, char *arg);
+int			exec_node(t_node *node, t_env *env);
 
 /* ==========<< src/ast_tree_utils.c >>========== */
 

@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/25 05:46:55 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/08 04:52:02 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	ft_echo(int argc, char **argv)
 	int		i;
 	bool	print_newline;
 
+	(void)argv;
 	i = 1;
 	print_newline = true;
 	if (argc > 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_every_char.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 09:28:15 by marvin            #+#    #+#             */
-/*   Updated: 2022/08/12 07:59:11 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/08 04:53:00 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	ft_every_char(const char *str, char c)
 {
+	if (*str == '\0')
+		return (0);
 	while (*str)
 	{
 		if (*str != c)

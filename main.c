@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/07 22:30:59 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/13 20:50:56 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int	g_exit_code = 0;
+int	g_exit_code = EXIT_SUCCESS;
 
 void	increment_shlvl(t_env *env)
 {
@@ -82,11 +82,7 @@ void	msh_repl(t_env *env)
 		{
 			handle_heredocs(tokens_lst, env);
 			ast_tree = create_ast(tokens_lst);
-			// printf("> ------- Tokens ------- <\n\n");
-			// print_tokens(tokens_lst);
-			// printf("\n> ------- AST ------- <\n\n");
-			// print_tree(ast_tree, 0);
-			g_exit_code = exec_node(ast_tree, env);
+			g_exit_code = exec_ast(ast_tree, env);
 		}
 		free(shell);
 		free_tree(ast_tree);
@@ -102,6 +98,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	env = create_env(envp);
 	increment_shlvl(env);
+	printf("PID: [%d]\n", getpid());
 	msh_repl(env);
 	free_env(&env);
 	return (0);

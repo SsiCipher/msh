@@ -3,23 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 02:58:34 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/11 02:04:32 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void	ft_cd_goto(char *path, t_env *env)
+int	ft_cd_goto(char *path, t_env *env)
 {
 	char	*prev_wd_path;
 	char	*new_wd_path;
+	int		exit_code;
 
+	exit_code = 0;
 	prev_wd_path = getcwd(NULL, 0);
 	if (chdir(path))
-		print_builtin_error("cd", NULL, strerror(errno));
+		exit_code = print_builtin_error("cd", NULL, strerror(errno), 1);
 	else
 	{
 		new_wd_path = getcwd(NULL, 0);
@@ -28,25 +30,28 @@ void	ft_cd_goto(char *path, t_env *env)
 		free(new_wd_path);
 	}
 	free(prev_wd_path);
+	return (exit_code);
 }
 
-void	ft_cd(int argc, char **argv, t_env *env)
+int	ft_cd(int argc, char **argv, t_env *env)
 {
 	char	*path;
+	int		exit_code;
 
 	path = NULL;
 	if (argc > 2)
-		print_builtin_error("cd", NULL, "too many arguments");
+		exit_code = print_builtin_error("cd", NULL, "too many arguments", 1);
 	else if (argc == 2)
 		path = argv[1];
 	else
 	{
 		path = get_var(env, "HOME");
 		if (!path)
-			print_builtin_error("cd", NULL, "HOME not set");
+			exit_code = print_builtin_error("cd", NULL, "HOME not set", 1);
 	}
 	if (path && argc <= 2)
-		ft_cd_goto(path, env);
+		exit_code = ft_cd_goto(path, env);
 	if (path && argc == 1)
 		free(path);
+	return (exit_code);
 }

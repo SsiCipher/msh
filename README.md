@@ -6,6 +6,12 @@ Minishell is a 42 cursus project to better learn the inner workings of the bash 
 
 ```c
 
+// Debug parsing
+printf("> ------- Tokens ------- <\n\n");
+print_tokens(tokens_lst);
+printf("\n> ------- AST ------- <\n\n");
+print_tree(ast_tree, 0);
+
 // Test builtins
 while (true)
 {

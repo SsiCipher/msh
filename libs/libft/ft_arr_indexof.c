@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_arr_indexof.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/13 10:58:52 by cipher           ###   ########.fr       */
+/*   Created: 2022/09/13 10:51:43 by cipher            #+#    #+#             */
+/*   Updated: 2022/09/13 10:53:12 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "msh.h"
+#include "libft.h"
 
-int	ft_pwd(int argc, char **argv, t_env *env)
+int ft_arr_indexof(char **arr, char *target)
 {
-	char	*current_wd;
+	int	i;
 
-	(void)argv;
-	(void)argc;
-	(void)env;
-	current_wd = getcwd(NULL, 0);
-	ft_putendl_fd(current_wd, 1);
-	free(current_wd);
-	return (EXIT_SUCCESS);
+	i = -1;
+	while (arr[++i])
+	{
+		if (!ft_strcmp(arr[i], target))
+			return (i);
+	}
+	return (-1);
 }

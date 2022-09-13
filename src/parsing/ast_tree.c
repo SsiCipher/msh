@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tree.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 15:00:51 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/09 19:30:15 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	handle_redirections(t_token **tkn, t_node **root, t_node **node)
 		else
 			(*root)->right->right = *node;
 	}
+	if ((*node)->type == R_HEREDOC)
+		(*node)->is_infile_heredoc = true;
 	update_io_fds(*node, (*tkn)->type, (*tkn)->next->content);
 	*tkn = (*tkn)->next;
 }

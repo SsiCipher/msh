@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/22 05:26:34 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/11 03:14:37 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void	ft_unset(int argc, char **argv, t_env *env)
+int	ft_unset(int argc, char **argv, t_env *env)
 {
 	int	i;
 
 	i = 0;
 	while (++i < argc)
 		delete_var(env, argv[i]);
+	return (EXIT_SUCCESS);
 }

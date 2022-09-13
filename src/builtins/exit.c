@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/27 20:06:56 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/11 03:16:01 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,28 @@ long long	atoi_check(char *number)
 	return (num * sign);
 }
 
-void	ft_exit(int argc, char **argv, t_env *env)
+int	ft_exit(int argc, char **argv, t_env *env)
 {
-	long long	exit_code;
+	long long	exit_value;
+	int			exit_code;
 
 	(void)env;
+	exit_code = EXIT_SUCCESS;
 	printf("exit\n");
 	if (argc == 1)
 		exit(EXIT_SUCCESS);
 	else
 	{
-		exit_code = atoi_check(argv[1]);
-		if (exit_code == -1)
+		exit_value = atoi_check(argv[1]);
+		if (exit_value == -1)
 		{
-			print_builtin_error("exit", argv[1], "numeric argument required");
+			print_builtin_error("exit", argv[1], "numeric argument required", 2);
 			exit(2);
 		}
 		if (argc > 2)
-			print_builtin_error("exit", NULL, "too many arguments");
+			exit_code = print_builtin_error("exit", NULL, "too many arguments", 1);
 		else
-			exit((unsigned short)exit_code);
+			exit((unsigned short)exit_value);
 	}
+	return (exit_code);
 }

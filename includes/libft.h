@@ -100,5 +100,6 @@ int		ft_every_char(const char *str, char c);
 char	*ft_find_n_replace(char *str, int start_i, char *find, char *replace);
 void	ft_qsort_str(char **array, int size,
 			int (*cmp)(const char *, const char *));
+int		ft_arr_indexof(char **arr, char *target);
 
 #endif

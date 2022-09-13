@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/07 22:29:23 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/13 11:13:40 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
 
 # include "libft.h"
 
@@ -71,7 +72,7 @@ typedef struct s_node
 	t_type				type;
 	char				**argv;
 	int					argc;
-	bool				unlink_infile;
+	bool				is_infile_heredoc;
 	int					input_fd;
 	int					output_fd;
 	int					exit_code;
@@ -84,8 +85,22 @@ extern int	g_exit_code;
 
 /* ==========<< src/execution/exec.c >>========== */
 
+int			exec_cmd(t_node *node, t_env *env);
+int			exec_ast(t_node *node, t_env *env);
+
+/* ==========<< src/execution/exec_cmd.c >>========== */
+
+char		*get_cmd_path(char *cmd_name, t_env *env);
+bool		is_builtin(char *cmd);
+int			run_builtin(t_node *node, t_env *env);
+int			run_cmd(t_node *node, t_env *env);
+
+/* ==========<< src/execution/exec_utils.c >>========== */
+
 void		print_err(char *error_msg, char *arg);
-int			exec_node(t_node *node, t_env *env);
+void		dup_io(t_node *node, int tmp_io[2]);
+void		dup_pipe(int pipe_ends[2], int std_fd);
+void		close_io(t_node *node, int tmp_io[2]);
 
 /* ==========<< src/ast_tree_utils.c >>========== */
 
@@ -100,19 +115,19 @@ t_node		*create_ast(t_token *tkns_lst);
 
 /* ==========<< src/builtins.c >>========== */
 
-void		print_builtin_error(char *cmd, char *pre_error, char *error);
-void		ft_echo(int argc, char **argv);
-void		ft_cd_goto(char *path, t_env *env);
-void		ft_cd(int argc, char **argv, t_env *env);
-void		ft_pwd(int argc, char **argv);
+int			print_builtin_error(char *cmd, char *pre, char *error, int exit_code);
+int			ft_echo(int argc, char **argv, t_env *env);
+int			ft_cd_goto(char *path, t_env *env);
+int			ft_cd(int argc, char **argv, t_env *env);
+int			ft_pwd(int argc, char **argv, t_env *env);
 bool		parse_var(char *line, char **name, char **value);
 bool		check_name(char *name);
 void		ft_export_list(t_env *env);
-void		ft_export(int argc, char **argv, t_env *env);
-void		ft_unset(int argc, char **argv, t_env *env);
-void		ft_env(int argc, char **argv, t_env *env);
+int			ft_export(int argc, char **argv, t_env *env);
+int			ft_unset(int argc, char **argv, t_env *env);
+int			ft_env(int argc, char **argv, t_env *env);
 long long	atoi_check(char *number);
-void		ft_exit(int argc, char **argv, t_env *env);
+int			ft_exit(int argc, char **argv, t_env *env);
 
 /* ==========<< src/debug.c >>========== */
 

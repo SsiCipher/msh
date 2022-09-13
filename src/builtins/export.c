@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 18:45:21 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/11 03:16:50 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,16 @@ void	ft_export_list(t_env *env)
 	}
 }
 
-void	ft_export(int argc, char **argv, t_env *env)
+int	ft_export(int argc, char **argv, t_env *env)
 {
 	size_t	i;
 	char	*tmp;
 	char	*name;
 	char	*value;
 	bool	append;
+	int		exit_code;
 
+	exit_code = EXIT_SUCCESS;
 	if (argc == 1)
 		ft_export_list(env);
 	else
@@ -91,8 +93,9 @@ void	ft_export(int argc, char **argv, t_env *env)
 			if (check_name(name))
 				edit_var(env, name, value, append);
 			else
-				print_builtin_error("export", tmp, "is not a valid identifier");
+				exit_code = print_builtin_error("export", tmp, "is not a valid identifier", 1);
 			free(tmp);
 		}
 	}
+	return (exit_code);
 }

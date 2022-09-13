@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tree_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 23:27:07 by yanab             #+#    #+#             */
-/*   Updated: 2022/08/28 23:22:48 by yanab            ###   ########.fr       */
+/*   Updated: 2022/09/13 10:31:53 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ t_node	*create_node(t_type type)
 	node->type = type;
 	node->argv = NULL;
 	node->argc = 0;
+	node->is_infile_heredoc = false;
 	node->input_fd = STDIN_FILENO;
 	node->output_fd = STDOUT_FILENO;
-	node->exit_code = EXIT_SUCCESS;
+	node->exit_code = -1;
 	node->left = NULL;
 	node->right = NULL;
 	return (node);
@@ -54,6 +55,8 @@ void	node_argv_push(t_node *node, char *new_arg)
 	node->argv[node->argc + 1] = NULL;
 	node->argc += 1;
 }
+
+// TODO: display error if open returns -1
 
 void	update_io_fds(t_node *node, t_type type, char *filename)
 {

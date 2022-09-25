@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 22:55:56 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/13 20:52:40 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/16 11:40:48 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void	dup_pipe(int pipe_ends[2], int std_fd)
 {
 	if (std_fd == STDIN_FILENO)
 	{
-		close(pipe_ends[STDOUT_FILENO]);
 		dup2(pipe_ends[STDIN_FILENO], STDIN_FILENO);
 		close(pipe_ends[STDIN_FILENO]);
+		close(pipe_ends[STDOUT_FILENO]);
 	}
 	else if (std_fd == STDOUT_FILENO)
 	{
-		close(pipe_ends[STDIN_FILENO]);
 		dup2(pipe_ends[STDOUT_FILENO], STDOUT_FILENO);
+		close(pipe_ends[STDIN_FILENO]);
 		close(pipe_ends[STDOUT_FILENO]);
 	}
 }

@@ -6,13 +6,13 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/13 20:50:56 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/16 21:53:52 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int	g_exit_code = EXIT_SUCCESS;
+int		g_exit_code = EXIT_SUCCESS;
 
 void	increment_shlvl(t_env *env)
 {
@@ -74,19 +74,21 @@ void	msh_repl(t_env *env)
 	{
 		ast_tree = NULL;
 		shell = read_shell(env);
-		if (!shell)
-			ft_exit(1, NULL, NULL);
-		tokens_lst = create_tokens_list(shell);
-		expand_shell(tokens_lst, env);
-		if (tokens_lst && !check_errors(tokens_lst))
+		if (shell && shell[0])
 		{
-			handle_heredocs(tokens_lst, env);
-			ast_tree = create_ast(tokens_lst);
-			g_exit_code = exec_ast(ast_tree, env);
+			tokens_lst = create_tokens_list(shell);
+			expand_shell(tokens_lst, env);
+			if (tokens_lst && !check_errors(tokens_lst))
+			{
+				handle_heredocs(tokens_lst, env);
+				ast_tree = create_ast(tokens_lst);
+				// print_tree(ast_tree, 0);
+				g_exit_code = exec_ast(ast_tree, env);
+			}
+			free(shell);
+			free_tree(ast_tree);
+			free_tokens(&tokens_lst);
 		}
-		free(shell);
-		free_tree(ast_tree);
-		free_tokens(&tokens_lst);
 	}
 }
 

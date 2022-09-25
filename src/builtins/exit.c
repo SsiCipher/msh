@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/11 03:16:01 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/17 02:46:30 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_exit(int argc, char **argv, t_env *env)
 
 	(void)env;
 	exit_code = EXIT_SUCCESS;
-	printf("exit\n");
+	ft_putendl_fd("exit", STDERR_FILENO);
 	if (argc == 1)
 		exit(EXIT_SUCCESS);
 	else

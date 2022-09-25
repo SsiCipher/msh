@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/13 11:13:40 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/16 10:50:08 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int			exec_ast(t_node *node, t_env *env);
 char		*get_cmd_path(char *cmd_name, t_env *env);
 bool		is_builtin(char *cmd);
 int			run_builtin(t_node *node, t_env *env);
+void		_run_cmd(t_node *node, t_env *env, int tmp_io[2]);
 int			run_cmd(t_node *node, t_env *env);
 
 /* ==========<< src/execution/exec_utils.c >>========== */

@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/13 20:54:07 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/17 02:51:53 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ int	exec_cmd(t_node *node, t_env *env)
 {
 	int	exit_code;
 
-	if (is_builtin(node->argv[0]) && !ft_strchr(node->argv[0], '/'))
+	if (
+		is_builtin(node->argv[0])
+		&& !ft_strchr(node->argv[0], '/')
+	)
 		exit_code = run_builtin(node, env);
 	else
 		exit_code = run_cmd(node, env);
@@ -24,39 +27,75 @@ int	exec_cmd(t_node *node, t_env *env)
 	return (exit_code);
 }
 
-void	exec_pipe(t_node *node, t_env *env)
-{
-	int pipe_ends[2];
-	int	pid_left;
-	int cmd_exec;
+int tmp_in = -1;
 
-	if (pipe(pipe_ends) == -1)
-		return ;
-	pid_left = fork();
-	if (pid_left == 0)
+int	exec_pipe(t_node *node, t_env *env, int pipe_ends[2], bool is_last)
+{
+	int	pid;
+	int tmp_io[2];
+
+	pid = fork();
+	if (pid == -1)
+		perror("msh: fork: ");
+	else if (pid == 0)
 	{
-		dup_pipe(pipe_ends, STDOUT_FILENO);
-		if (!ft_strchr(node->argv[0], '/'))
-			cmd_exec = execve(get_cmd_path(node->argv[0], env),
-					node->argv, env->content);
+		if (!is_last)
+			dup_pipe(pipe_ends, STDOUT_FILENO);
+		if (
+			is_builtin(node->argv[0])
+			&& !ft_strchr(node->argv[0], '/')
+		)
+			run_builtin(node, env);
 		else
-			cmd_exec = execve(node->argv[0], node->argv, env->content);
-		if (cmd_exec == -1)
-			print_err("msh: Command not found: ", node->argv[0]);
+			_run_cmd(node, env, tmp_io);
 	}
-	close(pipe_ends[STDIN_FILENO]);
-	close(pipe_ends[STDOUT_FILENO]);
-	waitpid(pid_left, NULL, 0);
+	else
+	{
+		if (tmp_in == -1)
+			tmp_in = dup(STDIN_FILENO);
+		if (!is_last)
+		{
+			dup_pipe(pipe_ends, STDIN_FILENO);
+			pipe(pipe_ends);
+		}
+		else
+		{
+			close(pipe_ends[STDIN_FILENO]);
+			close(pipe_ends[STDOUT_FILENO]);
+			dup2(tmp_in, STDIN_FILENO);
+			close(tmp_in);
+			tmp_in = -1;
+		}
+		waitpid(pid, NULL, 0);
+	}
+	return (0);
+}
+
+void	exec_pipe_rec(t_node *node, t_env *env, int *pipe_ends)
+{
+	if (node->type == CMD)
+		exec_pipe(node, env, pipe_ends, false);
+	else if (node->type == PIPE)
+	{
+		exec_pipe_rec(node->left, env, pipe_ends);
+		exec_pipe(node->right, env, pipe_ends, false);
+	}
+	wait(NULL);
 }
 
 int	exec_ast(t_node *node, t_env *env)
 {
+	int pipe_ends[2];
+
 	if (node->type == CMD)
 		return (exec_cmd(node, env));
 	else if (node->type == PIPE)
 	{
-		exec_ast(node->left, env);		
-		exec_ast(node->right, env);
+		pipe(pipe_ends);
+		exec_pipe_rec(node->left, env, pipe_ends);
+		exec_pipe(node->right, env, pipe_ends, true);
+		close(pipe_ends[STDIN_FILENO]);
+		close(pipe_ends[STDOUT_FILENO]);
 	}
 	return (EXIT_SUCCESS);
 }

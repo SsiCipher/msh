@@ -6,7 +6,7 @@
 /*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 07:11:24 by cipher            #+#    #+#             */
-/*   Updated: 2022/09/13 11:17:33 by cipher           ###   ########.fr       */
+/*   Updated: 2022/09/16 21:59:15 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,25 +75,29 @@ int	run_builtin(t_node *node, t_env *env)
 	return (exit_code);
 }
 
+void	_run_cmd(t_node *node, t_env *env, int tmp_io[2])
+{
+	int	cmd_exec;
+
+	dup_io(node, tmp_io);
+	if (!ft_strchr(node->argv[0], '/'))
+		cmd_exec = execve(get_cmd_path(node->argv[0], env),
+				node->argv, env->content);
+	else
+		cmd_exec = execve(node->argv[0], node->argv, env->content);
+	if (cmd_exec == -1)
+		print_err("msh: Command not found: ", node->argv[0]);
+}
+
 int	run_cmd(t_node *node, t_env *env)
 {
 	int		pid;
 	int		status;
-	int		cmd_exec;
 	int		tmp_io[2];
 
 	pid = fork();
 	if (pid == 0)
-	{
-		dup_io(node, tmp_io);
-		if (!ft_strchr(node->argv[0], '/'))
-			cmd_exec = execve(get_cmd_path(node->argv[0], env),
-					node->argv, env->content);
-		else
-			cmd_exec = execve(node->argv[0], node->argv, env->content);
-		if (cmd_exec == -1)
-			print_err("msh: Command not found: ", node->argv[0]);
-	}
+		_run_cmd(node, env, tmp_io);
 	close_io(node, tmp_io);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))

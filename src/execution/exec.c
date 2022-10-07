@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/17 02:51:53 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/07 23:32:08 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int	exec_cmd(t_node *node, t_env *env)
+int	exec_single_cmd(t_node *node, t_env *env)
 {
 	int	exit_code;
 
@@ -28,7 +28,6 @@ int	exec_cmd(t_node *node, t_env *env)
 }
 
 int tmp_in = -1;
-
 int	exec_pipe(t_node *node, t_env *env, int pipe_ends[2], bool is_last)
 {
 	int	pid;
@@ -66,7 +65,6 @@ int	exec_pipe(t_node *node, t_env *env, int pipe_ends[2], bool is_last)
 			close(tmp_in);
 			tmp_in = -1;
 		}
-		waitpid(pid, NULL, 0);
 	}
 	return (0);
 }
@@ -80,7 +78,6 @@ void	exec_pipe_rec(t_node *node, t_env *env, int *pipe_ends)
 		exec_pipe_rec(node->left, env, pipe_ends);
 		exec_pipe(node->right, env, pipe_ends, false);
 	}
-	wait(NULL);
 }
 
 int	exec_ast(t_node *node, t_env *env)
@@ -88,7 +85,7 @@ int	exec_ast(t_node *node, t_env *env)
 	int pipe_ends[2];
 
 	if (node->type == CMD)
-		return (exec_cmd(node, env));
+		return (exec_single_cmd(node, env));
 	else if (node->type == PIPE)
 	{
 		pipe(pipe_ends);
@@ -96,6 +93,8 @@ int	exec_ast(t_node *node, t_env *env)
 		exec_pipe(node->right, env, pipe_ends, true);
 		close(pipe_ends[STDIN_FILENO]);
 		close(pipe_ends[STDOUT_FILENO]);
+		while (waitpid(-1, NULL, 0) != -1)
+			;
 	}
 	return (EXIT_SUCCESS);
 }

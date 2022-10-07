@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 07:11:24 by cipher            #+#    #+#             */
-/*   Updated: 2022/09/16 21:59:15 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/04 22:27:51 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	run_builtin(t_node *node, t_env *env)
 	int		exit_code;
 
 	dup_io(node, tmp_io);
+	exit_code = EXIT_SUCCESS;
 	if (!ft_strcmp(node->argv[0], "echo"))
 		exit_code = ft_echo(node->argc, node->argv, env);
 	else if (!ft_strcmp(node->argv[0], "cd"))

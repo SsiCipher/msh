@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/16 21:53:52 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/06 22:38:10 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ void	msh_repl(t_env *env)
 			{
 				handle_heredocs(tokens_lst, env);
 				ast_tree = create_ast(tokens_lst);
-				// print_tree(ast_tree, 0);
 				g_exit_code = exec_ast(ast_tree, env);
 			}
 			free(shell);

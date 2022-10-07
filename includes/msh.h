@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/16 10:50:08 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/06 22:36:02 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,9 @@ extern int	g_exit_code;
 
 /* ==========<< src/execution/exec.c >>========== */
 
-int			exec_cmd(t_node *node, t_env *env);
 int			exec_ast(t_node *node, t_env *env);
 
-/* ==========<< src/execution/exec_cmd.c >>========== */
+/* ==========<< src/execution/exec_single_cmd.c >>========== */
 
 char		*get_cmd_path(char *cmd_name, t_env *env);
 bool		is_builtin(char *cmd);

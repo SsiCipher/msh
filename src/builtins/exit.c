@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/17 02:46:30 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/12 22:02:47 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ int	ft_exit(int argc, char **argv, t_env *env)
 		exit_value = atoi_check(argv[1]);
 		if (exit_value == -1)
 		{
-			print_builtin_error("exit", argv[1], "numeric argument required", 2);
+			builtin_error("exit", argv[1], "numeric argument required", 2);
 			exit(2);
 		}
 		if (argc > 2)
-			exit_code = print_builtin_error("exit", NULL, "too many arguments", 1);
+			exit_code = builtin_error("exit", NULL, "too many arguments", 1);
 		else
 			exit((unsigned short)exit_value);
 	}

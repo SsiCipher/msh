@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/06 22:36:02 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/12 22:02:49 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ t_node		*create_ast(t_token *tkns_lst);
 
 /* ==========<< src/builtins.c >>========== */
 
-int			print_builtin_error(char *cmd, char *pre, char *error, int exit_code);
+int			builtin_error(char *cmd, char *pre, char *error, int exit_code);
 int			ft_echo(int argc, char **argv, t_env *env);
 int			ft_cd_goto(char *path, t_env *env);
 int			ft_cd(int argc, char **argv, t_env *env);

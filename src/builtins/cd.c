@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/11 02:04:32 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/12 22:02:47 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_cd_goto(char *path, t_env *env)
 	exit_code = 0;
 	prev_wd_path = getcwd(NULL, 0);
 	if (chdir(path))
-		exit_code = print_builtin_error("cd", NULL, strerror(errno), 1);
+		exit_code = builtin_error("cd", NULL, strerror(errno), 1);
 	else
 	{
 		new_wd_path = getcwd(NULL, 0);
@@ -40,14 +40,14 @@ int	ft_cd(int argc, char **argv, t_env *env)
 
 	path = NULL;
 	if (argc > 2)
-		exit_code = print_builtin_error("cd", NULL, "too many arguments", 1);
+		exit_code = builtin_error("cd", NULL, "too many arguments", 1);
 	else if (argc == 2)
 		path = argv[1];
 	else
 	{
 		path = get_var(env, "HOME");
 		if (!path)
-			exit_code = print_builtin_error("cd", NULL, "HOME not set", 1);
+			exit_code = builtin_error("cd", NULL, "HOME not set", 1);
 	}
 	if (path && argc <= 2)
 		exit_code = ft_cd_goto(path, env);

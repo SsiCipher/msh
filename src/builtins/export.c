@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/11 03:16:50 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/12 22:04:07 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	ft_export(int argc, char **argv, t_env *env)
 			if (check_name(name))
 				edit_var(env, name, value, append);
 			else
-				exit_code = print_builtin_error("export", tmp, "is not a valid identifier", 1);
+				exit_code = builtin_error("export", tmp, "is not a valid identifier", 1);
 			free(tmp);
 		}
 	}

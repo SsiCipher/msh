@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/09/10 21:43:59 by cipher           ###   ########.fr       */
+/*   Updated: 2022/10/12 22:02:54 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-int	print_builtin_error(char *cmd, char *pre, char *error, int exit_code)
+int	builtin_error(char *cmd, char *pre, char *error, int exit_code)
 {
 	ft_putstr_fd("msh: ", STDERR_FILENO);
 	ft_putstr_fd(cmd, STDERR_FILENO);

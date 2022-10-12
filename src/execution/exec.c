@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cipher <cipher@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/07 23:32:08 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/12 17:26:16 by cipher           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+// TODO: [x] Edit builtins to return exit_codes
+// TODO: [x] Set exit_code to global variable
+// TODO: [ ] change heredoc to pipe
+// TODO: [x] close unused fds
+// TODO: [ ] dont skip : in path split (in case a directory is named ":blabla")
 
 int	exec_single_cmd(t_node *node, t_env *env)
 {
@@ -44,7 +50,7 @@ int	exec_pipe(t_node *node, t_env *env, int pipe_ends[2], bool is_last)
 			is_builtin(node->argv[0])
 			&& !ft_strchr(node->argv[0], '/')
 		)
-			run_builtin(node, env);
+			exit(run_builtin(node, env));
 		else
 			_run_cmd(node, env, tmp_io);
 	}
@@ -66,7 +72,7 @@ int	exec_pipe(t_node *node, t_env *env, int pipe_ends[2], bool is_last)
 			tmp_in = -1;
 		}
 	}
-	return (0);
+	return (pid);
 }
 
 void	exec_pipe_rec(t_node *node, t_env *env, int *pipe_ends)
@@ -83,6 +89,9 @@ void	exec_pipe_rec(t_node *node, t_env *env, int *pipe_ends)
 int	exec_ast(t_node *node, t_env *env)
 {
 	int pipe_ends[2];
+	int status;
+	int last_child_pid;
+	int p;
 
 	if (node->type == CMD)
 		return (exec_single_cmd(node, env));
@@ -90,11 +99,14 @@ int	exec_ast(t_node *node, t_env *env)
 	{
 		pipe(pipe_ends);
 		exec_pipe_rec(node->left, env, pipe_ends);
-		exec_pipe(node->right, env, pipe_ends, true);
+		last_child_pid = exec_pipe(node->right, env, pipe_ends, true);
 		close(pipe_ends[STDIN_FILENO]);
 		close(pipe_ends[STDOUT_FILENO]);
-		while (waitpid(-1, NULL, 0) != -1)
-			;
+		while ((p = waitpid(-1, &status, 0)) != -1)
+		{	
+			if (WIFEXITED(status) && p == last_child_pid)
+				return (WEXITSTATUS(status));
+		}
 	}
 	return (EXIT_SUCCESS);
 }

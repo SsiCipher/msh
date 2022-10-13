@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/12 22:17:20 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/12 23:17:24 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,16 @@ int	exec_pipe(t_node *node, t_env *env, int pipe_ends[2], bool is_last)
 	return (pid);
 }
 
-void	exec_pipe_rec(t_node *node, t_env *env, int *pipe_ends)
+int	exec_pipe_r(t_node *node, t_env *env, int *pipe_ends, bool is_last)
 {
 	if (node->type == CMD)
-		exec_pipe(node, env, pipe_ends, false);
+		exec_pipe(node, env, pipe_ends, is_last);
 	else if (node->type == PIPE)
 	{
-		exec_pipe_rec(node->left, env, pipe_ends);
-		exec_pipe(node->right, env, pipe_ends, false);
+		exec_pipe_r(node->left, env, pipe_ends, false);
+		return (exec_pipe(node->right, env, pipe_ends, is_last));
 	}
+	return (EXIT_SUCCESS);
 }
 
 int	exec_ast(t_node *node, t_env *env)
@@ -99,14 +100,13 @@ int	exec_ast(t_node *node, t_env *env)
 	else if (node->type == PIPE)
 	{
 		pipe(pipe_ends);
-		exec_pipe_rec(node->left, env, pipe_ends);
-		last_pid = exec_pipe(node->right, env, pipe_ends, true);
+		last_pid = exec_pipe_r(node, env, pipe_ends, true);
 		close(pipe_ends[STDIN_FILENO]);
 		close(pipe_ends[STDOUT_FILENO]);
 		while ((pid = waitpid(-1, &status, 0)) != -1)
 		{	
-			if (WIFEXITED(status) && pid == last_pid)
-				return (WEXITSTATUS(status));
+			// if (WIFEXITED(status) && pid == last_pid)
+			// 	return (WEXITSTATUS(status));
 		}
 	}
 	return (EXIT_SUCCESS);

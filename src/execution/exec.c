@@ -6,17 +6,11 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:08:21 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/12 23:17:24 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/13 23:29:37 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-// TODO: [x] Edit builtins to return exit_codes
-// TODO: [x] Set exit_code to global variable
-// TODO: [ ] change heredoc to pipe
-// TODO: [x] close unused fds
-// TODO: [ ] dont skip : in path split (in case a directory is named ":blabla")
 
 int	exec_single_cmd(t_node *node, t_env *env)
 {
@@ -94,7 +88,9 @@ int	exec_ast(t_node *node, t_env *env)
 	int		status;
 	pid_t	last_pid;
 	pid_t	pid;
+	int		exit_code;
 
+	exit_code = EXIT_SUCCESS;
 	if (node->type == CMD)
 		return (exec_single_cmd(node, env));
 	else if (node->type == PIPE)
@@ -105,9 +101,18 @@ int	exec_ast(t_node *node, t_env *env)
 		close(pipe_ends[STDOUT_FILENO]);
 		while ((pid = waitpid(-1, &status, 0)) != -1)
 		{	
-			// if (WIFEXITED(status) && pid == last_pid)
-			// 	return (WEXITSTATUS(status));
+			if (WIFEXITED(status) && pid == last_pid)
+				exit_code = WEXITSTATUS(status);
 		}
 	}
-	return (EXIT_SUCCESS);
+	else if (node->type == AND || node->type == OR)
+	{
+		exit_code = exec_ast(node->left, env);
+		if (
+			(node->type == AND && exit_code == 0)
+			|| (node->type == OR && exit_code != 0)
+		)
+			return (exec_ast(node->right, env));
+	}
+	return (exit_code);
 }

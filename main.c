@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 06:11:27 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/06 22:38:10 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/18 05:16:46 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,33 @@ char	*read_shell(t_env *env)
 	return (shell);
 }
 
+void redisplay_prompt(int sig)
+{
+	(void)sig;
+	// write(1, "\n", 1);
+	// rl_replace_line("", 0);
+	// rl_on_new_line();
+	// rl_redisplay();
+}
+
 void	msh_repl(t_env *env)
 {
 	char		*shell;
 	t_token		*tokens_lst;
 	t_node		*ast_tree;
 
+	signal(SIGINT, redisplay_prompt);
 	while (true)
 	{
 		ast_tree = NULL;
 		shell = read_shell(env);
-		if (shell && shell[0])
+		if (!shell)
+		{
+			rl_redisplay();
+			printf("exit\n");
+			exit(EXIT_SUCCESS);
+		}
+		else
 		{
 			tokens_lst = create_tokens_list(shell);
 			expand_shell(tokens_lst, env);
@@ -82,7 +98,9 @@ void	msh_repl(t_env *env)
 			{
 				handle_heredocs(tokens_lst, env);
 				ast_tree = create_ast(tokens_lst);
-				g_exit_code = exec_ast(ast_tree, env);
+				print_tokens(tokens_lst);
+				print_tree(ast_tree, 0);
+				// g_exit_code = exec_ast(ast_tree, env);
 			}
 			free(shell);
 			free_tree(ast_tree);
@@ -90,6 +108,12 @@ void	msh_repl(t_env *env)
 		}
 	}
 }
+
+/*
+- ctrl+c => SIGINT
+- ctrl+d => SIGQUIT
+- ctrl+\ => SIGQUIT
+*/
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -102,5 +126,5 @@ int	main(int argc, char **argv, char **envp)
 	printf("PID: [%d]\n", getpid());
 	msh_repl(env);
 	free_env(&env);
-	return (0);
+	return (EXIT_SUCCESS);
 }

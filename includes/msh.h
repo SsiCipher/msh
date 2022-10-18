@@ -6,7 +6,7 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:27:48 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/12 22:02:49 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/17 03:58:43 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <dirent.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>

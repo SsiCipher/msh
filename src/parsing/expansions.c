@@ -6,43 +6,11 @@
 /*   By: yanab <yanab@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 05:48:26 by yanab             #+#    #+#             */
-/*   Updated: 2022/10/07 23:20:08 by yanab            ###   ########.fr       */
+/*   Updated: 2022/10/15 00:04:39 by yanab            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-/**
- * Expand variables in token
- * 
- * @param	tkn the token to use for the expansion
- * @param	env t_env struct containing environment variables
- * @return	the token used
- */
-t_token	*expand_tkn_vars(t_token *tkn, t_env *env)
-{
-	char	*expanded_value;
-
-	expanded_value = expand_vars(tkn->content, false, env);
-	if (
-		(
-			tkn->prev
-			&& (
-				tkn->prev->type == R_INPUT
-				|| tkn->prev->type == R_OUTPUT
-				|| tkn->prev->type == R_APPEND
-			)
-		)
-		&& expanded_value[0] == '\0'
-	)
-		free(expanded_value);
-	else
-	{
-		free(tkn->content);
-		tkn->content = expanded_value;
-	}
-	return (tkn);
-}
 
 /**
  * Find and replace all variables in str
@@ -74,6 +42,38 @@ char	*expand_vars(char *str, bool ignore_quotes, t_env *env)
 		}
 	}
 	return (expanded_str);
+}
+
+/**
+ * Expand variables in token
+ * 
+ * @param	tkn the token to use for the expansion
+ * @param	env t_env struct containing environment variables
+ * @return	the token used
+ */
+t_token	*expand_tkn_vars(t_token *tkn, t_env *env)
+{
+	char	*expanded_value;
+
+	expanded_value = expand_vars(tkn->content, false, env);
+	if (
+		(
+			tkn->prev
+			&& (
+				tkn->prev->type == R_INPUT
+				|| tkn->prev->type == R_OUTPUT
+				|| tkn->prev->type == R_APPEND
+			)
+		)
+		&& expanded_value[0] == '\0'
+	)
+		free(expanded_value);
+	else
+	{
+		free(tkn->content);
+		tkn->content = expanded_value;
+	}
+	return (tkn);
 }
 
 // TODO: handle mixed expansions -> *$VAR => expand * if VAR doesn't exist
